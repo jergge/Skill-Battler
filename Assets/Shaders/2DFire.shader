@@ -83,7 +83,6 @@ Shader "Unlit/2DFire"
                 float otherMask =  1-i.uv.y/2-baseHeight;
 
                 float output = heightMask * (noiseOut + otherMask);
-
                 if (output < .5)
                 {
                     //discard;
