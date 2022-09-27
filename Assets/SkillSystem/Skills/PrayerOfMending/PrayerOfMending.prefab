@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5726972036060316176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5994847606467804382}
+  - component: {fileID: 5741961598706411585}
+  m_Layer: 0
+  m_Name: PrayerOfMending
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5994847606467804382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5726972036060316176}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.6150856, y: 3.555806, z: 8.740164}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5741961598706411585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5726972036060316176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3945f86db26b53a4d85164527a0b699e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spellName: Prayer of Mending
+  basicDescription: Heals for a small amount when damage is taken, then jumps to
+    another target
+  icon: {fileID: 0}
+  cost: 10
+  hasActiveComponent: 1
+  validTargets: 0
+  cooldown: 10
+  remainingCooldown: 0
+  baseHealAmount: 50
+  baseChargesCount: 5
+  baseJumpRange: 20
+  projectilePrefab: {fileID: 7225084684093734144, guid: 5243dc7ebfb66d34f991b85bc70ff7f3, type: 3}

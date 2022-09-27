@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d303a16def6917c469a47dee5c500f66, type: 3}
+  m_Name: New Perlin Noise 2D
+  m_EditorClassIdentifier: 
+  autoUpdate: 0
+  seed: 117
+  scale: 400
+  noiseGPUShader: {fileID: 7200000, guid: db8d5f59ba17cc741b717e6800a86492, type: 3}
+  perlinOffset: {x: 34.56, y: 3.69}
+  octaves: 4
+  persistence: 0.152
+  lacunarity: 4.36
