@@ -46,11 +46,6 @@ public class PlayerController : MonoBehaviour
        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void Update()
-    {
-               
-    }
-
     void FixedUpdate()
     {
         Quaternion deltaRotation = Quaternion.Euler(new Vector3(0,lookInputs.x * turnSpeed,0)* Time.fixedDeltaTime);
@@ -110,15 +105,5 @@ public class PlayerController : MonoBehaviour
                 }
             jumpCount++;
         }
-    }
-
-    void OnAttack()
-    {
-
-    }
-
-    void OnBlock()
-    {
-
     }
 }
