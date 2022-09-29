@@ -5,6 +5,8 @@ using UnityEngine;
 using SkillSystem;
 using UnityEngine.UI;
 
+
+//The script for player controlled characters, now using the new Unity input system
 [RequireComponent(typeof(PlayerController), typeof(SkillManager))]
 public class Player : LivingEntity, IHaveTargetInfo
 {
