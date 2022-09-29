@@ -36,8 +36,8 @@ public class Player : LivingEntity, IHaveTargetInfo
         {
             targetPosition = hit.point;
             Ray ray2 = new Ray(skillManager.skillSpawnLocation.position, transform.forward);
-            Debug.DrawRay(ray2.origin, ray2.direction * 40, Color.yellow);
-            Debug.DrawLine(skillManager.skillSpawnLocation.position, targetPosition, Color.blue);
+                Debug.DrawRay(ray2.origin, ray2.direction * 40, Color.yellow);
+                Debug.DrawLine(skillManager.skillSpawnLocation.position, targetPosition, Color.blue);
             targetInfo.position = hit.point;
             targetInfo.distanceToTarget = Vector3.Distance(hit.point, skillManager.skillSpawnLocation.position);
             targetInfo.target = hit.transform.gameObject;
