@@ -1,6 +1,5 @@
 //
-// Description : Array and textureless GLSL 2D/3D/4D simplex 
-//               noise functions.
+// Description : Array and textureless GLSL 2D/3D/4D simplex noise functions.
 //      Author : Ian McEwan, Ashima Arts.
 //  Maintainer : stegu
 //     Lastmod : 20201014 (stegu)
@@ -11,16 +10,19 @@
 // 
 //  changes to HLSL made by me
 
-float3 mod289(float3 x) {
+float3 mod289(float3 x)
+{
   return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 
-float4 mod289(float4 x) {
+float4 mod289(float4 x) 
+{
   return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 
-float4 permute(float4 x) {
-     return mod289(((x*34.0)+10.0)*x);
+float4 permute(float4 x) 
+{
+  return mod289(((x*34.0)+10.0)*x);
 }
 
 float4 taylorInvSqrt(float4 r)
@@ -29,7 +31,7 @@ float4 taylorInvSqrt(float4 r)
 }
 
 float snoise(float3 v)
-  { 
+{ 
   const float2  C = float2(1.0/6.0, 1.0/3.0) ;
   const float4  D = float4(0.0, 0.5, 1.0, 2.0);
 
@@ -102,4 +104,4 @@ float snoise(float3 v)
   m = m * m;
   return 105.0 * dot( m*m, float4( dot(p0,x0), dot(p1,x1), 
                                 dot(p2,x2), dot(p3,x3) ) );
-  }
+}
