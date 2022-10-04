@@ -37,7 +37,7 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
         {
             skillSpawnLocation = new GameObject("DEFAULT skill spawn for " + gameObject.name).transform;
             skillSpawnLocation.transform.SetParent(transform);
-            skillSpawnLocation.transform.localPosition = Vector3.zero;
+            skillSpawnLocation.transform.localPosition = Vector3.zero + transform.forward *2;
         }
 
         foreach (Transform t in skillHolder.transform)

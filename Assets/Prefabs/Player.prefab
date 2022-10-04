@@ -792,8 +792,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillHolder: {fileID: 0}
   skillSpawnLocation: {fileID: 0}
-  attack: {fileID: 2378467274592662024, guid: 20f421a3795d7b640a1385e9c86b7729, type: 3}
-  block: {fileID: 7463269424459660977, guid: 7308a7bd849be3343bd608d0d9b42796, type: 3}
+  attack: {fileID: 263542385365331316, guid: b368a23c08dce60439f0a512d9f0a5c5, type: 3}
+  block: {fileID: 0}
   skill1: {fileID: 0}
   skill2: {fileID: 0}
 --- !u!114 &470693241491193098
