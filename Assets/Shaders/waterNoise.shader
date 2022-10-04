@@ -7,15 +7,16 @@ Shader "Custom/waterNoise"
         SimplexSampleSpeed ("SimplexSampleSpeed", float) = 0
         ringStrength ("RingStrength", float) = 1 
         ringShift ("RingShift", float) = .5
+        [MaterialToggle] useAlpha("useAlpha", float) = 0
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags {"Queue" = "Transparent" "RenderType"="Transparent" }
         LOD 200
 
         CGPROGRAM 
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+        #pragma surface surf Standard alpha fullforwardshadows
 
         #include "3DSimplex.cginc"  
         // Use shader model 3.0 target, to get nicer looking lighting
@@ -34,6 +35,7 @@ Shader "Custom/waterNoise"
             float SimplexSampleSpeed;
             float ringStrength;
             float ringShift;
+            float useAlpha;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -70,7 +72,15 @@ Shader "Custom/waterNoise"
             
             fixed3 output = fixed3(r, g, b);
 
+            fixed alpha = 1;
+            if (useAlpha == 1)
+            {
+                alpha = squishedNoise;
+            }
+            
+
             o.Albedo = output;
+            o.Alpha = alpha;
 
         }
         ENDCG

@@ -7,7 +7,7 @@ namespace TerrainGeneration{
 public class WorldMeshGenerator : MonoBehaviour
 {
 
-
+    public bool generateRandomInBuild = false;
 
     public int worldSizeX;
     public int worldSizeZ;
@@ -133,6 +133,8 @@ public class WorldMeshGenerator : MonoBehaviour
         mesh.SetTriangles(triangles, 0);
 
         waterObj.GetComponent<MeshRenderer>().sharedMaterial = flatWaterMaterial;
+
+        waterObj.layer = gameObject.layer;
 
         mesh.RecalculateNormals();
 

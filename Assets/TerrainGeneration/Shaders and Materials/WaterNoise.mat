@@ -10,7 +10,8 @@ Material:
   m_Name: WaterNoise
   m_Shader: {fileID: 4800000, guid: 6fa0a03b574f61948bd0af3ad39d8354, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - USEALPHA_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -30,7 +31,9 @@ Material:
     - PinchInScale: 1.8
     - SimplexSampleSpeed: 4
     - SimplexScale: 6.65
+    - _isToggled: 0
     - ringShift: 0.5
     - ringStrength: 152.13
+    - useAlpha: 1
     m_Colors: []
   m_BuildTextureStacks: []
