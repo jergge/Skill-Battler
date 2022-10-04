@@ -18,7 +18,8 @@ public class WorldMeshGenerator : MonoBehaviour
     public bool bakeCollider;
     public bool useShader = false; 
 
-    public Material mat;
+    public Material heightMapMaterial;
+    public Material flatWaterMaterial;
     public string layerToAdd;
 
     //public bool usePerlinNoiseMap = false;
@@ -95,6 +96,46 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         noiseData.Configure();
         GenerateNewChuks();
+        GenerateWater();
+    }
+
+    void GenerateWater()
+    {
+        float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
+        // float topOfWater = 100f;
+
+        Vector3[] verticies = new Vector3[4] 
+        {
+            new Vector3(0,          topOfWater, 0           ),      //bottom left
+            new Vector3(0,          topOfWater, worldSizeZ  ),      //top left
+            new Vector3(worldSizeX, topOfWater, 0           ),      //bottom right
+            new Vector3(worldSizeX, topOfWater, worldSizeZ  )       //top right
+        };
+        int[] triangles = new int[6] 
+        {
+            0, 1, 2,
+            1, 3, 2
+        };
+
+
+        GameObject waterObj = new GameObject("Water Mesh");
+        waterObj.AddComponent<MeshRenderer>();
+        waterObj.AddComponent<MeshFilter>();
+        waterObj.transform.SetParent(transform);
+
+        Mesh mesh = new Mesh();
+        
+        waterObj.GetComponent<MeshFilter>().sharedMesh = mesh;
+
+        mesh.Clear();
+
+        mesh.SetVertices(verticies);
+        mesh.SetTriangles(triangles, 0);
+
+        waterObj.GetComponent<MeshRenderer>().sharedMaterial = flatWaterMaterial;
+
+        mesh.RecalculateNormals();
+
     }
 
     public void GenerateNewChuks()
@@ -121,7 +162,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
                 Vector3 chunkPos = new Vector3(x * (TerrainChunk.maxSideVertexCount-1) / resolutionToUse, 0, z * (TerrainChunk.maxSideVertexCount-1) / resolutionToUse) + transform.position;
 
-                chunk.Configure(xCount, zCount, chunkPos, spaceBetweenVerticies, noiseData, heightCurve, heightScale, mat);
+                chunk.Configure(xCount, zCount, chunkPos, spaceBetweenVerticies, noiseData, heightCurve, heightScale, heightMapMaterial);
                 chunk.bakeCollider = bakeCollider;
                 chunk.transform.SetParent(transform);
                 chunk.CreateMesh();
@@ -158,7 +199,9 @@ public class WorldMeshGenerator : MonoBehaviour
             chunk.UpdateMesh();
         }
 
-        ApplyToMaterial(mat);
+        GenerateWater();
+
+        ApplyToMaterial(heightMapMaterial);
         
 
     }
