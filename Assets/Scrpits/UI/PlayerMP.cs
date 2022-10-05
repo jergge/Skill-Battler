@@ -6,36 +6,22 @@ using SkillSystem;
 
 public class PlayerMP : MonoBehaviour
 {
-    public LivingEntity player;
+    public ManaStats stats;
 
-    ManaStats mp => player.MP;
+    public Slider slider;
 
-    Slider slider;
 
-    // Start is called before the first frame update
     void Start()
     {
-        slider = GetComponent<Slider>();
-        //player.CanICast += EnoughToCast;
-        //player.OnAfterCast += AfterCast;
+        //slider = GetComponent<Slider>();
+        slider.value = stats.currentPercent;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        slider.value = player.MP.currentPercent;
+        slider.value = stats.currentPercent;
     }
 
-    // void EnoughToCast(CastEventInfo info, CheckForAny checker)
-    // {
-    //     if ( info.skill.cost > mp.current )
-    //     {
-    //         checker.False();
-    //     }
-    // }
 
-    // void AfterCast(CastEventInfo info)
-    // {
-    //     mp.current -= info.skill.cost;
-    // }
 }

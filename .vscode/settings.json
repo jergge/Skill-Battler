@@ -1,9 +1,11 @@
 {
     "files.exclude":
     {
+        "**/*.csproj":true,
+        "**/*.sln":true,
         "**/.DS_Store":true,
         "**/.git":true,
-        "**/.gitignore":true,
+        "**/.gitignore":false,
         "**/.gitmodules":true,
         "**/*.booproj":true,
         "**/*.pidb":true,
@@ -45,13 +47,16 @@
         "**/*.unity":true,
         "build/":true,
         "Build/":true,
+        "Builds/":true,
         "Library/":true,
         "library/":true,
         "obj/":true,
         "Obj/":true,
         "ProjectSettings/":true,
+        "Packages/":true,
         "temp/":true,
-        "Temp/":true
+        "Temp/":true,
+        ".vs/":true
     },
     "editor.codeLens": false
 }

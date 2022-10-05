@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace SkillSystem { namespace Properties {
+namespace SkillSystem.Properties {
 public class SkillPropertyModifier {
     public ModifiableSkillProperty.ModifyValue value; 
     protected Func<float, float> method;
@@ -25,4 +25,4 @@ public class SkillPropertyModifier {
         return method(f);
     } 
         
-}}}
+}}

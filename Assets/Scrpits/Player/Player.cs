@@ -6,18 +6,22 @@ using SkillSystem;
 using UnityEngine.UI;
 
 //The script for player controlled characters, now using the new Unity input system
-[RequireComponent(typeof(PlayerController), typeof(SkillManager))]
+[RequireComponent(typeof(PlayerController), typeof(SkillManager), typeof(PlayerCamera))]
 public class Player : LivingEntity, IHaveTargetInfo
 {
     public Camera playerCamera;
+    public PlayerCamera playerCameraController;
+    public PlayerController playerController;
 
     TargetInfo targetInfo = new TargetInfo();
+    public LayerMask targetInfoLayers;
     public TargetInfo GetTargetInfo() => targetInfo;
 
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
+
     }
 
     void Update()
@@ -32,7 +36,7 @@ public class Player : LivingEntity, IHaveTargetInfo
 
         Vector3 targetPosition;
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, targetInfoLayers))
         {
             targetPosition = hit.point;
             Ray ray2 = new Ray(skillManager.skillSpawnLocation.position, transform.forward);

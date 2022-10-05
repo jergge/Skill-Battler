@@ -13,8 +13,29 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 6;
     bool sprinting;
     public float sprintSpeed = 10;
+
     public float turnSpeed = 300;
+    bool panLock = false;
+    public void LockPan()
+    {
+        panLock = true;
+    }
+    public void UnlockPan()
+    {
+        panLock = false;
+    }
+
     public float lookVerticalSpeed = 10;
+    bool tiltLock = false;
+    public void LockTilt()
+    {
+        tiltLock = true;
+    }
+    public void UnlockTilt()
+    {
+        tiltLock = false;
+    }
+
     public float jumpForce = 5;
     public int numberOfJumps = 2;
     public int jumpCount = 0;
@@ -48,13 +69,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+
         Quaternion deltaRotation = Quaternion.Euler(new Vector3(0,lookInputs.x * turnSpeed,0)* Time.fixedDeltaTime);
         rb.MoveRotation(rb.rotation * deltaRotation);
+
         
         Vector3 currentMoveVelocity = (sprinting) ? currentMoveDirection * sprintSpeed : currentMoveDirection * moveSpeed;
         Vector3 newPosition = rb.position + transform.TransformDirection(currentMoveVelocity * Time.fixedDeltaTime);
         rb.MovePosition(newPosition);
-
     }
     
     
@@ -74,8 +96,11 @@ public class PlayerController : MonoBehaviour
     {
         lookInputs.x = value.Get<Vector2>().x;
         lookInputs.y = value.Get<Vector2>().y;
+        if(!tiltLock)
+        {
         Quaternion cameraRotation = Quaternion.Euler(lookInputs.y * -lookVerticalSpeed, 0, 0);
         playerCamera.transform.rotation *= cameraRotation;
+        }
     }
 
     void OnJump()

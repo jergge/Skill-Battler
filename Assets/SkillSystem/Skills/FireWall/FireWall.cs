@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace SkillSystem{
-public class FireWall : Skill
+public class FireWall : Skill, IActiveSkill
 {
     public Material material;
     public float height;
@@ -12,7 +13,7 @@ public class FireWall : Skill
     float maxRayCastDist = 300;
     public LayerMask collisionLayer;
 
-    public override void Cast(Transform spawnLoaction, TargetInfo targetInfo)
+    public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
         // GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Quad);
         // wall.transform.position = source.transform.position;

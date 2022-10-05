@@ -1,45 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SkillSystem.Properties;
 
 namespace SkillSystem{
-public class Missile : MonoBehaviour
+public abstract class Missile : Skill
 {
-    public float speed;
-    public float damage;
-    public float maxTravelDistance;
-    float distanceTraveled;
-    public float MaxTravelTime;
-    float timeAlive;
+    public MissilePrefab misslePrefab;
+    
+    public int baseDamage = 20;
+    public int damage =>
+        GetModifiedValueInt(ModifiableSkillProperty.ModifyValue.damage, baseDamage);
+
+    public float baseSpeed = 10;
+    public float speed =>
+        GetModifiedValue(ModifiableSkillProperty.ModifyValue.speed, baseSpeed);
+
+    public float BaseMaxTravelDistance = 10;
+    public float maxTravelDistance =>
+        GetModifiedValue(ModifiableSkillProperty.ModifyValue.range, BaseMaxTravelDistance);
+
+    public float MaxTravelTime = 10;
 
     public LayerMask collisionDamage;
     public LayerMask collisionDestroy;
-
-    public GameObject targetObject;
-    public Vector3 initialTarget;
-    // Start is called before the first frame update
-    void Start()
-    {
-        transform.LookAt(initialTarget);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        CheckExpiery();
-
-        Vector3 moveAmount = transform.forward * speed * Time.deltaTime;
-        transform.position += moveAmount;
-        
-        timeAlive += Time.deltaTime;
-        distanceTraveled += speed* Time.deltaTime;
-    }
-
-    void CheckExpiery()
-    {
-        if((timeAlive > MaxTravelTime) || (distanceTraveled > maxTravelDistance))
-        {
-            Destroy(gameObject);
-        }
-    }
 }}

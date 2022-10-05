@@ -16,7 +16,7 @@ MonoBehaviour:
   seed: 117
   scale: 400
   noiseGPUShader: {fileID: 7200000, guid: db8d5f59ba17cc741b717e6800a86492, type: 3}
-  perlinOffset: {x: 34.56, y: 3.69}
+  perlinOffset: {x: 400, y: 3.69}
   octaves: 4
   persistence: 0.152
   lacunarity: 4.36

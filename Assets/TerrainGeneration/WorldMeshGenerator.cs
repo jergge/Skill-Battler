@@ -9,8 +9,8 @@ public class WorldMeshGenerator : MonoBehaviour
 
     public bool generateRandomInBuild = false;
 
-    public int worldSizeX;
-    public int worldSizeZ;
+    public float worldSizeX;
+    public float worldSizeZ;
     [Range(.01f, 1f)] public float editorTerrainResolution = 1f;
     public float gameTerrianResolution = 3f;
 
@@ -36,8 +36,8 @@ public class WorldMeshGenerator : MonoBehaviour
     //verticies per unity unit
     float spaceBetweenVerticies;
 
-    int totalVerticiesX;
-    int totalVerticiesZ;
+    float totalVerticiesX;
+    float totalVerticiesZ;
     public Layer[] layers = new Layer[8];
 
     float maxMeshHeight;
@@ -96,11 +96,12 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         noiseData.Configure();
         GenerateNewChuks();
-        GenerateWater();
+        //GenerateWater();
     }
 
     void GenerateWater()
     {
+        Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
         float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
         // float topOfWater = 100f;
 
@@ -146,9 +147,11 @@ public class WorldMeshGenerator : MonoBehaviour
         ClearChunks();
         resolutionToUse = (Application.isPlaying) ? gameTerrianResolution : editorTerrainResolution;
         float spaceBetweenVerticies = 1f / resolutionToUse;
+        // float spaceBetweenVerticies = 1f / resolutionToUse;
 
-        int totalVerticiesX = Mathf.RoundToInt(worldSizeX * resolutionToUse);
-        int totalVerticiesZ = Mathf.RoundToInt(worldSizeZ * resolutionToUse);
+        int totalVerticiesX = Mathf.CeilToInt(worldSizeX * resolutionToUse);
+        worldSizeX = totalVerticiesX * spaceBetweenVerticies;
+        int totalVerticiesZ = Mathf.CeilToInt(worldSizeZ * resolutionToUse);
 
         noiseData.Configure();
         noiseData.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
@@ -192,7 +195,8 @@ public class WorldMeshGenerator : MonoBehaviour
             if (minMax.maxHeight > maxMeshHeight)
             {
                 maxMeshHeight = minMax.maxHeight;
-            } else if ( minMax.minHeight < minMeshHeight)
+            } 
+            if ( minMax.minHeight < minMeshHeight)
             {
                 minMeshHeight = minMax.minHeight;
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 
-namespace SkillSystem { namespace Properties {
+namespace SkillSystem.Properties {
 public static class ModifiableSkillProperty { 
     
     public enum ModifyValue {
@@ -18,6 +18,7 @@ public static class ModifiableSkillProperty {
     public static float GetModifiedValue(ModifyValue value, float baseValue , GameObject source) 
     {
         var allMods = source.GetComponents<IModifySkillProperty>();
+        //Debug.Log("BASE Property Value is  " + baseValue + " all mods length is: " + allMods.Length);
         float modifiedValue = baseValue;
 
         foreach ( var list in allMods )
@@ -26,6 +27,10 @@ public static class ModifiableSkillProperty {
             foreach (var func in list.GetPropertyModifiers())
             {
                 modifiedValue = (func.value == value) ? func.Evaluate(modifiedValue) : modifiedValue;
+                if (func.value == ModifyValue.damage)
+                {
+                    //Debug.Log("mod Property Value is now " + modifiedValue);    
+                }
             }
         }
         // Debug.Log(this.ToString());
@@ -35,4 +40,4 @@ public static class ModifiableSkillProperty {
          => Mathf.RoundToInt( GetModifiedValue(  value,  baseValue ,  source ) );
 
 
-}}}
+}}

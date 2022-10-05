@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -546279404607432142}
   - component: {fileID: 1814127156070755897}
   - component: {fileID: 2969196990962859286}
+  - component: {fileID: 6723619507336214121}
   m_Layer: 13
   m_Name: Single Caster
   m_TagString: Untagged
@@ -132,17 +133,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: {fileID: 2969196990962859286}
   MP: {fileID: 1814127156070755897}
-  skillHolder: {fileID: 0}
-  skills:
-  - {fileID: 1913059007874363883, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
-  - {fileID: 1913059007874363883, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
-  - {fileID: 1913059007874363883, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
-  skillSpawnLocation: {fileID: 0}
-  awarenessRaduis: 40
+  skillManager: {fileID: 6723619507336214121}
+  awarenessRaduis: 60
   awarenessAngle: 180
-  moveSpeed: 2
-  attackRange: 30
-  castInterval: 2
+  moveSpeed: 5
+  attackRange: 40
+  castInterval: 0.5
   awareOf: []
 --- !u!114 &1814127156070755897
 MonoBehaviour:
@@ -172,4 +168,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseValue: 100
+  bonus: 0
   regenPerSecond: 0
+--- !u!114 &6723619507336214121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599149030808184435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac28c70d024b76d44a183a246dff30dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillHolder: {fileID: 0}
+  skillSpawnLocation: {fileID: 0}
+  mainEnergyStats: {fileID: 0}
+  attack: {fileID: 6263357398972305974, guid: bc22b41d7372eaf4c811e1c94ff8def3, type: 3}
+  block: {fileID: 0}
+  skill1: {fileID: 0}
+  skill2: {fileID: 0}
+  activeList: []

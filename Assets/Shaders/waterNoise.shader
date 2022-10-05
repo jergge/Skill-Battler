@@ -13,6 +13,7 @@ Shader "Custom/waterNoise"
     {
         Tags {"Queue" = "Transparent" "RenderType"="Transparent" }
         LOD 200
+        // cull off
 
         CGPROGRAM 
         // Physically based Standard lighting model, and enable shadows on all light types
@@ -75,7 +76,8 @@ Shader "Custom/waterNoise"
             fixed alpha = 1;
             if (useAlpha == 1)
             {
-                alpha = squishedNoise;
+                alpha = lerp(.2, .8, squishedNoise); 
+                //squishedNoise;
             }
             
 

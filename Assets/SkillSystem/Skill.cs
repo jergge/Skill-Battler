@@ -4,8 +4,10 @@ using UnityEngine;
 using System;
 using SkillSystem.Properties;
 using System.Linq;
+using UnityEngine.InputSystem;
 
-namespace SkillSystem {
+
+namespace SkillSystem {    
 public abstract class Skill : MonoBehaviour
 {
     protected enum SpellState
@@ -19,12 +21,13 @@ public abstract class Skill : MonoBehaviour
 
     protected SpellState spellState = SpellState.Prefab;
     protected GameObject source;
+    public GameObject GetSource() => source;
     public string spellName;
     public string basicDescription;
     public Sprite icon;
     public int cost;
 
-    public bool hasActiveComponent = true;
+    protected Player? player => source.GetComponent<Player>();
 
     private bool cooldownPaused = false;
     protected void PauseCooldown() {
@@ -234,7 +237,7 @@ public abstract class Skill : MonoBehaviour
 
     public virtual void UpdateInWorld() { }
 
-    public abstract void Cast(Transform spawnLoaction, TargetInfo targetInfo);
+    //public abstract void Cast(Transform spawnLoaction, TargetInfo targetInfo, InputValue inputValue);
 
     protected float GetModifiedValue(ModifiableSkillProperty.ModifyValue propertyIdentifier, float baseAmount)
     {

@@ -34,39 +34,39 @@
                 },
                 {
                     "name": "Attack",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "f77dd0fa-7638-4d8d-a595-df8ae463bd2f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Block",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "d6b987c9-b366-4022-b6cd-5ab209c8f0b1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Skill 1",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "ee15754b-013a-4464-9327-6ad86ad03f10",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Skill 2",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "f3c819a1-83cb-402f-901d-31818a4e85b7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Sprint",

@@ -85,10 +85,12 @@ public class CasterEnemy : LivingEntity
             {
                 timeOfLastCast = Time.time;
                 //Debug.Log("Trying to cast at " + currentTarget.name);
-                GetComponentsInChildren<Skill>()[0].Cast(skillManager.skillSpawnLocation, new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.transform.position));
-            } else if (distanceToCurrentTarget <= awarenessRaduis)
+                //GetComponentsInChildren<Skill>()[0].Cast(skillManager.skillSpawnLocation, new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.transform.position), null);
+                TargetInfo targetInfo = new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.transform.position);
+                skillManager.NPCUseSkill(skillManager.attack, targetInfo, true);
+            } else if (distanceToCurrentTarget <= awarenessRaduis && distanceToCurrentTarget > attackRange)
             {
-                moveDirecton = (currentTarget.transform.position - transform.position).normalized;
+                //moveDirecton = (currentTarget.transform.position - transform.position).normalized;
             } else if (distanceToCurrentTarget > awarenessRaduis) 
             {
                 moveDirecton = Vector3.zero;

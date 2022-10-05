@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Jergge.Extensions;
+using UnityEngine.InputSystem;
 
 namespace SkillSystem {
 
 
-    public class PrayerOfMending : Skill
+    public class PrayerOfMending : Skill, IActiveSkill
     {
         public float baseHealAmount = 50f;
         public int baseChargesCount = 5;
@@ -20,7 +21,7 @@ namespace SkillSystem {
         protected State state;
         
         
-        public override void Cast(Transform spawnLoaction, TargetInfo targetInfo)
+        public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
         {
             LivingEntity le;
             if (targetInfo.target.gameObject.TryGetComponent<LivingEntity>(out le))
