@@ -19,4 +19,4 @@ MonoBehaviour:
   perlinOffset: {x: 400, y: 3.69}
   octaves: 4
   persistence: 0.152
-  lacunarity: 4.36
+  lacunarity: 4.55

@@ -30,10 +30,10 @@ Material:
     - BaseHeight: -2.85
     - PinchInScale: 1.8
     - SimplexSampleSpeed: 4
-    - SimplexScale: 6.65
+    - SimplexScale: 4.85
     - _isToggled: 0
     - ringShift: 0.5
-    - ringStrength: 152.13
+    - ringStrength: 184.5
     - useAlpha: 1
     m_Colors: []
   m_BuildTextureStacks: []

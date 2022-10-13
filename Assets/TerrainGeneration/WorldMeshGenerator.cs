@@ -55,6 +55,7 @@ public class WorldMeshGenerator : MonoBehaviour
         float evaluatedHeight = ((heightCurve.Evaluate(scaledNoise) * 2 -1 ) * heightScale) + transform.position.y;
         //Debug.Log(evaluatedHeight);
         return evaluatedHeight;
+
     }
 
     public void ApplyToMaterial(Material material)
@@ -101,7 +102,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
     void GenerateWater()
     {
-        Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
+        //Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
         float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
         // float topOfWater = 100f;
 

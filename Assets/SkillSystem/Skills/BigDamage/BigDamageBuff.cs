@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem.Properties;
+using SkillSystem;
 
-public class BigDamageBuff : MonoBehaviour, IModifySkillProperty
+public class BigDamageBuff : Buff, IModifySkillProperty
 {
     List<SkillPropertyModifier> temp = new List<SkillPropertyModifier>();
 
