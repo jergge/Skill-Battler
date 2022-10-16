@@ -582,8 +582,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxCameraAngleUp: 90
   maxCameraAngleDown: 80
-  moveSpeed: 6
-  sprintSpeed: 10
+  moveSpeed: 2
+  sprintSpeed: 4
   turnSpeed: 100
   lookVerticalSpeed: 1
   jumpForce: 5
@@ -693,8 +693,8 @@ MonoBehaviour:
   mainEnergyStats: {fileID: 470693241491193098}
   attack: {fileID: 263542385365331316, guid: b368a23c08dce60439f0a512d9f0a5c5, type: 3}
   block: {fileID: 3635482256972591754, guid: 4880cca59a58d374496f1bde4c0da3f1, type: 3}
-  skill1: {fileID: 1589708435621308694, guid: 4857e46bca014cd4c858c70319ab8f0a, type: 3}
-  skill2: {fileID: 0}
+  skill1: {fileID: 8086380231930331825, guid: 7baba31fff5bac745af6bbd238ff310b, type: 3}
+  skill2: {fileID: 3853941981888623652, guid: 9b507a543e699b143a22f915a8eafc9e, type: 3}
   activeList: []
 --- !u!114 &470693241491193098
 MonoBehaviour:
@@ -1364,11 +1364,11 @@ PrefabInstance:
       objectReference: {fileID: 470693241491193098}
     - target: {fileID: 8478087144072340108, guid: 785195492fcba0a4bac14c7627244131, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.425
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8478087144072340108, guid: 785195492fcba0a4bac14c7627244131, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 785195492fcba0a4bac14c7627244131, type: 3}
