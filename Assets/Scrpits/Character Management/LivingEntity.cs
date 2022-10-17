@@ -13,7 +13,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
     public HealthStats HP;
     public ManaStats MP;
     public SkillManager skillManager;
-    public Animator? animator;
+    public Animator animator;
     public List<MonoBehaviour> disableOnDie = new List<MonoBehaviour>();
 
     protected void Start()
@@ -26,28 +26,34 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
     public event Action<CastEventInfo, CheckForAny> CanICast;
     protected void FireCanICast(CastEventInfo info, CheckForAny check)
     {
-        if (CanICast != null)
-        {
-            CanICast(info, check);
-        }
+        // if (CanICast != null)
+        // {
+        //     CanICast(info, check);
+        // }
+
+        CanICast?.Invoke(info, check);
     }
 
     public event Action<CastEventInfo> OnBeforeCast;
     protected void FireOnBeforeCast(CastEventInfo info)
     {
-        if (OnBeforeCast != null)
-        {
-            OnBeforeCast(info);
-        }
+        // if (OnBeforeCast != null)
+        // {
+        //     OnBeforeCast(info);
+        // }
+
+        OnBeforeCast?.Invoke(info);
     }
 
     public event Action<CastEventInfo> OnAfterCast;
     protected void FireOnAfterCast(CastEventInfo info)
     {
-        if (OnAfterCast != null)
-        {
-            OnAfterCast(info);
-        }
+        // if (OnAfterCast != null)
+        // {
+        //     OnAfterCast(info);
+        // }
+
+        OnAfterCast?.Invoke(info);
     }
 
     public event Action<DamageInfo> OnTakeDamage;
@@ -59,10 +65,12 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
 
         DamageInfo info = new DamageInfo((stats.current == 0) ? true : false, d, stats.current);
         
-        if(OnTakeDamage != null)
-        {
-            OnTakeDamage(info);
-        }
+        // if(OnTakeDamage != null)
+        // {
+        //     OnTakeDamage(info);
+        // }
+
+        OnTakeDamage?.Invoke(info);
         
         if (stats.current == 0)
         {
@@ -126,8 +134,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
 
     void OnDeath()
     {
-        if(animator != null)
-            animator.SetTrigger("Death");
+        if(animator != null) {animator.SetTrigger("Death");}
         
         foreach(MonoBehaviour m in disableOnDie)
         {
