@@ -62,7 +62,7 @@ public class CasterEnemy : LivingEntity
             {
                 awareOf.Add(le);
 
-                if ( Vector3.Distance(transform.position, le.transform.position) < attackRange && Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies) )
+                if ( Vector3.Distance(transform.position, le.transform.position) < attackRange && Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies) && !le.IsDead() )
                 {
                     currentTarget = le;
                     //Debug.Log(name + " will attack " + currentTarget.name);
@@ -86,7 +86,7 @@ public class CasterEnemy : LivingEntity
                 timeOfLastCast = Time.time;
                 //Debug.Log("Trying to cast at " + currentTarget.name);
                 //GetComponentsInChildren<Skill>()[0].Cast(skillManager.skillSpawnLocation, new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.transform.position), null);
-                TargetInfo targetInfo = new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.transform.position);
+                TargetInfo targetInfo = new TargetInfo(currentTarget.gameObject, distanceToCurrentTarget, currentTarget.NPCBodyTarget.position);
                 skillManager.NPCUseSkill(skillManager.attack, targetInfo, true);
             } else if (distanceToCurrentTarget <= awarenessRaduis && distanceToCurrentTarget > attackRange)
             {

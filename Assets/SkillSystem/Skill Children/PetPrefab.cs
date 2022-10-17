@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PetPrefab : LivingEntity
 {
-    public Animator animator;
+    
     public GameObject master;
     public float currentMoveSpeed;
     public float maxSpeedWhileTurning;
@@ -14,6 +14,7 @@ public class PetPrefab : LivingEntity
     Vector3 currentMoveDirection;
     public float masterFollowRadius = 5f;
     public Rigidbody rb;
+    public DPadMap dPadMap;
     float distanceToMaster => Vector3.Distance(transform.position, master.transform.position);
     public enum PetState
     {
@@ -22,6 +23,11 @@ public class PetPrefab : LivingEntity
         explore,
         attack,
         dead
+    }
+
+    public DPadMap GetDPadMap()
+    {
+        return dPadMap;
     }
 
     PetState petState = PetState.follow;
@@ -48,15 +54,16 @@ public class PetPrefab : LivingEntity
 
     IEnumerator Follow()
     {
+        Debug.Log("now following " + master.name);
         while(true)
         {
-            Debug.Log(distanceToMaster);
+            // Debug.Log(distanceToMaster);
             if (distanceToMaster <= masterFollowRadius)
             {
                 currentMoveSpeed = 0;
-                Debug.Log("stopping");
+                // Debug.Log("stopping");
             } else {
-            Debug.Log("starting up again ");
+            // Debug.Log("starting up again ");
             currentMoveSpeed = 3;
 
             }
@@ -66,10 +73,29 @@ public class PetPrefab : LivingEntity
         }
     }
 
+    IEnumerator Stay()
+    {
+        Debug.Log("now staying - what a good girl!");
+        currentMoveSpeed = 0;
+        yield return new WaitForSeconds(3);
+    }
+
     public void TurnToFace()
     {
         transform.LookAt(new Vector3(master.transform.position.x, transform.position.y, master.transform.position.z));
 
+    }
+
+    public void OnStay()
+    {
+        StopAllCoroutines();
+        StartCoroutine(Stay());
+    }
+
+    public void OnFollow()
+    {
+        StopAllCoroutines();
+        StartCoroutine(Follow());
     }
 
 }

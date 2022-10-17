@@ -5,11 +5,16 @@ using UnityEngine;
 using SkillSystem;
 
 [RequireComponent(typeof(ManaStats), typeof(HealthStats), typeof(SkillManager))]
+[RequireComponent(typeof(Animator))]
 public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvents
 {
+    public Transform NPCHeadTarget;
+    public Transform NPCBodyTarget;
     public HealthStats HP;
     public ManaStats MP;
     public SkillManager skillManager;
+    public Animator? animator;
+    public List<MonoBehaviour> disableOnDie = new List<MonoBehaviour>();
 
     protected void Start()
     {
@@ -61,7 +66,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
         
         if (stats.current == 0)
         {
-            Destroy(gameObject);
+            OnDeath();
         }
         return info;
     }
@@ -117,5 +122,29 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
         {
             col.enabled = true;
         }
+    }
+
+    void OnDeath()
+    {
+        if(animator != null)
+            animator.SetTrigger("Death");
+        
+        foreach(MonoBehaviour m in disableOnDie)
+        {
+            if ( m != null )
+            {
+                m.enabled = false;
+            }
+        }
+    }
+
+    public bool IsDead()
+    {
+        if (HP.currentPercent == 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IDamageable
 {
     public DamageInfo TakeDamage(int damage);
+    public bool IsDead();
 }
 
 public struct DamageInfo 

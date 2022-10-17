@@ -16,6 +16,8 @@ public class MissilePrefab : MonoBehaviour
     float timeAlive;
     Skill.ValidTargets validTargets;
 
+    List<IDamageable> alreadyDamagedInFrame = new List<IDamageable>();
+
     public GameObject source;
 
     LayerMask collisionDamage;
@@ -52,6 +54,8 @@ public class MissilePrefab : MonoBehaviour
         
         timeAlive += Time.deltaTime;
         distanceTraveled += speed* Time.deltaTime;
+
+        alreadyDamagedInFrame.Clear();
     }
 
     void CheckExpiery()
@@ -64,7 +68,8 @@ public class MissilePrefab : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if( collisionDestroy.Contains(other.gameObject))
+        Debug.Log("Skill " + name + " colliding with " + other.name);
+        if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();
         } else if ( collisionDamage.Contains(other.gameObject) && Skill.IsValidTarget(source, other.gameObject, validTargets))
@@ -72,8 +77,13 @@ public class MissilePrefab : MonoBehaviour
             IDamageable d;
             if(other.gameObject.TryGetComponent<IDamageable>(out d))
             {
-                d.TakeDamage(Mathf.RoundToInt(damage));
-                Die();
+                if(!alreadyDamagedInFrame.Contains(d))
+                {
+                    alreadyDamagedInFrame.Add(d);
+                    Debug.Log("Skill " + name + " colliding with " + other.name);
+                    d.TakeDamage(Mathf.RoundToInt(damage));
+                    Die();
+                }
             }
         }
     }

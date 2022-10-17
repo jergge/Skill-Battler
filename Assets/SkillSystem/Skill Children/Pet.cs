@@ -4,9 +4,10 @@ using UnityEngine;
 using SkillSystem;
 
 namespace SkillSystem.Pet {
-public class Pet : Skill, IActiveSkill
+public class Pet : Skill, IActiveSkill, IUpdateDPad
 {
     public PetPrefab petToSummon;
+
 
     PetPrefab summonedPet;
 
@@ -24,7 +25,13 @@ public class Pet : Skill, IActiveSkill
         PauseCooldown();
     }
 
-    void OnPetDeath()
+    public DPadMap GetDPadMap()
+    {
+//        return summonedPet.GetDPadMap();
+        return new DPadMap();
+    }
+
+        void OnPetDeath()
     {
         summonedPet.OnDeath -= OnPetDeath;
         ResumeCooldown();

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class Player : LivingEntity, IHaveTargetInfo
 {
     public Camera playerCamera;
-    public PlayerCamera playerCameraController;
+    public PlayerCamera playerCameraController; 
     public PlayerController playerController;
 
     TargetInfo targetInfo = new TargetInfo();

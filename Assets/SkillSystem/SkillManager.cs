@@ -14,6 +14,8 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
     public TargetInfo targetInfo = new TargetInfo();
     public ManaStats mainEnergyStats;
 
+    public event Action<DPadMap> NewDPadMap;
+
     //public List<Skill> InitialSkills;
     protected List<Skill> spellBook = new List<Skill>();
 
@@ -126,6 +128,17 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
     protected void UseSkill(Skill skill, bool triggerDown)
     {
+        if (skill is IUpdateDPad && triggerDown)
+        {
+            IUpdateDPad d = skill as IUpdateDPad;
+
+            if (NewDPadMap != null)
+            {
+                NewDPadMap(d.GetDPadMap());
+            }
+
+        }
+
         if (skill is IChanneledSkill && !triggerDown)
         {
             IChanneledSkill s = skill as IChanneledSkill;

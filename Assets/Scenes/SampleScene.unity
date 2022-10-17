@@ -694,13 +694,14 @@ GameObject:
   - component: {fileID: 384082038}
   - component: {fileID: 384082037}
   - component: {fileID: 384082036}
+  - component: {fileID: 384082039}
   m_Layer: 13
   m_Name: Target Dummy (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &384082030
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -729,9 +730,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &384082032
@@ -863,6 +868,91 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &384082039
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 384082029}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1001 &484603504
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5023372781478248984, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5023372781478248984, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320323, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_Name
+      value: New Player HumanMale_Character
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.162
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -22.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843701162680320325, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
 --- !u!1 &503274577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1304,13 +1394,14 @@ GameObject:
   - component: {fileID: 894650680}
   - component: {fileID: 894650679}
   - component: {fileID: 894650678}
+  - component: {fileID: 894650681}
   m_Layer: 13
   m_Name: Target Dummy (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &894650672
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1339,9 +1430,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &894650674
@@ -1473,6 +1568,26 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &894650681
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894650671}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &911487668
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,13 +1799,14 @@ GameObject:
   - component: {fileID: 1040760780}
   - component: {fileID: 1040760779}
   - component: {fileID: 1040760778}
+  - component: {fileID: 1040760781}
   m_Layer: 13
   m_Name: Target Dummy (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1040760772
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1719,9 +1835,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &1040760774
@@ -1853,6 +1973,26 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &1040760781
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040760771}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1099986070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,13 +2048,14 @@ GameObject:
   - component: {fileID: 1283359650}
   - component: {fileID: 1283359649}
   - component: {fileID: 1283359648}
+  - component: {fileID: 1283359651}
   m_Layer: 13
   m_Name: Target Dummy (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1283359642
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1943,9 +2084,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &1283359644
@@ -2077,6 +2222,26 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &1283359651
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283359641}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1380486885
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,13 +2259,14 @@ GameObject:
   - component: {fileID: 1380486894}
   - component: {fileID: 1380486893}
   - component: {fileID: 1380486892}
+  - component: {fileID: 1380486895}
   m_Layer: 13
   m_Name: Target Dummy (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1380486886
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2129,9 +2295,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &1380486888
@@ -2263,6 +2433,26 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &1380486895
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380486885}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1392270576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2492,13 +2682,14 @@ GameObject:
   - component: {fileID: 1851988949}
   - component: {fileID: 1851988948}
   - component: {fileID: 1851988947}
+  - component: {fileID: 1851988950}
   m_Layer: 13
   m_Name: Target Dummy (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1851988941
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2527,9 +2718,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
   HP: {fileID: 0}
   MP: {fileID: 0}
   skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!136 &1851988943
@@ -2661,6 +2856,26 @@ MonoBehaviour:
   baseValue: 0
   bonus: 0
   regenPerSecond: 0
+--- !u!95 &1851988950
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851988940}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2020238027
 GameObject:
   m_ObjectHideFlags: 0
@@ -2771,6 +2986,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3599149030808184447, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
   m_PrefabInstance: {fileID: 3599149029139264740}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2089472676 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 842810873747477411, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
+  m_PrefabInstance: {fileID: 3599149029139264740}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3599149029139264740
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2778,9 +2998,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1099986071}
     m_Modifications:
+    - target: {fileID: -546279404607432142, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2089472676}
     - target: {fileID: 3599149030808184435, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
       propertyPath: m_Name
       value: Target Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3599149030808184435, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3599149030808184447, guid: fe60a4a2e88fdae40a05e12d8b4afb15, type: 3}
       propertyPath: m_RootOrder
@@ -2837,15 +3065,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7947929449871379211, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.605
       objectReference: {fileID: 0}
     - target: {fileID: 7947929449871379211, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7947929450182437972, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947929450182437972, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947929450182438059, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7947929450182438061, guid: 56685a1597a07cb47abd0c32e6d92fa3, type: 3}
       propertyPath: m_RootOrder

@@ -40,7 +40,7 @@ public class WaterShield : Skill, IChanneledSkill
 
         if(player != null)
         {
-            player.playerCameraController.SetLocation(player.playerCameraController.presets[1]);
+            //ffplayer.playerCameraController.SetLocation(player.playerCameraController.presets[1]);
         }
 
         while(casting && energy.GetCurrent() > energyDrainPerSecond*Time.deltaTime)
@@ -58,7 +58,7 @@ public class WaterShield : Skill, IChanneledSkill
 
         if(player != null)
         {
-            player.playerCameraController.SetLocation(player.playerCameraController.presets[0]);
+            //player.playerCameraController.SetLocation(player.playerCameraController.presets[0]);
         }
         ResetCooldown();
     }

@@ -8,7 +8,8 @@ public class PlayerHUD : MonoBehaviour
 {
     public GameObject energies;
     public PlayerMP prefab;
-
+    public Player player;
+    public DPad dPad;
     List<PlayerMP> mps = new List<PlayerMP>();
 
     public float gap;
@@ -16,7 +17,7 @@ public class PlayerHUD : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

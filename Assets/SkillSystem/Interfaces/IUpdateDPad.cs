@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkillSystem{
-public interface IActiveSkill
+public interface IUpdateDPad
 {
-    public void Cast(Transform spawnLoaction, TargetInfo targetInfo);
+    public DPadMap GetDPadMap();
 }}

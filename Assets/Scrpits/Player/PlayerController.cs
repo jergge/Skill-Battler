@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(PlayerInput), typeof(Player))]
 public class PlayerController : MonoBehaviour
 {
     public float maxCameraAngleUp = 90;
@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     Vector2 lookInputs;
 
     Vector3 currentMoveDirection;
+    float currentMoveSpeed;
 
     public Camera playerCamera;
 
@@ -74,9 +75,26 @@ public class PlayerController : MonoBehaviour
         rb.MoveRotation(rb.rotation * deltaRotation);
 
         
-        Vector3 currentMoveVelocity = (sprinting) ? currentMoveDirection * sprintSpeed : currentMoveDirection * moveSpeed;
+        Vector3 currentMoveVelocity = currentMoveDirection * currentMoveSpeed;
         Vector3 newPosition = rb.position + transform.TransformDirection(currentMoveVelocity * Time.fixedDeltaTime);
         rb.MovePosition(newPosition);
+    }
+
+    void Update()
+    {
+        
+        if(sprinting)
+        {
+            currentMoveSpeed = sprintSpeed;
+        } else {
+            currentMoveSpeed = moveSpeed;
+        }
+
+        if(currentMoveDirection == Vector3.zero)
+        {
+            currentMoveSpeed = 0;
+        } 
+        GetComponent<Player>().animator.SetFloat("moveSpeed", currentMoveSpeed);
     }
     
     
@@ -84,12 +102,13 @@ public class PlayerController : MonoBehaviour
     {
         moveInputs.x = value.Get<Vector2>().x;
         moveInputs.z = value.Get<Vector2>().y;
-        currentMoveDirection = moveInputs; 
+        currentMoveDirection = moveInputs;
+        //Debug.Log(currentMoveDirection); 
     }
 
     void OnSprint(InputValue value)
     {
-        sprinting = value.isPressed;
+        sprinting = value.isPressed; 
     }
 
     void OnLook(InputValue value)
