@@ -11,20 +11,22 @@ public class WorldMeshGenerator : MonoBehaviour
 
     public float worldSizeX;
     public float worldSizeZ;
+    public float heightToTestHeightFrom;
     [Range(.01f, 1f)] public float editorTerrainResolution = 1f;
     public float gameTerrianResolution = 3f;
 
     float resolutionToUse;
     public bool bakeCollider;
-    public bool useShader = false; 
 
     public Material heightMapMaterial;
+    public bool generateWaterMesh = true;
     public Material flatWaterMaterial;
-    public string layerToAdd;
 
-    //public bool usePerlinNoiseMap = false;
+    public NoiseSampler noiseData;
 
-    public NoiseData noiseData;
+    //public bool useMultipleNoiseDatas = false;
+    //for the new system that itterates over each of these to get more useful terrain
+    //public List<NoiseSampler> noiseDatas = new List<NoiseSampler>();
     //public IHeightMap noisesMap;
 
     public AnimationCurve heightCurve;
@@ -46,16 +48,24 @@ public class WorldMeshGenerator : MonoBehaviour
     const int textureSize = 512;
     const TextureFormat textureFormat = TextureFormat.RGB565;
 
-    public float GetHeightAtPoint(Vector3 point)
+    public float GetHeightAtPoint(Vector2 point)
     {
-        float noise =  noiseData.GetNoiseAtPointGPU(point);
-        float scaledNoise = Mathf.InverseLerp(-1, 1, noise);
-        //Debug.Log(noise);
-       //Debug.Log(scaledNoise);
-        float evaluatedHeight = ((heightCurve.Evaluate(scaledNoise) * 2 -1 ) * heightScale) + transform.position.y;
-        //Debug.Log(evaluatedHeight);
-        return evaluatedHeight;
+        RaycastHit hitInfo;
+        if(Physics.Raycast(new Vector3(point.x, heightToTestHeightFrom, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
+        {
+            return hitInfo.point.y;
+        }
 
+        throw new System.OverflowException("could not find terrain with the raycast");
+        return 0;
+
+        // float noise =  noiseData.Sample(new Vector2(point.x, point.z));
+        // float scaledNoise = Mathf.InverseLerp(-1, 1, noise);
+        // //Debug.Log(noise);
+        // //Debug.Log(scaledNoise);
+        // float evaluatedHeight = ((heightCurve.Evaluate(scaledNoise) * 2 -1 ) * heightScale) + transform.position.y;
+        // //Debug.Log(evaluatedHeight);
+        // return evaluatedHeight;
     }
 
     public void ApplyToMaterial(Material material)
@@ -95,13 +105,17 @@ public class WorldMeshGenerator : MonoBehaviour
 
     void Awake()
     {
-        noiseData.Configure();
+        noiseData.Reset();
         GenerateNewChuks();
         //GenerateWater();
     }
 
     void GenerateWater()
     {
+        if (!generateWaterMesh)
+        {
+            return;
+        }
         //Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
         float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
         // float topOfWater = 100f;
@@ -154,7 +168,7 @@ public class WorldMeshGenerator : MonoBehaviour
         worldSizeX = totalVerticiesX * spaceBetweenVerticies;
         int totalVerticiesZ = Mathf.CeilToInt(worldSizeZ * resolutionToUse);
 
-        noiseData.Configure();
+        noiseData.Reset();
         noiseData.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
 
         int chunkID = 0;
@@ -172,12 +186,9 @@ public class WorldMeshGenerator : MonoBehaviour
                 chunk.bakeCollider = bakeCollider;
                 chunk.transform.SetParent(transform);
                 chunk.CreateMesh();
-                if (useShader)
-                {
-                    chunk.ApplyNoiseGPU();
-                } else {
-                    chunk.ApplyNoise();
-                }
+                
+                chunk.SetNoiseToHeight();
+
                     //Debug.Log(noiseData.minNoiseHeight + "    " + noiseData.maxNoiseHeight);
                 chunk.gameObject.layer = gameObject.layer;
                 chunkID++;
@@ -189,9 +200,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
         foreach(TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
         {
-            var minMax =    (useShader)
-                            ? chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight)
-                            : chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight);
+            var minMax = chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight);
 
             if (minMax.maxHeight > maxMeshHeight)
             {
@@ -220,12 +229,8 @@ public class WorldMeshGenerator : MonoBehaviour
             if(t.TryGetComponent<TerrainChunk>(out chunk))
             {
                 chunk.SetNoiseData(noiseData);
-                if (useShader)
-                {
-                    chunk.ApplyNoiseGPU();
-                } else {
-                    chunk.ApplyNoise();
-                }
+                chunk.SetNoiseToHeight();
+
             chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight);
             chunk.UpdateMesh();
             }
@@ -267,11 +272,6 @@ public class WorldMeshGenerator : MonoBehaviour
         Vector2 centre = new Vector2(worldSizeX / 2 + transform.position.x, worldSizeZ / 2 + transform.position.z);
 
         return centre;
-    }
-
-    void OnBlock()
-    {
-        GetHeightAtPoint(new Vector3(1000, 0, 1000));
     }
 
 }}

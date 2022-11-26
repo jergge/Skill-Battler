@@ -25,13 +25,13 @@ public class TerrainChunk : MonoBehaviour
 
     float heightScale;
 
-    NoiseData pNoise;
+    NoiseSampler pNoise;
     Material material;
     AnimationCurve heightCurve;
 
     int vertexCount => (xSize +1) * (zSize +1);
     
-    public void Configure(int xSize, int zSize, Vector3 position,float spaceBetweenVerticies, NoiseData pNoise, AnimationCurve heightCurve, float heightScale, Material mat)
+    public void Configure(int xSize, int zSize, Vector3 position,float spaceBetweenVerticies, NoiseSampler pNoise, AnimationCurve heightCurve, float heightScale, Material mat)
     {
         this.xSize = xSize;
         this.zSize = zSize;
@@ -46,7 +46,7 @@ public class TerrainChunk : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void SetNoiseData(NoiseData data)
+    public void SetNoiseData(NoiseSampler data)
     {
         pNoise = data;
     }
@@ -82,23 +82,9 @@ public class TerrainChunk : MonoBehaviour
         }
     }
 
-    public void ApplyNoise()
+    public void SetNoiseToHeight()
     {
-        // for (int i = 0, z = 0; z < zSize; z++) {
-        //     for (int x = 0; x < xSize; x++)
-        //     {
-        //         verticies[i].y = pNoise.GetNoiseAtPoint(verticies[i]+ transform.position);
-        //         i ++;
-        //     }
-        // }
-
-        verticies = pNoise.EditNoiseAtPoints(verticies, transform.position);
-
-    }
-
-    public void ApplyNoiseGPU()
-    {
-        verticies = pNoise.EditNoiseAtPointsGPU(verticies, transform.position);
+        verticies = pNoise.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
     }
 
     public (float minHeight, float maxHeight) ApplyHeight(float minNoise, float maxNoise)

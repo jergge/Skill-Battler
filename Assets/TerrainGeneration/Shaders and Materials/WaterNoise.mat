@@ -29,11 +29,11 @@ Material:
     m_Floats:
     - BaseHeight: -2.85
     - PinchInScale: 1.8
-    - SimplexSampleSpeed: 4
-    - SimplexScale: 4.85
+    - SimplexSampleSpeed: 2.72
+    - SimplexScale: 7.09
     - _isToggled: 0
     - ringShift: 0.5
-    - ringStrength: 184.5
+    - ringStrength: 17.39
     - useAlpha: 1
     m_Colors: []
   m_BuildTextureStacks: []

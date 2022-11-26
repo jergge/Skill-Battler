@@ -68,7 +68,7 @@ public class MissilePrefab : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Skill " + name + " colliding with " + other.name);
+        //Debug.Log("Skill " + name + " colliding with " + other.name);
         if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();

@@ -11,7 +11,7 @@ public class MarchingCubeManager : MonoBehaviour
     Vector3[] samplePoints;
     MarchingCube[] marchingCubes;
 
-    public NoiseData noiseData;
+    public NoiseSampler noiseData;
 
     void Update()
     {
@@ -38,7 +38,7 @@ public class MarchingCubeManager : MonoBehaviour
 
     public void CreateMarchingCubes()
     {
-        noiseData.Configure();
+        noiseData.Reset();
         marchingCubes = new MarchingCube[(size.x-1) * (size.y-1 )* (size.z-1)];
 
         for(int z = 0, i = 0; z < size.z-1; z++) 
@@ -95,7 +95,7 @@ public class MarchingCube {
     Vector3 centrePosition;
     float sideLength = 1;
     Quaternion rotation;
-    NoiseData noiseData;
+    NoiseSampler noiseData;
     float cutoff = .5f;
 
     int activeCorners = 0;
@@ -107,7 +107,7 @@ public class MarchingCube {
     Vector3[] singleCorners = new Vector3[8];
     Vector4[] singleCornersWithNoise = new Vector4[8];
 
-    public MarchingCube (Vector3 centrePosition, float sideLength, Quaternion rotation, NoiseData noiseData)
+    public MarchingCube (Vector3 centrePosition, float sideLength, Quaternion rotation, NoiseSampler noiseData)
     {
         this.centrePosition = centrePosition;
         this.sideLength = sideLength;
@@ -154,7 +154,7 @@ public class MarchingCube {
         for (int i = 0; i < singleCorners.Length; i ++)
         {
             Vector3 corner = singleCorners[i];
-            singleCornersWithNoise[i] = new Vector4(corner.x, corner.y, corner.z, noiseData.GetNoiseAtPoint(corner));
+            singleCornersWithNoise[i] = new Vector4(corner.x, corner.y, corner.z, noiseData.Sample(corner));
         }
     }
 
