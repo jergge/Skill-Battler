@@ -25,10 +25,6 @@ public class SpawnManager : MonoBehaviour
         Vector2 mapCentre2D = worldMesh.GetCentre2D();
         Vector3 pos = new Vector3 (mapCentre2D.x, worldMesh.GetHeightAtPoint(new Vector3(mapCentre2D.x, 0, mapCentre2D.y)) + extraHeight, mapCentre2D.y);
 
-        //float spawnHeight = worldMesh.getHeightAtPoint(transform.position);
-
-       // pos = pos + Vector3.up * (spawnHeight+extraHeight + worldMesh.transform.position.y);
-
         GameObject.Instantiate(player, pos, Quaternion.identity);
 
     }

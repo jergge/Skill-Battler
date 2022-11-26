@@ -57,7 +57,6 @@ public class WorldMeshGenerator : MonoBehaviour
         }
 
         throw new System.OverflowException("could not find terrain with the raycast");
-        return 0;
 
         // float noise =  noiseData.Sample(new Vector2(point.x, point.z));
         // float scaledNoise = Mathf.InverseLerp(-1, 1, noise);

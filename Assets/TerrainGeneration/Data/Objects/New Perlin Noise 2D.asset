@@ -20,6 +20,4 @@ MonoBehaviour:
   perlinOffset: {x: 760.7, y: 72.8}
   octaves: 1
   persistence: 0.152
-  lacunarity: 4.55
-  useGPUShader: 0
-  GPUShader: {fileID: 7200000, guid: db8d5f59ba17cc741b717e6800a86492, type: 3}
+  lacunarity: 6.14
