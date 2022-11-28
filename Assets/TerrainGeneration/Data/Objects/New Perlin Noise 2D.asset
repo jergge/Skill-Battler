@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoUpdate: 0
   seed: 117
-  scale: 433.89
-  nextInChain: {fileID: 0}
-  chainOpperation: 0
+  scale: 71.9
   perlinOffset: {x: 760.7, y: 72.8}
-  octaves: 1
-  persistence: 0.152
-  lacunarity: 6.14
+  octaves: 3
+  persistence: 0.27
+  lacunarity: 2.64

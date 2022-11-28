@@ -32,7 +32,7 @@ Material:
     - SimplexSampleSpeed: 2.72
     - SimplexScale: 7.09
     - _isToggled: 0
-    - ringShift: 0.5
+    - ringShift: 0.9
     - ringStrength: 17.39
     - useAlpha: 1
     m_Colors: []

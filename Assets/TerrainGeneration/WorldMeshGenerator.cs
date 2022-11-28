@@ -11,23 +11,20 @@ public class WorldMeshGenerator : MonoBehaviour
 
     public float worldSizeX;
     public float worldSizeZ;
-    public float heightToTestHeightFrom;
-    [Range(.01f, 1f)] public float editorTerrainResolution = 1f;
-    public float gameTerrianResolution = 3f;
+    public float heightToTestHeightFrom = 200;
 
-    float resolutionToUse;
+    //verticies per unity unit
+    [Range(.05f, 3)] public float verteciesPerUnitEditor = 1f;
+    [Range(.05f, 3)] public float verteciesPerUnitGame = 2f;
+    float verticiesPerUnit => (Application.isPlaying) ? verteciesPerUnitGame : verteciesPerUnitEditor;
+
     public bool bakeCollider;
 
     public Material heightMapMaterial;
     public bool generateWaterMesh = true;
     public Material flatWaterMaterial;
 
-    public NoiseSampler noiseData;
-
-    //public bool useMultipleNoiseDatas = false;
-    //for the new system that itterates over each of these to get more useful terrain
-    //public List<NoiseSampler> noiseDatas = new List<NoiseSampler>();
-    //public IHeightMap noisesMap;
+    public NoiseSampler noiseSampler;
 
     public AnimationCurve heightCurve;
     [Range(0,100)]
@@ -35,11 +32,10 @@ public class WorldMeshGenerator : MonoBehaviour
 
     public bool autoUpdate;
 
-    //verticies per unity unit
-    float spaceBetweenVerticies;
 
-    float totalVerticiesX;
-    float totalVerticiesZ;
+    int totalVerticiesX;
+    int totalVerticiesZ;
+
     public Layer[] layers = new Layer[8];
 
     float maxMeshHeight;
@@ -57,14 +53,6 @@ public class WorldMeshGenerator : MonoBehaviour
         }
 
         throw new System.OverflowException("could not find terrain with the raycast");
-
-        // float noise =  noiseData.Sample(new Vector2(point.x, point.z));
-        // float scaledNoise = Mathf.InverseLerp(-1, 1, noise);
-        // //Debug.Log(noise);
-        // //Debug.Log(scaledNoise);
-        // float evaluatedHeight = ((heightCurve.Evaluate(scaledNoise) * 2 -1 ) * heightScale) + transform.position.y;
-        // //Debug.Log(evaluatedHeight);
-        // return evaluatedHeight;
     }
 
     public void ApplyToMaterial(Material material)
@@ -78,15 +66,10 @@ public class WorldMeshGenerator : MonoBehaviour
         Texture2DArray texturesArray = GenerateTextureArray(layers.Select(x => x.texture).ToArray());
         material.SetTexture("baseTextures", texturesArray);
 
-        //material.SetFloat("minHeight", minMeshHeight);
         float tempMin = (heightCurve.Evaluate(-1) *2 -1) * heightScale;
         material.SetFloat("minHeight", tempMin);
-        //Debug.Log(tempMin);
-
         float tempMax = (heightCurve.Evaluate(1) *2 -1) * heightScale;
         material.SetFloat("maxHeight", tempMax);
-        // material.SetFloat("maxHeight", maxMeshHeight);
-        //Debug.Log(heightCurve.Evaluate(1)* heightScale);
     }
 
     Texture2DArray GenerateTextureArray(Texture2D[] textures) 
@@ -104,7 +87,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
     void Awake()
     {
-        noiseData.Reset();
+        noiseSampler.Reset();
         GenerateNewChuks();
         //GenerateWater();
     }
@@ -157,38 +140,57 @@ public class WorldMeshGenerator : MonoBehaviour
 
     public void GenerateNewChuks()
     {
-        
+        //delete all the existing terrain chunks that are children
         ClearChunks();
-        resolutionToUse = (Application.isPlaying) ? gameTerrianResolution : editorTerrainResolution;
-        float spaceBetweenVerticies = 1f / resolutionToUse;
-        // float spaceBetweenVerticies = 1f / resolutionToUse;
 
-        int totalVerticiesX = Mathf.CeilToInt(worldSizeX * resolutionToUse);
-        worldSizeX = totalVerticiesX * spaceBetweenVerticies;
-        int totalVerticiesZ = Mathf.CeilToInt(worldSizeZ * resolutionToUse);
+        //The total # of verticies in each direction of the world mesh
+        totalVerticiesX = Mathf.CeilToInt(worldSizeX * verticiesPerUnit);
+        totalVerticiesZ = Mathf.CeilToInt(worldSizeZ * verticiesPerUnit);
+        // Debug.Log("Total Verticies x / z:     " + totalVerticiesX + " / " + totalVerticiesX);
 
-        noiseData.Reset();
-        noiseData.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
+        //How far apart the verticies must be (according to how many verticies we want per unit)
+        float spaceBetweenVerticiesX = worldSizeX / (float)(totalVerticiesX);
+        float spaceBetweenVerticiesZ = worldSizeZ / (float)(totalVerticiesZ);
+        // Debug.Log("Space between Verticies x / z:     " + spaceBetweenVerticiesX + " / " + spaceBetweenVerticiesZ);
 
+        //the maximum lenght of a chunk along the X or Z dimension
+        float chunkOffsetX = (TerrainChunk.maxSideVertexCount-1) * spaceBetweenVerticiesX;
+        float chunkOffsetZ = (TerrainChunk.maxSideVertexCount-1) * spaceBetweenVerticiesZ;
+        // Debug.Log("Chunk offsets x / z:     " + chunkOffsetX + " / " + chunkOffsetZ);
+
+        int numberOfChunksX = Mathf.CeilToInt(totalVerticiesX / (float)(TerrainChunk.maxSideVertexCount - 1));
+        int numberOfChunksZ = Mathf.CeilToInt(totalVerticiesZ / (float)(TerrainChunk.maxSideVertexCount - 1));
+        // Debug.Log("Number of chunks x / z:     " + numberOfChunksX + " / " + numberOfChunksZ);
+
+        noiseSampler.Reset();
+        noiseSampler.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
+
+        //Label in inspector to ID each chunk
         int chunkID = 0;
-        for( int z = 0; z <= totalVerticiesZ / TerrainChunk.maxSideVertexCount; z++ )
+
+        //the number of verticies for each chunk to create along the direction
+        int verticiesForChunkZ;
+        int verticiesForChunkX;
+
+        for( int z = 0; z < numberOfChunksZ; z++ )
         {
-            int zCount = ( ((z+1) * TerrainChunk.maxSideVertexCount) < totalVerticiesZ ) ? TerrainChunk.maxSideVertexCount : totalVerticiesZ % TerrainChunk.maxSideVertexCount; 
-            for (int x = 0; x <= totalVerticiesX / TerrainChunk.maxSideVertexCount; x++ )
+                verticiesForChunkZ = ( (z != numberOfChunksZ -1) || totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1) == 0 ) ? TerrainChunk.maxSideVertexCount : totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1 ) + 1; 
+            
+            for (int x = 0; x < numberOfChunksX; x++ )
             {
-                int xCount = ( ((x+1) * TerrainChunk.maxSideVertexCount) < totalVerticiesX ) ? TerrainChunk.maxSideVertexCount : totalVerticiesX % TerrainChunk.maxSideVertexCount; 
+                verticiesForChunkX = ( (x != numberOfChunksX -1) || totalVerticiesX % (TerrainChunk.maxSideVertexCount -1) == 0 ) ? TerrainChunk.maxSideVertexCount : totalVerticiesX % (TerrainChunk.maxSideVertexCount-1) + 1; 
+                
                 TerrainChunk chunk = new GameObject("Chunk " + chunkID.ToString()).AddComponent<TerrainChunk>();
+                Vector3 chunkPos = new Vector3(x * chunkOffsetX, 0, z * chunkOffsetZ) + transform.position;
 
-                Vector3 chunkPos = new Vector3(x * (TerrainChunk.maxSideVertexCount-1) / resolutionToUse, 0, z * (TerrainChunk.maxSideVertexCount-1) / resolutionToUse) + transform.position;
-
-                chunk.Configure(xCount, zCount, chunkPos, spaceBetweenVerticies, noiseData, heightCurve, heightScale, heightMapMaterial);
+                chunk.Configure(verticiesForChunkX, verticiesForChunkZ, chunkPos, spaceBetweenVerticiesX, spaceBetweenVerticiesZ, noiseSampler, heightCurve, heightScale, heightMapMaterial);
                 chunk.bakeCollider = bakeCollider;
                 chunk.transform.SetParent(transform);
-                chunk.CreateMesh();
                 
+                chunk.CreateMesh();
                 chunk.SetNoiseToHeight();
 
-                    //Debug.Log(noiseData.minNoiseHeight + "    " + noiseData.maxNoiseHeight);
+                //Debug.Log(noiseData.minNoiseHeight + "    " + noiseData.maxNoiseHeight);
                 chunk.gameObject.layer = gameObject.layer;
                 chunkID++;
             }
@@ -199,7 +201,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
         foreach(TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
         {
-            var minMax = chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight);
+            var minMax = chunk.ApplyHeight(noiseSampler.minNoiseHeight, noiseSampler.maxNoiseHeight);
 
             if (minMax.maxHeight > maxMeshHeight)
             {
@@ -227,19 +229,19 @@ public class WorldMeshGenerator : MonoBehaviour
             TerrainChunk chunk;
             if(t.TryGetComponent<TerrainChunk>(out chunk))
             {
-                chunk.SetNoiseData(noiseData);
+                chunk.SetNoiseData(noiseSampler);
                 chunk.SetNoiseToHeight();
 
-            chunk.ApplyHeight(noiseData.minNoiseHeight, noiseData.maxNoiseHeight);
+            chunk.ApplyHeight(noiseSampler.minNoiseHeight, noiseSampler.maxNoiseHeight);
             chunk.UpdateMesh();
             }
         }
 
-        noiseData.OnVaulesUpdated += RegenerateMeshFromNewNoise;
+        noiseSampler.OnVaulesUpdated += RegenerateMeshFromNewNoise;
     }
     public void ClearChunks()
     {
-        noiseData.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
+        noiseSampler.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
         for (int i = transform.childCount -1; i >= 0; i--)
         {
 
@@ -253,14 +255,14 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         if(!Application.isPlaying)
         {
-            noiseData.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
+            noiseSampler.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
             RegenerateMeshFromNewNoise(); 
         }
     }
 
     void OnValidate()
     {
-        if (noiseData != null)
+        if (noiseSampler != null)
         {
             //noiseData.OnVaulesUpdated += OnVaulesUpdated;
         }

@@ -68,16 +68,6 @@ public abstract class NoiseSampler : UpdateableData
     public abstract Vector3[] SampleOverride(Vector3[] input, ReplaceComponent replace, Vector3 offset);
     public abstract Vector4[] SampleOverride(Vector4[] input, ReplaceComponent replace, Vector4 offset);
 
-    // public abstract float SampleGPU(float input);
-    // public abstract float SampleGPU(Vector2 input);
-    // public abstract float SampleGPU(Vector3 input);
-    // public abstract float SampleGPU(Vector4 input);
-
-    //public abstract Vector3[] EditNoiseAtPointsGPU(Vector3[] input, Vector3 sampleOffset);
-
-    public NoiseSampler nextInChain;
-    public enum ChainOpperation {add, multiply, overideAdd, overideMultiply};
-    public ChainOpperation chainOpperation;
 
     protected void ClearMinMax()
     {

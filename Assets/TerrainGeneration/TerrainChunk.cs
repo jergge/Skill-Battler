@@ -7,7 +7,7 @@ namespace TerrainGeneration{
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider))]
 public class TerrainChunk : MonoBehaviour
 {
-    public static int maxSideVertexCount = 255;
+    public static int maxSideVertexCount = 10;
     
     public Mesh mesh;
 
@@ -16,64 +16,71 @@ public class TerrainChunk : MonoBehaviour
 
     public bool showVertexGizmos = false;
 
-    public float spaceBetweenVerticies = 1;
+    float spaceBetweenVerticiesX;
+    float spaceBetweenVerticiesZ;
 
-    public int xSize = 50;
-    public int zSize = 50;
+    int numVerticiesX;
+    int numVerticiesZ;
 
     public bool bakeCollider = true;
 
     float heightScale;
 
-    NoiseSampler pNoise;
+    NoiseSampler noiseSampler;
     Material material;
     AnimationCurve heightCurve;
-
-    int vertexCount => (xSize +1) * (zSize +1);
     
-    public void Configure(int xSize, int zSize, Vector3 position,float spaceBetweenVerticies, NoiseSampler pNoise, AnimationCurve heightCurve, float heightScale, Material mat)
+    public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position,float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseSampler noiseSampler, AnimationCurve heightCurve, float heightScale, Material material)
     {
-        this.xSize = xSize;
-        this.zSize = zSize;
-        this.spaceBetweenVerticies = spaceBetweenVerticies;
+        this.numVerticiesX = numVerticiesX;
+        this.numVerticiesZ = numVerticiesZ;
+
+        if(numVerticiesX > maxSideVertexCount || numVerticiesZ > maxSideVertexCount)
+        {
+            throw new System.ArgumentOutOfRangeException("You cannot assign more verticies to a chunk that the set limit of: " + maxSideVertexCount);
+        }
+
+        this.spaceBetweenVerticiesX = spaceBetweenVerticiesX;
+        this.spaceBetweenVerticiesZ = spaceBetweenVerticiesZ;
+
         transform.position = position;
-        this.pNoise = pNoise;
+        this.noiseSampler = noiseSampler;
         this.heightCurve = heightCurve;
         this.heightScale = heightScale;
-        this.material = mat;
+        this.material = material;
         // StartUp();
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void SetNoiseData(NoiseSampler data)
+    public void SetNoiseData(NoiseSampler sampler)
     {
-        pNoise = data;
+        this.noiseSampler = sampler;
     }
 
     public void CreateMesh() {
-        verticies = new Vector3[vertexCount];
-        triangles = new int[xSize * zSize * 6];
+        verticies = new Vector3[numVerticiesX * numVerticiesZ];
+        triangles = new int[numVerticiesX * numVerticiesZ * 6];
         
-        for (int i = 0, z = 0; z < zSize; z++) {
-            for (int x = 0; x < xSize; x++)
+        for (int i = 0, z = 0; z < numVerticiesZ; z++) {
+            for (int x = 0; x < numVerticiesX; x++)
             {
-                verticies[i] = new Vector3(x*spaceBetweenVerticies, 0, z*spaceBetweenVerticies);
+                verticies[i] = new Vector3(x*spaceBetweenVerticiesX, 0, z*spaceBetweenVerticiesZ);
                 i ++;
             }
         }
         
         int vert = 0, tri = 0;
-        for (int z = 0; z < zSize-1; z++)
+        for (int z = 0; z < numVerticiesZ-1; z++)
         {
-            for (int x = 0; x < xSize-1; x++)
+            for (int x = 0; x < numVerticiesX-1; x++)
             {
                 triangles[tri + 0] = vert + 0;
-                triangles[tri + 1] = vert + 0 + xSize;
+                triangles[tri + 1] = vert + 0 + numVerticiesX;
                 triangles[tri + 2] = vert + 1;
                 triangles[tri + 3] = vert + 1;
-                triangles[tri + 4] = vert + 0 + xSize;
-                triangles[tri + 5] = vert + 1 + xSize;
+                triangles[tri + 4] = vert + 0 + numVerticiesX;
+                triangles[tri + 5] = vert + 1 + numVerticiesX;
 
                 vert++;
                 tri += 6;
@@ -84,15 +91,15 @@ public class TerrainChunk : MonoBehaviour
 
     public void SetNoiseToHeight()
     {
-        verticies = pNoise.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
+        verticies = noiseSampler.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
     }
 
     public (float minHeight, float maxHeight) ApplyHeight(float minNoise, float maxNoise)
     {
         float minHeight = float.MaxValue;
         float maxHeight = float.MinValue;
-        for (int i = 0, z = 0; z < zSize; z++) {
-            for (int x = 0; x < xSize; x++)
+        for (int i = 0, z = 0; z < numVerticiesZ; z++) {
+            for (int x = 0; x < numVerticiesX; x++)
             {
                 float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
                 verticies[i].y = newHeight;
