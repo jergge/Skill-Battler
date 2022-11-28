@@ -51,14 +51,14 @@ MonoBehaviour:
   validTargets: 4
   cooldown: 1
   remainingCooldown: 0
+  misslePrefab: {fileID: 3529076918935834263, guid: 75bee520fedf7b64594a634901d25419, type: 3}
   baseDamage: 25
   baseSpeed: 15
   BaseMaxTravelDistance: 30
   MaxTravelTime: 10
   collisionDamage:
     serializedVersion: 2
-    m_Bits: 30720
+    m_Bits: 30848
   collisionDestroy:
     serializedVersion: 2
     m_Bits: 64
-  misslePrefab: {fileID: 3529076918935834263, guid: 75bee520fedf7b64594a634901d25419, type: 3}

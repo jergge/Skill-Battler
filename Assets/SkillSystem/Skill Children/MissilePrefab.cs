@@ -68,7 +68,7 @@ public class MissilePrefab : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Skill " + name + " colliding with " + other.name);
+        Debug.Log("Skill " + name + " colliding with " + other.name);
         if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();
@@ -80,7 +80,7 @@ public class MissilePrefab : MonoBehaviour
                 if(!alreadyDamagedInFrame.Contains(d))
                 {
                     alreadyDamagedInFrame.Add(d);
-                    Debug.Log("Skill " + name + " colliding with " + other.name);
+                    Debug.Log("Skill " + name + " dealing damage to " + other.name);
                     d.TakeDamage(Mathf.RoundToInt(damage));
                     Die();
                 }
