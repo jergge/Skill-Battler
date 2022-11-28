@@ -47,7 +47,8 @@ public class WorldMeshGenerator : MonoBehaviour
     public float GetHeightAtPoint(Vector2 point)
     {
         RaycastHit hitInfo;
-        if(Physics.Raycast(new Vector3(point.x, heightToTestHeightFrom, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
+        Debug.Log("Testing height at point " + point);
+        if(Physics.Raycast(new Vector3(point.x, heightToTestHeightFrom + maxMeshHeight, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
         {
             return hitInfo.point.y;
         }
@@ -174,11 +175,15 @@ public class WorldMeshGenerator : MonoBehaviour
 
         for( int z = 0; z < numberOfChunksZ; z++ )
         {
-                verticiesForChunkZ = ( (z != numberOfChunksZ -1) || totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1) == 0 ) ? TerrainChunk.maxSideVertexCount : totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1 ) + 1; 
+                verticiesForChunkZ = ( (z != numberOfChunksZ -1) || totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1) == 0 ) 
+                                    ? TerrainChunk.maxSideVertexCount 
+                                    : totalVerticiesZ % (TerrainChunk.maxSideVertexCount -1 ) + 1; 
             
             for (int x = 0; x < numberOfChunksX; x++ )
             {
-                verticiesForChunkX = ( (x != numberOfChunksX -1) || totalVerticiesX % (TerrainChunk.maxSideVertexCount -1) == 0 ) ? TerrainChunk.maxSideVertexCount : totalVerticiesX % (TerrainChunk.maxSideVertexCount-1) + 1; 
+                verticiesForChunkX = ( (x != numberOfChunksX -1) || totalVerticiesX % (TerrainChunk.maxSideVertexCount -1) == 0 ) 
+                                    ? TerrainChunk.maxSideVertexCount 
+                                    : totalVerticiesX % (TerrainChunk.maxSideVertexCount-1) + 1; 
                 
                 TerrainChunk chunk = new GameObject("Chunk " + chunkID.ToString()).AddComponent<TerrainChunk>();
                 Vector3 chunkPos = new Vector3(x * chunkOffsetX, 0, z * chunkOffsetZ) + transform.position;
@@ -196,23 +201,12 @@ public class WorldMeshGenerator : MonoBehaviour
             }
         }
 
-        minMeshHeight = float.MaxValue;
-        maxMeshHeight = float.MinValue;
-
+        minMeshHeight = ((heightCurve.Evaluate(0) * 2 - 1) * heightScale);
+        maxMeshHeight = ((heightCurve.Evaluate(1) * 2 - 1) * heightScale);
+        
         foreach(TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
         {
             var minMax = chunk.ApplyHeight(noiseSampler.minNoiseHeight, noiseSampler.maxNoiseHeight);
-
-            if (minMax.maxHeight > maxMeshHeight)
-            {
-                maxMeshHeight = minMax.maxHeight;
-            } 
-            if ( minMax.minHeight < minMeshHeight)
-            {
-                minMeshHeight = minMax.minHeight;
-            }
-
-
             chunk.UpdateMesh();
         }
 

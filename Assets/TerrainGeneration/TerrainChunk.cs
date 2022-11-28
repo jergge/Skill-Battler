@@ -7,7 +7,7 @@ namespace TerrainGeneration{
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider))]
 public class TerrainChunk : MonoBehaviour
 {
-    public static int maxSideVertexCount = 10;
+    public static int maxSideVertexCount = 255;
     
     public Mesh mesh;
 

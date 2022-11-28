@@ -4,7 +4,7 @@ using UnityEngine;
 using TerrainGeneration;
 using System;
 
-
+//should return values between -1 and 1
 public abstract class NoiseSampler : UpdateableData
 {
 
