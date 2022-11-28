@@ -7238,7 +7238,7 @@ MonoBehaviour:
   playerController: {fileID: 5663759525403945936}
   targetInfoLayers:
     serializedVersion: 2
-    m_Bits: 30800
+    m_Bits: 30928
 --- !u!114 &5476147642164595017
 MonoBehaviour:
   m_ObjectHideFlags: 0
