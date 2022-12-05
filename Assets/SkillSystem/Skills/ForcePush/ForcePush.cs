@@ -21,8 +21,6 @@ public class ForcePush : Skill, IActiveSkill
     [Range(0, 180)] public float angleFromCastCentre;
     //public float sphereRadiusForTesting;
 
-
-
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
         if(OnCooldown())
