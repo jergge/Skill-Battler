@@ -7,7 +7,7 @@ using System;
 
 
 namespace SkillSystem{
-    [Obsolete("Use the Missle and MisslePrefab classes now")]
+[Obsolete("Use the Missle and MisslePrefab classes now")]
 public abstract class Projectile : Skill
 {
 

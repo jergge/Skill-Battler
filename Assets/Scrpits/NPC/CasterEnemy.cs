@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CasterEnemy : LivingEntity
@@ -33,7 +34,6 @@ public class CasterEnemy : LivingEntity
     float distanceToCurrentTarget => Vector3.Distance(currentTarget.transform.position, transform.position);
 
     Skill skill;
-
 
     State state = State.patrol;
     // Start is called before the first frame update

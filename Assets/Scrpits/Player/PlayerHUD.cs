@@ -27,8 +27,10 @@ public class PlayerHUD : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
+
         int i = 0;
-        foreach(ManaStats m in GetComponentsInParent<ManaStats>())
+
+        foreach(StatsTracker m in GetComponentsInParent<StatsTracker>())
         {
              PlayerMP mp = GameObject.Instantiate(prefab);
              mp.transform.SetParent(energies.transform);

@@ -7176,9 +7176,9 @@ MonoBehaviour:
   skillHolder: {fileID: 0}
   skillSpawnLocation: {fileID: 0}
   mainEnergyStats: {fileID: 5663759525403945943}
-  attack: {fileID: 263542385365331316, guid: b368a23c08dce60439f0a512d9f0a5c5, type: 3}
-  block: {fileID: 3635482256972591754, guid: 4880cca59a58d374496f1bde4c0da3f1, type: 3}
-  skill1: {fileID: 3853941981888623652, guid: 9b507a543e699b143a22f915a8eafc9e, type: 3}
+  attack: {fileID: 0}
+  block: {fileID: 0}
+  skill1: {fileID: 0}
   skill2: {fileID: 0}
   activeList: []
 --- !u!114 &5663759525403945941

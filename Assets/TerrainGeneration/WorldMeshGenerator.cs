@@ -47,7 +47,7 @@ public class WorldMeshGenerator : MonoBehaviour
     public float GetHeightAtPoint(Vector2 point)
     {
         RaycastHit hitInfo;
-        Debug.Log("Testing height at point " + point);
+        //Debug.Log("Testing height at point " + point);
         if(Physics.Raycast(new Vector3(point.x, heightToTestHeightFrom + maxMeshHeight, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
         {
             return hitInfo.point.y;

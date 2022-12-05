@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
 
-[RequireComponent(typeof(ManaStats), typeof(HealthStats), typeof(SkillManager))]
+[RequireComponent(typeof(StatsTracker), typeof(HealthStats), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
 public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
     public HealthStats HP;
-    public ManaStats MP;
+    public StatsTracker MP;
     public SkillManager skillManager;
     public Animator animator;
     public List<MonoBehaviour> disableOnDie = new List<MonoBehaviour>();
@@ -19,7 +19,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
     protected void Start()
     {
         HP = GetComponent<HealthStats>();
-        MP = GetComponent<ManaStats>();
+        MP = GetComponent<StatsTracker>();
         skillManager = GetComponent<SkillManager>();
     }
 

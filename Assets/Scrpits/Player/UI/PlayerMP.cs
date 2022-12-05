@@ -6,7 +6,7 @@ using SkillSystem;
 
 public class PlayerMP : MonoBehaviour
 {
-    public ManaStats stats;
+    public StatsTracker stats;
 
     public Slider slider;
 
