@@ -8,9 +8,9 @@ public abstract class Missile : Skill
 {
     public MissilePrefab misslePrefab;
     
-    public int baseDamage = 20;
-    public int damage =>
-        GetModifiedValueInt(ModifiableSkillProperty.ModifyValue.damage, baseDamage);
+    public float baseDamage = 20;
+    public float damage =>
+        GetModifiedValue(ModifiableSkillProperty.ModifyValue.damage, baseDamage);
 
     public float baseSpeed = 10;
     public float speed =>
@@ -22,6 +22,6 @@ public abstract class Missile : Skill
 
     public float MaxTravelTime = 10;
 
-    public LayerMask collisionDamage;
-    public LayerMask collisionDestroy;
+    public LayerMask collisionOffload;
+    public LayerMask collisionSelfDestruct;
 }}

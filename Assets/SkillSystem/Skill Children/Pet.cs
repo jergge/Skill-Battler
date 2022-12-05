@@ -7,8 +7,6 @@ namespace SkillSystem.Pet {
 public class Pet : Skill, IActiveSkill, IUpdateDPad
 {
     public PetPrefab petToSummon;
-
-
     PetPrefab summonedPet;
 
     public void Cast(Transform spawnLocation, TargetInfo targetInfo)

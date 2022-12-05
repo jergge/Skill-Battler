@@ -26,26 +26,16 @@ public class FireWall : Skill, IActiveSkill
         base.OnStartInSpellbook();
     }
 
-    public override void OnStartInWorld()
-    {
-        base.OnStartInWorld();
-    }
-
     public override void UpdateInSpellBook()
     {
         base.UpdateInSpellBook();
-    }
-
-    public override void UpdateInWorld()
-    {
-        base.UpdateInWorld();
     }
 
     void GenerateWall(Vector3 dir)
     {
         Vector3[] verticies = new Vector3[numPoints*2];
             // Debug.Log(verticies.Length + " verticies");
-            int numTriangels = (numPoints-1)*2;
+        int numTriangels = (numPoints-1)*2;
             // Debug.Log(numTriangels + " triangles");
         int[] triangles = new int[numTriangels*3];
             // Debug.Log(triangles.Length + " corners of triangles");

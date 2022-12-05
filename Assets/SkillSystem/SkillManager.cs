@@ -6,13 +6,13 @@ using System.Linq;
 using UnityEngine.InputSystem;
 
 namespace SkillSystem {
-[RequireComponent(typeof(ManaStats))]
+[RequireComponent(typeof(StatsTracker))]
 public class SkillManager : MonoBehaviour, IOnCastEvents
 {
     public GameObject skillHolder;
     public Transform skillSpawnLocation;
     public TargetInfo targetInfo = new TargetInfo();
-    public ManaStats mainEnergyStats;
+    public StatsTracker mainEnergyStats;
 
     public event Action<DPadMap> NewDPadMap;
 
@@ -53,17 +53,36 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
             Destroy(t.gameObject);
         }
 
-        InitialSkill(ref attack);
-        InitialSkill(ref block);
-        InitialSkill(ref skill1);
-        InitialSkill(ref skill2);
+        InitialSkill(attack);
+        InitialSkill(block);
+        InitialSkill(skill1);
+        InitialSkill(skill2);
 
     }
 
-    void InitialSkill (ref Skill s )
+    public Skill Aquire(Skill skillToAquire, bool addToActiveBook = false)
     {
-        if (s != null)
-            s = s.Aquire(this);
+        Skill newSkill = GameObject.Instantiate(skillToAquire);
+
+        //Make it nice in the Unity hierachy
+        newSkill.transform.SetParent(skillHolder.transform);
+        //Locate them in the same in game space..
+        newSkill.transform.position = transform.position;
+        //set the object to have the right update and cast methods
+        newSkill.SetSpellState(Skill.SpellState.SpellBook);
+        //disable all the visuals and colliders
+        newSkill.DisableColliders();
+        newSkill.SetSource(gameObject);
+        newSkill.OnStartInSpellbook();
+        return newSkill;
+    }
+
+    void InitialSkill (Skill skill)
+    {
+        if (skill != null)
+        {
+            Aquire(skill);
+        }
     }
    
     void Update()
@@ -118,54 +137,45 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
         this.targetInfo = targetInfo;
         // UseSkill(skill, triggerDown);
 
-        if (skill is IActiveSkill)
+        if (skill is IActiveSkill activeSkill)
         {
-            IActiveSkill s = skill as IActiveSkill;
-            //Debug.Log("Casting without the extras");
-            s.Cast(skillSpawnLocation, targetInfo);
+            activeSkill.Cast(skillSpawnLocation, targetInfo);
         }
     }
 
     protected void UseSkill(Skill skill, bool triggerDown)
     {
-        if (skill is IUpdateDPad && triggerDown)
+        if (skill is IUpdateDPad dPadSkill && triggerDown)
         {
-            IUpdateDPad d = skill as IUpdateDPad;
-
             if (NewDPadMap != null)
             {
-                NewDPadMap(d.GetDPadMap());
+                NewDPadMap(dPadSkill.GetDPadMap());
             }
 
         }
 
-        if (skill is IChanneledSkill && !triggerDown)
+        if (skill is IChanneledSkill channeledSkill && !triggerDown)
         {
-            IChanneledSkill s = skill as IChanneledSkill;
-            s.StopCast();
+            channeledSkill.StopCast();
             //currentlyCasting.Remove(skill);
             return;
         }
 
-        if (skill == null || currentlyCasting.Count() > 0 || skill.cost > mainEnergyStats.GetCurrent())
+        if (skill == null || currentlyCasting.Count() > 0 || skill.cost > mainEnergyStats.current)
         {
             return;
         }
         
 
-        if (skill is IActiveSkill && triggerDown)
+        if (skill is IActiveSkill activeSkill && triggerDown)
         {
             //currentlyCasting = true;
             
-            IActiveSkill activeSkill = skill as IActiveSkill;
-
             CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
 
             CheckForAny checker = new CheckForAny(false);
-            if ( CanICast != null)
-            {
-                CanICast(castInfo, checker);
-            }
+
+            CanICast?.Invoke(castInfo, checker);
 
             if (checker.Found() || skill.OnCooldown())
             {
@@ -174,21 +184,17 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
             activeSkill.Cast(skillSpawnLocation, targetInfo);
 
-            if ( skill is IChanneledSkill)
+            if ( skill is IChanneledSkill cSkill )
             {
-                IChanneledSkill c = skill as IChanneledSkill;
-                c.CastEnded += SkillEnded;
+                cSkill.CastEnded += SkillEnded;
                 currentlyCasting.Add(skill);
             }
 
-            if ( OnAfterCast != null)
-            {
-                //Debug.Log("invoking after cast delegates");
-                OnAfterCast(castInfo);
-            }
+            OnAfterCast?.Invoke(castInfo);
 
-            mainEnergyStats.Reduce(skill.cost);
-        }
+            //mainEnergyStats.Reduce(skill.cost);
+            mainEnergyStats -= skill.cost;
+            }
     }
 
     void SkillEnded(Skill skill)

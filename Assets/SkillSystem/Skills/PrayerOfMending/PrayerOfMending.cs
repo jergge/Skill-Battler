@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 namespace SkillSystem {
 
-
     public class PrayerOfMending : Skill, IActiveSkill
     {
         public float baseHealAmount = 50f;
@@ -50,11 +49,6 @@ namespace SkillSystem {
         public override void UpdateInSpellBook()
         {
             base.UpdateInSpellBook();
-        }
-
-        public override void UpdateInWorld()
-        {
-            base.UpdateInWorld();
         }
 
         void TriggerHeal(DamageInfo info)

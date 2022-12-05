@@ -5,8 +5,12 @@ using System;
 
 namespace SkillSystem.Properties {
 public class SkillPropertyModifier {
-    public ModifiableSkillProperty.ModifyValue value; 
-    protected Func<float, float> method;
+    public ModifiableSkillProperty.ModifyValue value;
+
+    /// <summary>
+    /// Fuction which determines how the base value is changed. Can be called in any order!
+    /// </summary> 
+    protected Func<float, float> changeFunction;
     public enum ModifierType {
         addToBase,
         multiplyBase,
@@ -15,14 +19,19 @@ public class SkillPropertyModifier {
         immunity
     }
 
-    public SkillPropertyModifier (ModifiableSkillProperty.ModifyValue value, Func<float, float> method)
+    public SkillPropertyModifier (ModifiableSkillProperty.ModifyValue value, Func<float, float> changeFuncton)
     {
         this.value = value;
-        this.method = method;
+        this.changeFunction = changeFuncton;
     }
 
-    public float Evaluate(float f) {        
-        return method(f);
+    /// <summary>
+    /// Applies the changeFunction to the input and returns the result
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public float Evaluate(float input) {        
+        return changeFunction(input);
     } 
         
 }}

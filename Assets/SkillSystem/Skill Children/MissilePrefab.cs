@@ -39,8 +39,8 @@ public class MissilePrefab : MonoBehaviour
         initialTarget = targetInfo.position;
         maxTravelDistance = m.maxTravelDistance;
         MaxTravelTime = m.MaxTravelTime;
-        collisionDamage = m.collisionDamage;
-        collisionDestroy = m.collisionDestroy;
+        collisionDamage = m.collisionOffload;
+        collisionDestroy = m.collisionSelfDestruct;
         source = m.GetSource();
         validTargets = m.validTargets;
     }

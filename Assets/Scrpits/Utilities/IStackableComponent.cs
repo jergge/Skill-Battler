@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IStackableComponent
+namespace SkillSystem
 {
-    public int stackCount {get; set;}
+    public interface IStackableComponent
+    {
+        public int stackCount { get; set; }
 
-    public void AddStacks(int count) {
-        stackCount += count;
+        public virtual void AddStacks(int count)
+        {
+            stackCount += count;
+        }
     }
 }

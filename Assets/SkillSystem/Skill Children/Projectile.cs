@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem.Properties;
 using Jergge.Extensions;
+using System;
 
 
 namespace SkillSystem{
+    [Obsolete("Use the Missle and MisslePrefab classes now")]
 public abstract class Projectile : Skill
 {
 

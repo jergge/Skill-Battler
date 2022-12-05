@@ -9,7 +9,7 @@ public class WaterShield : Skill, IChanneledSkill
     bool casting;
     public WaterShieldPrefab shieldPrefab;
     public float energyDrainPerSecond = 10;
-    ManaStats energy;
+    StatsTracker energy;
 
     public event Action<Skill> CastEnded;
 
@@ -34,19 +34,19 @@ public class WaterShield : Skill, IChanneledSkill
     {
         casting = true;
 
-        WaterShieldPrefab s = GameObject.Instantiate<WaterShieldPrefab>(shieldPrefab);
-        s.transform.position = source.transform.position;
-        s.source = source;
+        WaterShieldPrefab shield = GameObject.Instantiate<WaterShieldPrefab>(shieldPrefab);
+        shield.transform.position = source.transform.position;
+        shield.source = source;
 
         if(player != null)
         {
             //ffplayer.playerCameraController.SetLocation(player.playerCameraController.presets[1]);
         }
 
-        while(casting && energy.GetCurrent() > energyDrainPerSecond*Time.deltaTime)
+        while(casting && energy.current > energyDrainPerSecond*Time.deltaTime)
         {
             //s.transform.position = source.transform.position;
-            energy.Reduce(energyDrainPerSecond * Time.deltaTime);
+            energy -= (energyDrainPerSecond * Time.deltaTime);
             yield return null;
         }
 
@@ -54,7 +54,7 @@ public class WaterShield : Skill, IChanneledSkill
         {
             CastEnded(this);
         }
-        Destroy(s.gameObject);
+        Destroy(shield.gameObject);
 
         if(player != null)
         {
@@ -65,7 +65,7 @@ public class WaterShield : Skill, IChanneledSkill
 
     public override void OnStartInSpellbook()
     {
-        energy = source.AddComponent<ManaStats>();
+        energy = source.AddComponent<StatsTracker>();
         energy.baseValue = 50f;
         energy.regenPerSecond = 2;
     }

@@ -17,21 +17,19 @@ public class WaterShieldPrefab : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        MissilePrefab p;
-        if ( other.gameObject.TryGetComponent<MissilePrefab>(out p))
+        MissilePrefab missile;
+        if ( other.gameObject.TryGetComponent<MissilePrefab>(out missile) )
         {
-            if (p.source.layer != source.gameObject.layer)
+            if (missile.source.layer != source.gameObject.layer)
             {
-            Destroy(other.gameObject);
-            }
+                Destroy(other.gameObject);
 
-            ManaStats ms;
-            if(source.TryGetComponent<ManaStats>(out ms))
-            {
-                ms.Regen(20);
+                StatsTracker sourceStats;
+                if(source.TryGetComponent<StatsTracker>(out sourceStats))
+                {
+                    sourceStats += 20;
+                }
             }
         }
     }
-
-
 }

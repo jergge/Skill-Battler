@@ -64,11 +64,6 @@ public class ForcePush : Skill, IActiveSkill
         base.OnStartInSpellbook();
     }
 
-    public override void OnStartInWorld()
-    {
-        base.OnStartInWorld();
-    }
-
     public override void UpdateInSpellBook()
     {
         base.UpdateInSpellBook();
@@ -78,11 +73,6 @@ public class ForcePush : Skill, IActiveSkill
         } else {
             hitRadius += Time.deltaTime * radiusIncresePerSecond;
         }
-    }
-
-    public override void UpdateInWorld()
-    {
-        throw new System.NotImplementedException();
     }
 
     void OnDrawGizmos()
