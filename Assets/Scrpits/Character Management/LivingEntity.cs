@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
 
-[RequireComponent(typeof(StatsTracker), typeof(HealthStats), typeof(SkillManager))]
+[RequireComponent(typeof(StatsTracker), typeof(StatsTracker), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
 public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
-    public HealthStats HP;
+    public StatsTracker HP;
     public StatsTracker MP;
     public SkillManager skillManager;
     public Animator animator;
@@ -18,9 +18,9 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
 
     protected void Start()
     {
-        HP = GetComponent<HealthStats>();
-        MP = GetComponent<StatsTracker>();
-        skillManager = GetComponent<SkillManager>();
+        // HP = GetComponent<HealthStats>();
+        // MP = GetComponent<StatsTracker>();
+        // skillManager = GetComponent<SkillManager>();
     }
 
     public event Action<CastEventInfo, CheckForAny> CanICast;
@@ -57,31 +57,30 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
     }
 
     public event Action<DamageInfo> OnTakeDamage;
-    public DamageInfo TakeDamage(int d)
+    public DamageInfo TakeDamage(float damage)
     {
-        var stats = HP.SubtractHP(d);
-        Debug.Log(name + " took " + stats.delta + " damage");
-        //HP.SubtractHP(d);
+        //var stats = HP.SubtractHP(damage);
 
-        DamageInfo info = new DamageInfo((stats.current == 0) ? true : false, d, stats.current);
-        
-        // if(OnTakeDamage != null)
-        // {
-        //     OnTakeDamage(info);
-        // }
+        HP -= damage;
+        var HPChangeInfo = HP.afterLastChange;
 
-        OnTakeDamage?.Invoke(info);
+        Debug.Log(name + " took " + HPChangeInfo.delta + " damage");
+
+        DamageInfo damageInfo = new DamageInfo(HPChangeInfo);
+        //DamageInfo damageInfo = new DamageInfo((statsInfo.current == 0) ? true : false, damage, statsInfo.current);
+
+        OnTakeDamage?.Invoke(damageInfo);
         
-        if (stats.current == 0)
+        if (HPChangeInfo.current == 0)
         {
             OnDeath();
         }
-        return info;
+        return damageInfo;
     }
 
-    public void TakeHeal(int h)
+    public void TakeHeal(float h)
     {
-        HP.AddHP(h);
+        HP += h;
     }
 
     public void ApplyForce(Vector3 directon, float magnitude, ForceMode forceMode)

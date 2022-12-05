@@ -7051,13 +7051,14 @@ GameObject:
   - component: {fileID: 8843701162680320322}
   - component: {fileID: 5663759525403945937}
   - component: {fileID: 5663759525403945936}
-  - component: {fileID: 5663759525403945943}
   - component: {fileID: 5663759525403945942}
   - component: {fileID: 5663759525403945941}
   - component: {fileID: 5663759525403945940}
   - component: {fileID: 5663759525403945947}
   - component: {fileID: 5476147642164595017}
   - component: {fileID: 2434658161012793651}
+  - component: {fileID: 8331990640365655062}
+  - component: {fileID: 4209795977568627087}
   m_Layer: 11
   m_Name: New Player HumanMale_Character
   m_TagString: Untagged
@@ -7146,21 +7147,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   playerCamera: {fileID: 6079973094266683286}
---- !u!114 &5663759525403945943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8843701162680320323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a46d534f92a8ba64984ddab21309a7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseValue: 200
-  bonus: 0
-  regenPerSecond: 0
 --- !u!114 &5663759525403945942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7175,7 +7161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillHolder: {fileID: 0}
   skillSpawnLocation: {fileID: 0}
-  mainEnergyStats: {fileID: 5663759525403945943}
+  mainEnergyStats: {fileID: 0}
   attack: {fileID: 0}
   block: {fileID: 0}
   skill1: {fileID: 0}
@@ -7224,8 +7210,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NPCHeadTarget: {fileID: 4352178006330842958}
   NPCBodyTarget: {fileID: 1807340663975563580}
-  HP: {fileID: 5663759525403945940}
-  MP: {fileID: 5663759525403945943}
+  HP: {fileID: 4209795977568627087}
+  MP: {fileID: 8331990640365655062}
   skillManager: {fileID: 5663759525403945942}
   animator: {fileID: 8843701162680320322}
   disableOnDie:
@@ -7286,6 +7272,36 @@ MonoBehaviour:
     source: {fileID: 0}
   - variableName: current
     source: {fileID: 0}
+--- !u!114 &8331990640365655062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843701162680320323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 100
+  bonus: 0
+  regenPerSecond: 0
+--- !u!114 &4209795977568627087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843701162680320323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 100
+  bonus: 0
+  regenPerSecond: 0
 --- !u!1 &8843701162683525376
 GameObject:
   m_ObjectHideFlags: 0

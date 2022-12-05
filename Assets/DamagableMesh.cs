@@ -11,7 +11,7 @@ public class DamagableMesh : MonoBehaviour, IDamageable
         return passDamageTarget.IsDead();
     }
 
-    public DamageInfo TakeDamage(int damage)
+    public DamageInfo TakeDamage(float damage)
     {
         return passDamageTarget.TakeDamage(damage);
     }

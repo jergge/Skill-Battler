@@ -11,7 +11,7 @@ public class Tree : MonoBehaviour, IDamageable
         throw new System.NotImplementedException();
     }
 
-    public DamageInfo TakeDamage(int damage)
+    public DamageInfo TakeDamage(float damage)
     {
         if ( damage >= SingleHitDestroyAmount )
         {

@@ -9,7 +9,7 @@ public class MissilePrefab : MonoBehaviour
 {
 
     float speed;
-    int damage;
+    float damage;
     float maxTravelDistance;
     float distanceTraveled;
     float MaxTravelTime;
@@ -63,7 +63,7 @@ public class MissilePrefab : MonoBehaviour
         if((timeAlive > MaxTravelTime) || (distanceTraveled > maxTravelDistance))
         {
             Destroy(gameObject);
-        }
+        } 
     }
 
     void OnTriggerEnter(Collider other)

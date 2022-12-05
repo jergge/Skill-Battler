@@ -2,24 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Obsolete("Use the more generic StatsTracker instead")]
 public class HealthStats : MonoBehaviour
 {
-    public int baseValue = 100;
-    public int bonus;
-    int current;
-    public int regenPerSecond;
+    public float baseValue = 100;
+    public float bonus;
+    public float current { get; protected set; }
+    public float regenPerSecond;
     
-    int max => baseValue + bonus;
-    public float currentPercent => current / (float)(baseValue + bonus);
+    float maxValue => baseValue + bonus;
+    public float currentPercent => current / (float)maxValue;
 
     void Start()
     {
         current = baseValue;
     }
 
-    public (int delta, int current, int max, float percent) SubtractHP(int d)
+    void Update()
     {
-        int delta = current;
+        current = Mathf.Min(current + (regenPerSecond * Time.deltaTime), maxValue);
+    }
+
+    public (float delta, float current, float max, float percent) SubtractHP(int d)
+    {
+        float delta = current;
         current -= d;
         if (current <=0)
         {
@@ -27,15 +33,15 @@ public class HealthStats : MonoBehaviour
         }
         
         delta -= current;
-        return (delta, current, max, current/(float)max);
+        return (delta, current, maxValue, current/(float)maxValue);
     }
 
     public bool AddHP(int d)
     {
         current += d;
-        if (current >= max)
+        if (current >= maxValue)
         {
-            current = max;
+            current = maxValue;
             return true;
         }
         return false;
@@ -50,9 +56,9 @@ public class HealthStats : MonoBehaviour
     public void RemoveBonusHP(int d)
     {
         bonus -= d;
-        if (current > max)
+        if (current > maxValue)
         {
-            current = max;
+            current = maxValue;
         }
     }
 }
