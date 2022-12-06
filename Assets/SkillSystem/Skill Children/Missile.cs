@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem.Properties;
+using DamageSystem;
 
 namespace SkillSystem{
 public abstract class Missile : Skill
@@ -11,6 +12,8 @@ public abstract class Missile : Skill
     public float baseDamage = 20;
     public float damage =>
         GetModifiedValue(ModifiableSkillProperty.ModifyValue.damage, baseDamage);
+
+    public DamageUnit.DamageType damageType;
 
     public float baseSpeed = 10;
     public float speed =>

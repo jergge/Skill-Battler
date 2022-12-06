@@ -53,10 +53,10 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
             Destroy(t.gameObject);
         }
 
-        InitialSkill(attack);
-        InitialSkill(block);
-        InitialSkill(skill1);
-        InitialSkill(skill2);
+        InitialSkill(ref attack);
+        InitialSkill(ref block);
+        InitialSkill(ref skill1);
+        InitialSkill(ref skill2);
 
     }
 
@@ -77,11 +77,11 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
         return newSkill;
     }
 
-    void InitialSkill (Skill skill)
+    void InitialSkill (ref Skill skill)
     {
         if (skill != null)
         {
-            Aquire(skill);
+            skill = Aquire(skill);
         }
     }
    
@@ -135,7 +135,6 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
     public void NPCUseSkill(Skill skill, TargetInfo targetInfo, bool triggerDown)
     {
         this.targetInfo = targetInfo;
-        // UseSkill(skill, triggerDown);
 
         if (skill is IActiveSkill activeSkill)
         {
@@ -145,8 +144,15 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
     protected void UseSkill(Skill skill, bool triggerDown)
     {
+        if (skill is null)
+        {
+            return;
+        }
+
+        Debug.Log("using skill: " + skill.name);
         if (skill is IUpdateDPad dPadSkill && triggerDown)
         {
+            Debug.Log("Skill is IUpdateDPad");
             if (NewDPadMap != null)
             {
                 NewDPadMap(dPadSkill.GetDPadMap());
@@ -156,6 +162,7 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
         if (skill is IChanneledSkill channeledSkill && !triggerDown)
         {
+            Debug.Log("Skill is IChanneledSkill");
             channeledSkill.StopCast();
             //currentlyCasting.Remove(skill);
             return;
@@ -163,12 +170,14 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
         if (skill == null || currentlyCasting.Count() > 0 || skill.cost > mainEnergyStats.current)
         {
+            Debug.Log("Skill is null or something already casting or costs too much");
             return;
         }
         
 
         if (skill is IActiveSkill activeSkill && triggerDown)
         {
+            Debug.Log("skill is IActiveSkill");
             //currentlyCasting = true;
             
             CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
@@ -177,11 +186,13 @@ public class SkillManager : MonoBehaviour, IOnCastEvents
 
             CanICast?.Invoke(castInfo, checker);
 
-            if (checker.Found() || skill.OnCooldown())
+            if (checker.Found() || skill.CoolingDown())
             {
+                Debug.Log("Checker says skill cannot be cast: Found():" + checker.Found() + "   OnCooldown():" + skill.CoolingDown());
                 return;
             }
 
+            Debug.Log("Casting the active skill: " + skill.name);
             activeSkill.Cast(skillSpawnLocation, targetInfo);
 
             if ( skill is IChanneledSkill cSkill )

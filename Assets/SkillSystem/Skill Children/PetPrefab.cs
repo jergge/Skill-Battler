@@ -32,7 +32,6 @@ public class PetPrefab : LivingEntity
 
     PetState petState = PetState.follow;
 
-    public event Action OnDeath;
 
     new void Start()
     {

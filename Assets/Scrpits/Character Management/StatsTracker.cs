@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StatsTracker : MonoBehaviour
 {
+    public string niceName;
     public float baseValue = 100;
     public float bonus;
     public float current { get; protected set; }
@@ -12,6 +13,9 @@ public class StatsTracker : MonoBehaviour
     float maxValue => baseValue + bonus;
     public float currentPercent => current / (float)maxValue;
 
+    /// <summary>
+    /// Holds information about the last change (+ or - operation) that occured
+    /// </summary>
     public InfoFromLastOperator afterLastChange;
 
     void Start()

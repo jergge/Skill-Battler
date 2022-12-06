@@ -15,7 +15,7 @@ public class WaterShield : Skill, IChanneledSkill
 
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
-        if (!OnCooldown())
+        if (!CoolingDown())
         {
             StartCoroutine(Channel());
 

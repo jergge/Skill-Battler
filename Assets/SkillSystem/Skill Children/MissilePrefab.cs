@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Jergge.Extensions;
 using UnityEngine;
 using SkillSystem.Properties;
+using DamageSystem;
 
 namespace SkillSystem{
 public class MissilePrefab : MonoBehaviour
@@ -10,6 +11,7 @@ public class MissilePrefab : MonoBehaviour
 
     float speed;
     float damage;
+    DamageUnit.DamageType damageType;
     float maxTravelDistance;
     float distanceTraveled;
     float MaxTravelTime;
@@ -35,6 +37,7 @@ public class MissilePrefab : MonoBehaviour
     {
         speed = m.speed;
         damage = m.damage;
+        damageType = m.damageType;
         targetObject = targetInfo.target;
         initialTarget = targetInfo.position;
         maxTravelDistance = m.maxTravelDistance;
@@ -53,8 +56,11 @@ public class MissilePrefab : MonoBehaviour
         transform.position += moveAmount;
         
         timeAlive += Time.deltaTime;
-        distanceTraveled += speed* Time.deltaTime;
+        distanceTraveled += speed * Time.deltaTime;
+    }
 
+    void FixedUpdate()
+    {
         alreadyDamagedInFrame.Clear();
     }
 
@@ -74,14 +80,15 @@ public class MissilePrefab : MonoBehaviour
             Die();
         } else if ( collisionDamage.Contains(other.gameObject) && Skill.IsValidTarget(source, other.gameObject, validTargets))
         {
-            IDamageable d;
-            if(other.gameObject.TryGetComponent<IDamageable>(out d))
+            IDamageable damagable;
+            if(other.gameObject.TryGetComponent<IDamageable>(out damagable))
             {
-                if(!alreadyDamagedInFrame.Contains(d))
+                if(!alreadyDamagedInFrame.Contains(damagable))
                 {
-                    alreadyDamagedInFrame.Add(d);
+                    alreadyDamagedInFrame.Add(damagable);
                     Debug.Log("Skill " + name + " dealing damage to " + other.name);
-                    d.TakeDamage(Mathf.RoundToInt(damage));
+                    // damagable.TakeDamage(damage);
+                    damagable.TakeDamage(new DamageUnit(damage, damageType, source));
                     Die();
                 }
             }

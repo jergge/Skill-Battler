@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4804057c27e6504c8336cd51ebd18a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellName: WaterPulse
-  basicDescription: 
+  skillName: Water Pulse
+  basicDescription: Shoots a short range, slow moving pulse of water towards an enemy
   icon: {fileID: 21300000, guid: 40dcedd373ebb6443827d0bc2ae4c855, type: 3}
   cost: 10
   validTargets: 4
@@ -53,12 +53,13 @@ MonoBehaviour:
   remainingCooldown: 0
   misslePrefab: {fileID: 3529076918935834263, guid: 75bee520fedf7b64594a634901d25419, type: 3}
   baseDamage: 25
+  damageType: 4
   baseSpeed: 15
   BaseMaxTravelDistance: 30
   MaxTravelTime: 10
-  collisionDamage:
+  collisionOffload:
     serializedVersion: 2
     m_Bits: 30848
-  collisionDestroy:
+  collisionSelfDestruct:
     serializedVersion: 2
     m_Bits: 64

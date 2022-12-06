@@ -75,14 +75,17 @@ public abstract class Skill : MonoBehaviour
     /// <summary>
     /// Is the Skill currently cooling down? Is it unable to be used because of this?
     /// </summary>
-    public bool OnCooldown() {
-        return (remainingCooldown >=0) ? true : false;
+    public bool CoolingDown() 
+    {
+        Debug.Log(remainingCooldown);
+        return (remainingCooldown > 0) ? true : false;
     }
 
     /// <summary>
     /// Sets the Skill's current cooldown to its base cooldown
     /// </summary>
-    protected void ResetCooldown() {
+    protected void ResetCooldown() 
+    {
         remainingCooldown = cooldown;
     }
 
@@ -185,7 +188,7 @@ public abstract class Skill : MonoBehaviour
         source = gameObject;
     }
 
-    [Obsolete("Please use method SkillManager.Aquire(Skill s) instead")]
+    [Obsolete("Please use method SkillManager.Aquire(Skill) instead")]
     public Skill Aquire(SkillManager manager)
     {
         Skill temp = GameObject.Instantiate(this);
@@ -289,7 +292,8 @@ public abstract class Skill : MonoBehaviour
     {
         if ( !cooldownPaused )
         {
-            remainingCooldown -= (Time.deltaTime * cooldownRate);
+            //remainingCooldown -= (Time.deltaTime * cooldownRate);
+            remainingCooldown = Mathf.Max(remainingCooldown - (Time.deltaTime * cooldownRate), 0);
         }
     }
 

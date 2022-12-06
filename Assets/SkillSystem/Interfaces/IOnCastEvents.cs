@@ -17,7 +17,6 @@ public interface IOnCastEvents
     public event Action<CastEventInfo> OnBeforeCast;
 
     //check for any triggers after the spell in cast
-    //including costs that get paid???? somewhere this is happening....???!
     public event Action<CastEventInfo> OnAfterCast;
 }
 

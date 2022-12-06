@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using SkillSystem.Properties;
+using DamageSystem;
 
 namespace SkillSystem { namespace Utilities {
 

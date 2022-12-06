@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7175a7361e2d78b429b162fdcbc54074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellName: 
-  basicDescription: 
+  skillName: Fireball
+  basicDescription: Shoots a fast moving, long range ball of fire in the targeted
+    direction
   icon: {fileID: 0}
   cost: 0
   validTargets: 4
@@ -53,12 +54,13 @@ MonoBehaviour:
   remainingCooldown: 0
   misslePrefab: {fileID: 545934043473865816, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
   baseDamage: 20
+  damageType: 2
   baseSpeed: 30
   BaseMaxTravelDistance: 50
   MaxTravelTime: 4
-  collisionDamage:
+  collisionOffload:
     serializedVersion: 2
-    m_Bits: 30720
-  collisionDestroy:
+    m_Bits: 30848
+  collisionSelfDestruct:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 0

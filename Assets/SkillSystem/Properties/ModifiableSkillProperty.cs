@@ -24,10 +24,10 @@ public static class ModifiableSkillProperty {
         foreach ( var list in allMods )
         {
             //Debug.Log("in first foreach loop");
-            foreach (var func in list.GetPropertyModifiers())
+            foreach (var function in list.GetPropertyModifiers())
             {
-                modifiedValue = (func.value == value) ? func.Evaluate(modifiedValue) : modifiedValue;
-                if (func.value == ModifyValue.damage)
+                modifiedValue = (function.value == value) ? function.Evaluate(modifiedValue) : modifiedValue;
+                if (function.value == ModifyValue.damage)
                 {
                     //Debug.Log("mod Property Value is now " + modifiedValue);    
                 }
@@ -36,6 +36,7 @@ public static class ModifiableSkillProperty {
         // Debug.Log(this.ToString());
         return modifiedValue;
     }
+    [Obsolete("Do the rounding yourself if you need to...")]
     public static int GetModifiedValueInt(ModifyValue value, float baseValue , GameObject source)
          => Mathf.RoundToInt( GetModifiedValue(  value,  baseValue ,  source ) );
 

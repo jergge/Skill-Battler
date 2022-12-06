@@ -11,7 +11,7 @@ public class Pet : Skill, IActiveSkill, IUpdateDPad
 
     public void Cast(Transform spawnLocation, TargetInfo targetInfo)
     {
-        if(OnCooldown())
+        if(CoolingDown())
         {
             return;
         }

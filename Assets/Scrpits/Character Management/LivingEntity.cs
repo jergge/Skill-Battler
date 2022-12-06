@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
+using DamageSystem;
 
-[RequireComponent(typeof(StatsTracker), typeof(StatsTracker), typeof(SkillManager))]
+[RequireComponent(typeof(StatsTracker), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
-public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvents
+public class LivingEntity : MonoBehaviour, IDamageable, IOnDamageEvents, IOnDeathEvents, IForceable, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
@@ -16,51 +17,34 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
     public Animator animator;
     public List<MonoBehaviour> disableOnDie = new List<MonoBehaviour>();
 
+    public event Action OnDeath;
+
     protected void Start()
     {
-        // HP = GetComponent<HealthStats>();
-        // MP = GetComponent<StatsTracker>();
-        // skillManager = GetComponent<SkillManager>();
+
     }
 
     public event Action<CastEventInfo, CheckForAny> CanICast;
     protected void FireCanICast(CastEventInfo info, CheckForAny check)
     {
-        // if (CanICast != null)
-        // {
-        //     CanICast(info, check);
-        // }
-
         CanICast?.Invoke(info, check);
     }
 
     public event Action<CastEventInfo> OnBeforeCast;
     protected void FireOnBeforeCast(CastEventInfo info)
     {
-        // if (OnBeforeCast != null)
-        // {
-        //     OnBeforeCast(info);
-        // }
-
         OnBeforeCast?.Invoke(info);
     }
 
     public event Action<CastEventInfo> OnAfterCast;
     protected void FireOnAfterCast(CastEventInfo info)
     {
-        // if (OnAfterCast != null)
-        // {
-        //     OnAfterCast(info);
-        // }
-
         OnAfterCast?.Invoke(info);
     }
 
     public event Action<DamageInfo> OnTakeDamage;
-    public DamageInfo TakeDamage(float damage)
+    public DamageInfo? TakeDamage(float damage)
     {
-        //var stats = HP.SubtractHP(damage);
-
         HP -= damage;
         var HPChangeInfo = HP.afterLastChange;
 
@@ -73,14 +57,17 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
         
         if (HPChangeInfo.current == 0)
         {
-            OnDeath();
+            Die();
         }
         return damageInfo;
     }
 
-    public void TakeHeal(float h)
+
+    public DamageInfo? TakeHeal(float h)
     {
         HP += h;
+
+        return new DamageInfo(HP.afterLastChange);
     }
 
     public void ApplyForce(Vector3 directon, float magnitude, ForceMode forceMode)
@@ -131,8 +118,10 @@ public class LivingEntity : MonoBehaviour, IDamageable, IForceable, IOnCastEvent
         }
     }
 
-    void OnDeath()
+    void Die()
     {
+        OnDeath?.Invoke();
+
         if(animator != null) {animator.SetTrigger("Death");}
         
         foreach(MonoBehaviour m in disableOnDie)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
+using DamageSystem;
 
 public class Ignition : MonoBehaviour, IStackableComponent
 {

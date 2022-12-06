@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DamageSystem;
 
-public class Tree : MonoBehaviour, IDamageable
+public class Tree : Flora, IDamageable
 {
     public float SingleHitDestroyAmount = 10f;
 
@@ -11,7 +12,7 @@ public class Tree : MonoBehaviour, IDamageable
         throw new System.NotImplementedException();
     }
 
-    public DamageInfo TakeDamage(float damage)
+    public DamageInfo? TakeDamage(float damage)
     {
         if ( damage >= SingleHitDestroyAmount )
         {
@@ -21,8 +22,14 @@ public class Tree : MonoBehaviour, IDamageable
         else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount));
     }
 
+    public DamageInfo? TakeHeal(float heal)
+    {
+        return null;
+    }
+
     protected void Die()
     {
+        TriggerOnDeath();
         gameObject.SetActive(false);
     }
 }

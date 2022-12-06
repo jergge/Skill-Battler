@@ -5,7 +5,7 @@ using SkillSystem;
 using System;
 
 [RequireComponent(typeof(Rigidbody))]
-public class CasterEnemy : LivingEntity
+public class CasterEnemy : NPC
 {
     public enum State {
         patrol,

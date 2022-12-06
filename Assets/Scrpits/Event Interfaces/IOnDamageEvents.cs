@@ -1,18 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class IOnDamageEvents : MonoBehaviour
+namespace DamageSystem
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IOnDamageEvents
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public event Action<DamageInfo> OnTakeDamage;
     }
 }
