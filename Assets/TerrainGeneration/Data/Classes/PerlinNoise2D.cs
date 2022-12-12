@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 using Jergge.Extensions;
+using UnityEngine;
 
 [CreateAssetMenu()]
 public class PerlinNoise2D : NoiseSampler
 {
     
     public Vector2 perlinOffset = Vector2.zero;
-    [Range(1,5)]    
+    [Range(1,5)]  
     public int octaves;
     [Range(0,1)]
     public float persistence;
@@ -87,6 +89,12 @@ public class PerlinNoise2D : NoiseSampler
                     for (int i = 0; i < input.Length; i++)
                         input[i] = new Vector3(input[i].x, Sample(input[i].XZ() + offset.XZ()), input[i].z);
                     break;
+
+                    // Parallel.For(0, input.Length, i =>
+                    // {
+                    //     input[i] = new Vector3(input[i].x, Sample(input[i].XZ() + offset.XZ()), input[i].z);
+                    // });
+                    // break;
 
                 case ReplaceComponent.z:
                     for (int i = 0; i < input.Length; i++)

@@ -16,6 +16,6 @@ MonoBehaviour:
   seed: 117
   scale: 71.9
   perlinOffset: {x: 760.7, y: 72.8}
-  octaves: 3
-  persistence: 0.27
-  lacunarity: 2.64
+  octaves: 2
+  persistence: 0
+  lacunarity: 2.66
