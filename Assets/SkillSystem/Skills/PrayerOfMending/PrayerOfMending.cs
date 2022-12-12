@@ -29,14 +29,9 @@ public class PrayerOfMending : Skill, IActiveSkill
         }
     }
 
-    public override void UpdateInSpellBook()
-    {
-        base.UpdateInSpellBook();
-    }
-
     void TriggerHeal(DamageInfo info)
     {
-        if (info.amountDone >0 && !info.lethalHit)
+        if (info.realHPLost >0 && !info.wasLethalHit)
         {
             var le = gameObject.GetComponent<LivingEntity>();
             le.TakeHeal(((int)baseHealAmount));

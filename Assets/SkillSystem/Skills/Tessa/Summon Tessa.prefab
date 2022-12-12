@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94505e6b310fd5843812cd09bde61cf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellName: Summon Tessa
+  skillName: 
   basicDescription: 
   icon: {fileID: 21300000, guid: f5a8a1c52af2c4946a8b8d7a533e6c74, type: 3}
   cost: 50
@@ -52,40 +52,3 @@ MonoBehaviour:
   cooldown: 14.87
   remainingCooldown: 0
   petToSummon: {fileID: -6301641894929843649, guid: 41ba2668867a47b4a944bd18e62ecf42, type: 3}
-  dPadMap:
-    up:
-      name: Follow Me
-      image: {fileID: 0}
-      uevent:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: 
-            m_MethodName: 
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: 
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-    down:
-      name: Stay
-      image: {fileID: 0}
-      uevent:
-        m_PersistentCalls:
-          m_Calls: []
-    left:
-      name: 
-      image: {fileID: 0}
-      uevent:
-        m_PersistentCalls:
-          m_Calls: []
-    right:
-      name: 
-      image: {fileID: 0}
-      uevent:
-        m_PersistentCalls:
-          m_Calls: []

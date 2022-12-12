@@ -8,6 +8,10 @@ using UnityEngine.InputSystem;
 
 public class Fireball : Missile, IActiveSkill
 {
+    void Update()
+    {
+        TickCooldown();
+    }
 
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {

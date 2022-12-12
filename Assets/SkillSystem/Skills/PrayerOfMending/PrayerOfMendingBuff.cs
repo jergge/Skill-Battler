@@ -33,7 +33,7 @@ public class PrayerOfMendingBuff : MonoBehaviour
 
     protected void TriggerHeal(DamageInfo info)
     {
-        if(info.amountDone >0 && !info.lethalHit)
+        if(info.realHPLost >0 && !info.wasLethalHit)
         {
             livingEntityOn.TakeHeal(sourceSkill.baseHealAmount);
             if (remainingCharges == 0)

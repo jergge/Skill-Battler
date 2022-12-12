@@ -33,9 +33,8 @@ public class PetPrefab : LivingEntity
     PetState petState = PetState.follow;
 
 
-    new void Start()
+    void Start()
     {
-        base.Start();
         StartCoroutine(Follow());
     }
 

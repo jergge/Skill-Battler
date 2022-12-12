@@ -57,14 +57,9 @@ public class ForcePush : Skill, IActiveSkill
         ResetCooldown();
     }
 
-    public override void OnStartInSpellbook()
+    void Update()
     {
-        base.OnStartInSpellbook();
-    }
-
-    public override void UpdateInSpellBook()
-    {
-        base.UpdateInSpellBook();
+        TickCooldown();
         if (hitRadius >= maxHitDistance)
         {
             hitRadius = maxHitDistance;
@@ -75,21 +70,15 @@ public class ForcePush : Skill, IActiveSkill
 
     void OnDrawGizmos()
     {
-        if (spellState == SpellState.SpellBook)
+        for (int i=-Mathf.RoundToInt(angleFromCastCentre); i<angleFromCastCentre; i++)
         {
-            for (int i=-Mathf.RoundToInt(angleFromCastCentre); i<angleFromCastCentre; i++)
-            {
-                //Vector3 angle = new Vector3(Mathf.Sin((Mathf.Deg2Rad * i)+Mathf.PI/2), 0, Mathf.Cos(Mathf.Deg2Rad * i));
-                //angle  = transform.InverseTransformDirection(angle);
-                //Debug.Log(i);
-                //int tempAngle = Mathf.RoundToInt(angleFromCastCentre);
-                int tempAngle = i;
-                Vector3 rotatedVector = new Vector3(gameObject.transform.forward.x * Mathf.Cos(Mathf.Deg2Rad * tempAngle) - gameObject.transform.forward.z * Mathf.Sin(Mathf.Deg2Rad * tempAngle), 0, gameObject.transform.forward.x * Mathf.Sin(Mathf.Deg2Rad * tempAngle) + gameObject.transform.forward.z * Mathf.Cos(Mathf.Deg2Rad * tempAngle));
-                Gizmos.DrawRay(gameObject.transform.position, rotatedVector * hitRadius);
-            }
-
-                
-        }
+            //Vector3 angle = new Vector3(Mathf.Sin((Mathf.Deg2Rad * i)+Mathf.PI/2), 0, Mathf.Cos(Mathf.Deg2Rad * i));
+            //angle  = transform.InverseTransformDirection(angle);
+            //Debug.Log(i);
+            //int tempAngle = Mathf.RoundToInt(angleFromCastCentre);
+            int tempAngle = i;
+            Vector3 rotatedVector = new Vector3(gameObject.transform.forward.x * Mathf.Cos(Mathf.Deg2Rad * tempAngle) - gameObject.transform.forward.z * Mathf.Sin(Mathf.Deg2Rad * tempAngle), 0, gameObject.transform.forward.x * Mathf.Sin(Mathf.Deg2Rad * tempAngle) + gameObject.transform.forward.z * Mathf.Cos(Mathf.Deg2Rad * tempAngle));
+            Gizmos.DrawRay(gameObject.transform.position, rotatedVector * hitRadius);
+        }    
     }
-
 }

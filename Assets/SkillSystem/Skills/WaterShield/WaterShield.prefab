@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8f0de66cbcd534478eb0dfa0d61546a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellName: 
+  skillName: 
   basicDescription: 
   icon: {fileID: 21300000, guid: 6995b2da3140af048bbbce5d5c7d745c, type: 3}
   cost: 0

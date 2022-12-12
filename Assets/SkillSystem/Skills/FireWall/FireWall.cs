@@ -13,22 +13,17 @@ public class FireWall : Skill, IActiveSkill
     float maxRayCastDist = 300;
     public LayerMask collisionLayer;
 
+    void Update()
+    {
+        TickCooldown();
+    }
+
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
         // GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Quad);
         // wall.transform.position = source.transform.position;
         // wall.GetComponent<Renderer>().material = material;
         GenerateWall(targetInfo.direction);
-    }
-
-    public override void OnStartInSpellbook()
-    {
-        base.OnStartInSpellbook();
-    }
-
-    public override void UpdateInSpellBook()
-    {
-        base.UpdateInSpellBook();
     }
 
     void GenerateWall(Vector3 dir)

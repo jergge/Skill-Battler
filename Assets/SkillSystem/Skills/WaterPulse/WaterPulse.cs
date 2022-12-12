@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using SkillSystem;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class WaterPulse : Missile, IActiveSkill
 {
+    void Update()
+    {
+        TickCooldown();
+    }
+
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
-        if(CoolingDown())
+        if (CoolingDown())
         {
             return;
         }

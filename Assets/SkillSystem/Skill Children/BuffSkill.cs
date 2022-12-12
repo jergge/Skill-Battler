@@ -7,13 +7,13 @@ public abstract class BuffSkill<T> : Skill where T:MonoBehaviour
 {
     T buff;
     // Start is called before the first frame update
-    public override void OnStartInSpellbook()
+    void OnEnable()
     {
         buff = source.AddComponent<T>();
     }
 
     
-    void OnDestroy()
+    void OnDisable()
     {
         Destroy(buff);
     }

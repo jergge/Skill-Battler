@@ -1,217 +1,252 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SkillSystem {
-[RequireComponent(typeof(StatsTracker))]
-public class SkillManager : MonoBehaviour, IOnCastEvents
+namespace SkillSystem
 {
-    public GameObject skillHolder;
-    public Transform skillSpawnLocation;
-    public TargetInfo targetInfo = new TargetInfo();
-    public StatsTracker mainEnergyStats;
-
-    public event Action<DPadMap> NewDPadMap;
-
-    //public List<Skill> InitialSkills;
-    protected List<Skill> spellBook = new List<Skill>();
-
-    public Skill attack;
-    public Skill block;
-    public Skill skill1;
-    public Skill skill2;
-
-    //bool currentlyCasting = false;
-    List<Skill> currentlyCasting = new List<Skill>();
-
-    public event Action<CastEventInfo, CheckForAny> CanICast;
-    public event Action<CastEventInfo> OnBeforeCast;
-    public event Action<CastEventInfo> OnAfterCast;
-
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(StatsTracker))]
+    public class SkillManager : MonoBehaviour, IOnCastEvents
     {
-        if (skillHolder == null)
+        public GameObject enabledSkills;
+        List<Skill> enabledSkillsList = new List<Skill>();
+
+        public GameObject disabledSkills;
+        List<Skill> disabledSkillsList = new List<Skill>();
+
+        public Transform skillSpawnLocation;
+        public TargetInfo targetInfo = new TargetInfo();
+        public StatsTracker mainEnergyStats;
+
+        public event Action<DPadMap> NewDPadMap;
+
+        //public List<Skill> InitialSkills;
+        protected List<Skill> spellBook = new List<Skill>();
+
+        public Skill attack;
+        public Skill block;
+        public Skill skill1;
+        public Skill skill2;
+
+        //bool currentlyCasting = false;
+        List<Skill> currentlyCasting = new List<Skill>();
+
+        public event Action<CastEventInfo, CheckForAny> CanICast;
+        public event Action<CastEventInfo> OnBeforeCast;
+        public event Action<CastEventInfo> OnAfterCast;
+
+
+        void Awake()
         {
-            skillHolder = new GameObject("DEFAULT skill Holder for " + name);
-            skillHolder.transform.SetParent(transform);
-            skillHolder.transform.localPosition = Vector3.zero;
+            if (enabledSkills == null)
+            {
+                enabledSkills = new GameObject("DEFAULT collection of enabled skills");
+                enabledSkills.transform.SetParent(transform);
+                enabledSkills.transform.localPosition = Vector3.zero;
+            }
+
+            if (skillSpawnLocation == null)
+            {
+                skillSpawnLocation = new GameObject("DEFAULT skill spawn location").transform;
+                skillSpawnLocation.transform.SetParent(transform);
+                skillSpawnLocation.transform.localPosition = Vector3.zero + transform.forward;
+            }
+
+            if (disabledSkills == null)
+            {
+                disabledSkills = new GameObject("DEFAULT collection of disabled skills");
+                disabledSkills.transform.SetParent(transform);
+                disabledSkills.transform.localPosition = Vector3.zero;
+            }
+
+            foreach (Transform t in enabledSkills.transform)
+            {
+                Destroy(t.gameObject);
+            }
+
+            AquireInitialSkill(ref attack);
+            AquireInitialSkill(ref block);
+            AquireInitialSkill(ref skill1);
+            AquireInitialSkill(ref skill2);
+
         }
 
-        if (skillSpawnLocation == null)
+        public Skill Aquire(Skill skillToAquire, bool addToActiveBook = false)
         {
-            skillSpawnLocation = new GameObject("DEFAULT skill spawn for " + gameObject.name).transform;
-            skillSpawnLocation.transform.SetParent(transform);
-            skillSpawnLocation.transform.localPosition = Vector3.zero + transform.forward;
+            Skill newSkill = GameObject.Instantiate(skillToAquire);
+
+            newSkill.SetSource(gameObject);
+            newSkill.transform.position = transform.position;
+            
+            if (addToActiveBook)
+            {
+                AddSkillToEnabled(newSkill);
+            }
+            else
+            {
+                AddSkillToDisabled(newSkill);
+            }
+
+            return newSkill;
         }
 
-        foreach (Transform t in skillHolder.transform)
+        void AddSkillToEnabled(Skill skill)
         {
-            Destroy(t.gameObject);
+            skill.gameObject.SetActive(true);
+            skill.OnMadeActive();
+            disabledSkillsList.Remove(skill);
+            enabledSkillsList.Add(skill);
+            skill.transform.SetParent(enabledSkills.transform);
         }
 
-        InitialSkill(ref attack);
-        InitialSkill(ref block);
-        InitialSkill(ref skill1);
-        InitialSkill(ref skill2);
-
-    }
-
-    public Skill Aquire(Skill skillToAquire, bool addToActiveBook = false)
-    {
-        Skill newSkill = GameObject.Instantiate(skillToAquire);
-
-        //Make it nice in the Unity hierachy
-        newSkill.transform.SetParent(skillHolder.transform);
-        //Locate them in the same in game space..
-        newSkill.transform.position = transform.position;
-        //set the object to have the right update and cast methods
-        newSkill.SetSpellState(Skill.SpellState.SpellBook);
-        //disable all the visuals and colliders
-        newSkill.DisableColliders();
-        newSkill.SetSource(gameObject);
-        newSkill.OnStartInSpellbook();
-        return newSkill;
-    }
-
-    void InitialSkill (ref Skill skill)
-    {
-        if (skill != null)
+        void AddSkillToDisabled(Skill skill)
         {
-            skill = Aquire(skill);
+            skill.gameObject.SetActive(false);
+            skill.OnMadeInActive();
+            enabledSkillsList.Remove(skill);
+            disabledSkillsList.Add(skill);
+            skill.transform.SetParent(disabledSkills.transform);
         }
-    }
-   
-    void Update()
-    {
-        spellBook = skillHolder.GetComponentsInChildren<Skill>().ToList<Skill>();
-        IHaveTargetInfo info;
-        if (TryGetComponent<IHaveTargetInfo>(out info))
-        {
-            targetInfo = info.GetTargetInfo();
-        }
-    }
 
-    public List<Skill> activeList = new List<Skill>();
-    public List<Skill> GetActiveSkills() {
-        activeList.Clear();
-            foreach (Transform t in skillHolder.transform)
+        void AquireInitialSkill(ref Skill skill)
+        {
+            if (skill != null)
+            {
+                skill = Aquire(skill, true);
+            }
+        }
+
+        void Update()
+        {
+            spellBook = enabledSkills.GetComponentsInChildren<Skill>().ToList<Skill>();
+            IHaveTargetInfo info;
+            if (TryGetComponent<IHaveTargetInfo>(out info))
+            {
+                targetInfo = info.GetTargetInfo();
+            }
+        }
+
+        public List<Skill> activeList = new List<Skill>();
+        public List<Skill> GetActiveSkills()
+        {
+            activeList.Clear();
+            foreach (Transform t in enabledSkills.transform)
             {
                 IActiveSkill active;
 
-                if( t.gameObject.TryGetComponent<IActiveSkill>(out active))
+                if (t.gameObject.TryGetComponent<IActiveSkill>(out active))
                 {
                     activeList.Add(t.GetComponent<Skill>());
                     // Debug.Log("getting something");
 
                 }
             }
-        return activeList; 
-    }
-
-    void OnAttack(InputValue inputValue)
-    {
-        UseSkill(attack, inputValue.isPressed);
-    }
-
-    void OnBlock(InputValue inputValue)
-    {
-        UseSkill(block, inputValue.isPressed);
-    }
-
-    void OnSkill1(InputValue inputValue)
-    {
-        UseSkill(skill1, inputValue.isPressed);
-    }
-
-    void OnSkill2(InputValue inputValue)
-    {
-        UseSkill(skill2, inputValue.isPressed);
-    }
-
-    public void NPCUseSkill(Skill skill, TargetInfo targetInfo, bool triggerDown)
-    {
-        this.targetInfo = targetInfo;
-
-        if (skill is IActiveSkill activeSkill)
-        {
-            activeSkill.Cast(skillSpawnLocation, targetInfo);
-        }
-    }
-
-    protected void UseSkill(Skill skill, bool triggerDown)
-    {
-        if (skill is null)
-        {
-            return;
+            return activeList;
         }
 
-        Debug.Log("using skill: " + skill.name);
-        if (skill is IUpdateDPad dPadSkill && triggerDown)
+        void OnAttack(InputValue inputValue)
         {
-            Debug.Log("Skill is IUpdateDPad");
-            if (NewDPadMap != null)
+            UseSkill(attack, inputValue.isPressed);
+        }
+
+        void OnBlock(InputValue inputValue)
+        {
+            UseSkill(block, inputValue.isPressed);
+        }
+
+        void OnSkill1(InputValue inputValue)
+        {
+            UseSkill(skill1, inputValue.isPressed);
+        }
+
+        void OnSkill2(InputValue inputValue)
+        {
+            UseSkill(skill2, inputValue.isPressed);
+        }
+
+        public void NPCUseSkill(Skill skill, TargetInfo targetInfo, bool triggerDown)
+        {
+            this.targetInfo = targetInfo;
+
+            if (skill is IActiveSkill activeSkill)
             {
-                NewDPadMap(dPadSkill.GetDPadMap());
+                activeSkill.Cast(skillSpawnLocation, targetInfo);
             }
-
         }
 
-        if (skill is IChanneledSkill channeledSkill && !triggerDown)
+        protected void UseSkill(Skill skill, bool triggerDown)
         {
-            Debug.Log("Skill is IChanneledSkill");
-            channeledSkill.StopCast();
-            //currentlyCasting.Remove(skill);
-            return;
-        }
-
-        if (skill == null || currentlyCasting.Count() > 0 || skill.cost > mainEnergyStats.current)
-        {
-            Debug.Log("Skill is null or something already casting or costs too much");
-            return;
-        }
-        
-
-        if (skill is IActiveSkill activeSkill && triggerDown)
-        {
-            Debug.Log("skill is IActiveSkill");
-            //currentlyCasting = true;
-            
-            CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
-
-            CheckForAny checker = new CheckForAny(false);
-
-            CanICast?.Invoke(castInfo, checker);
-
-            if (checker.Found() || skill.CoolingDown())
+            if (skill is null)
             {
-                Debug.Log("Checker says skill cannot be cast: Found():" + checker.Found() + "   OnCooldown():" + skill.CoolingDown());
                 return;
             }
 
-            Debug.Log("Casting the active skill: " + skill.name);
-            activeSkill.Cast(skillSpawnLocation, targetInfo);
-
-            if ( skill is IChanneledSkill cSkill )
+            Debug.Log("using skill: " + skill.name);
+            if (skill is IUpdateDPad dPadSkill && triggerDown)
             {
-                cSkill.CastEnded += SkillEnded;
-                currentlyCasting.Add(skill);
+                Debug.Log("Skill is IUpdateDPad");
+                if (NewDPadMap != null)
+                {
+                    NewDPadMap(dPadSkill.GetDPadMap());
+                }
+
             }
 
-            OnAfterCast?.Invoke(castInfo);
-
-            //mainEnergyStats.Reduce(skill.cost);
-            mainEnergyStats -= skill.cost;
+            if (skill is IChanneledSkill channeledSkill && !triggerDown)
+            {
+                Debug.Log("Skill is IChanneledSkill");
+                channeledSkill.StopCast();
+                //currentlyCasting.Remove(skill);
+                return;
             }
-    }
 
-    void SkillEnded(Skill skill)
-    {
-        currentlyCasting.Remove(skill);
-        IChanneledSkill c = skill as IChanneledSkill;
-        c.CastEnded -= SkillEnded;
+            if (skill == null || currentlyCasting.Count() > 0 || skill.baseCost > mainEnergyStats.current)
+            {
+                Debug.Log("Skill is null or something already casting or costs too much");
+                return;
+            }
+
+
+            if (skill is IActiveSkill activeSkill && triggerDown)
+            {
+                Debug.Log("skill is IActiveSkill");
+                //currentlyCasting = true;
+
+                CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
+
+                CheckForAny checker = new CheckForAny(false);
+
+                CanICast?.Invoke(castInfo, checker);
+
+                if (checker.Found() || skill.CoolingDown())
+                {
+                    Debug.Log("Checker says skill cannot be cast: Found():" + checker.Found() + "   OnCooldown():" + skill.CoolingDown());
+                    return;
+                }
+
+                Debug.Log("Casting the active skill: " + skill.name);
+                activeSkill.Cast(skillSpawnLocation, targetInfo);
+
+                if (skill is IChanneledSkill channeledSkillx)
+                {
+                    channeledSkillx.CastEnded += SkillEnded;
+                    currentlyCasting.Add(skill);
+                }
+
+                OnAfterCast?.Invoke(castInfo);
+
+                //mainEnergyStats.Reduce(skill.cost);
+                mainEnergyStats -= skill.baseCost;
+            }
+        }
+
+        void SkillEnded(Skill skill)
+        {
+            currentlyCasting.Remove(skill);
+            IChanneledSkill c = skill as IChanneledSkill;
+            c.CastEnded -= SkillEnded;
+        }
     }
-}}
+}

@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using SkillSystem;
-using System;
+using UnityEngine;
 
 public class WaterShield : Skill, IChanneledSkill
 {
@@ -12,6 +12,11 @@ public class WaterShield : Skill, IChanneledSkill
     StatsTracker energy;
 
     public event Action<Skill> CastEnded;
+
+    void Update()
+    {
+        TickCooldown();
+    }
 
     public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
     {
@@ -24,7 +29,7 @@ public class WaterShield : Skill, IChanneledSkill
 
     public void StopCast()
     {
-        if(casting)
+        if (casting)
         {
             casting = false;
         }
@@ -38,12 +43,13 @@ public class WaterShield : Skill, IChanneledSkill
         shield.transform.position = source.transform.position;
         shield.source = source;
 
-        if(player != null)
+        Player player;
+        if (source.TryGetComponent<Player>(out player))
         {
             //ffplayer.playerCameraController.SetLocation(player.playerCameraController.presets[1]);
         }
 
-        while(casting && energy.current > energyDrainPerSecond*Time.deltaTime)
+        while (casting && energy.current > energyDrainPerSecond * Time.deltaTime)
         {
             //s.transform.position = source.transform.position;
             energy -= (energyDrainPerSecond * Time.deltaTime);
@@ -56,18 +62,23 @@ public class WaterShield : Skill, IChanneledSkill
         }
         Destroy(shield.gameObject);
 
-        if(player != null)
+        if (source.TryGetComponent<Player>(out player))
         {
             //player.playerCameraController.SetLocation(player.playerCameraController.presets[0]);
         }
         ResetCooldown();
     }
 
-    public override void OnStartInSpellbook()
+    public override void OnMadeActive()
     {
         energy = source.AddComponent<StatsTracker>();
         energy.baseValue = 50f;
         energy.regenPerSecond = 2;
+    }
+
+    public override void OnMadeInActive()
+    {
+        energy = null;
     }
 
 }
