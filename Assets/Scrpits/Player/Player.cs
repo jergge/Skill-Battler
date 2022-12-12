@@ -17,4 +17,5 @@ public class Player : LivingEntity
 
     //TargetInfo targetInfo = new TargetInfo();
     //public LayerMask targetInfoLayers;
+
 }

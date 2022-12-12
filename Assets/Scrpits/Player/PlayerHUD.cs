@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class PlayerHUD : MonoBehaviour
+public class PlayerHUD : PlayerUI
 {
     public GameObject energies;
     public PlayerMP prefab;
