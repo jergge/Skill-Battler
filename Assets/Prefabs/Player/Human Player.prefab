@@ -1084,7 +1084,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8666705231427d44e9341461b169d5df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passDamageTarget: {fileID: 5663759525403945947}
+  passToIDamageable: {fileID: 8843701162680320323}
 --- !u!1 &4112255613285601409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,7 +1375,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 26.991467
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -7058,8 +7058,9 @@ GameObject:
   - component: {fileID: 2434658161012793651}
   - component: {fileID: 8331990640365655062}
   - component: {fileID: 4209795977568627087}
+  - component: {fileID: 2428124346928246891}
   m_Layer: 11
-  m_Name: New Player HumanMale_Character
+  m_Name: Human Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7158,7 +7159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac28c70d024b76d44a183a246dff30dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillHolder: {fileID: 0}
+  enabledSkills: {fileID: 0}
+  disabledSkills: {fileID: 0}
   skillSpawnLocation: {fileID: 0}
   mainEnergyStats: {fileID: 4209795977568627087}
   attack: {fileID: 263542385365331316, guid: b368a23c08dce60439f0a512d9f0a5c5, type: 3}
@@ -7206,9 +7208,7 @@ MonoBehaviour:
   playerCamera: {fileID: 6079973094266683286}
   playerCameraController: {fileID: 5663759525403945941}
   playerController: {fileID: 5663759525403945936}
-  targetInfoLayers:
-    serializedVersion: 2
-    m_Bits: 30928
+  targetInfoSetter: {fileID: 2428124346928246891}
 --- !u!114 &5476147642164595017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7268,7 +7268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: HP
+  niceName: 
   baseValue: 100
   bonus: 0
   regenPerSecond: 0
@@ -7284,10 +7284,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Mana
+  niceName: 
   baseValue: 100
   bonus: 0
   regenPerSecond: 0
+--- !u!114 &2428124346928246891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843701162680320323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d14e0e5c5441f44a7e12ad57d272c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 5663759525403945947}
+  targetInfoLayers:
+    serializedVersion: 2
+    m_Bits: 30928
 --- !u!1 &8843701162683525376
 GameObject:
   m_ObjectHideFlags: 0
