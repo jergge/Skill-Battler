@@ -9,4 +9,4 @@ public interface IChanneledSkill : IActiveSkill
     public void StopCast();
 
     public event Action<Skill> CastEnded;
-}}
+}} 

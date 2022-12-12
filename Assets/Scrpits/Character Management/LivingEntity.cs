@@ -7,7 +7,7 @@ using DamageSystem;
 
 [RequireComponent(typeof(StatsTracker), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
-public class LivingEntity : MonoBehaviour, IDamageable, IOnDamageEvents, IOnDeathEvents, IForceable, IOnCastEvents
+public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOnDeathEvents, IForceable, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
@@ -18,11 +18,6 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnDamageEvents, IOnDeat
     public List<MonoBehaviour> disableOnDie = new List<MonoBehaviour>();
 
     public event Action OnDeath;
-
-    protected void Start()
-    {
-
-    }
 
     public event Action<CastEventInfo, CheckForAny> CanICast;
     protected void FireCanICast(CastEventInfo info, CheckForAny check)

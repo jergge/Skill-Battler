@@ -32,14 +32,14 @@ public class StatsTracker : MonoBehaviour
     /// Increses the stat's current amount
     /// </summary>
     /// <param name="stats"></param>
-    /// <param name="a"></param>
+    /// <param name="value"></param>
     /// <returns></returns>
-    public static StatsTracker operator + (StatsTracker stats, float a)
+    public static StatsTracker operator + (StatsTracker stats, float value)
     {
         float valueBefore = stats.current;
-        stats.current = Mathf.Min(stats.current + a, stats.maxValue);
+        stats.current = Mathf.Min(stats.current + value, stats.maxValue);
         stats.afterLastChange = new InfoFromLastOperator
-            { delta = stats.current - valueBefore, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+            {operatorValueInput = value, delta = stats.current - valueBefore, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
         return stats;
     }
 
@@ -47,19 +47,20 @@ public class StatsTracker : MonoBehaviour
     /// Reduces the stat's current amount
     /// </summary>
     /// <param name="stats"></param>
-    /// <param name="a"></param>
+    /// <param name="input"></param>
     /// <returns></returns>
-    public static StatsTracker operator - (StatsTracker stats, float a)
+    public static StatsTracker operator - (StatsTracker stats, float input)
     {
         float valueBefore = stats.current;
-        stats.current = Mathf.Max(stats.current - a, 0);
+        stats.current = Mathf.Max(stats.current - input, 0);
         stats.afterLastChange = new InfoFromLastOperator
-            { delta = valueBefore - stats.current, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+            {operatorValueInput = input, delta = valueBefore - stats.current, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
         return stats;
     }
 
     public struct InfoFromLastOperator
     {
+        public float operatorValueInput;
         public float delta;
         public bool isZeroOrLess;
         public float current;

@@ -17,9 +17,9 @@ public class Tree : Flora, IDamageable
         if ( damage >= SingleHitDestroyAmount )
         {
             Die();
-            return new DamageInfo(true, damage, 0);
+            return new DamageInfo(true, damage, 0, damage);
         }
-        else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount));
+        else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount), damage);
     }
 
     public DamageInfo? TakeHeal(float heal)

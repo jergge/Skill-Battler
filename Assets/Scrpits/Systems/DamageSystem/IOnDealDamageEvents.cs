@@ -1,12 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace DamageSystem
 {
-    public interface IOnDamageEvents
+    public interface IOnDealDamageEvents
     {
-        public event Action<DamageInfo> OnTakeDamage;
+        public event Action<DamageInfo?> OnDealDamage;
     }
 }

@@ -13,9 +13,8 @@ public class Dummy : LivingEntity
     }
 
     // Start is called before the first frame update
-    new void Start()
+    void Start()
     {
-        base.Start();
         initialLocation = transform.position;
     }
 
