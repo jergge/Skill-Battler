@@ -138,10 +138,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78282683f6c63240a90881a7ad92d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: {fileID: 3400534203737493898}
-  MP: {fileID: 6716095159894946195}
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
+  HP: {fileID: 2260698279778302473}
+  MP: {fileID: 3439033683049381182}
   skillManager: {fileID: 2522443240570944465}
   animator: {fileID: 8274835415563214944}
+  disableOnDie: []
   master: {fileID: 0}
   currentMoveSpeed: 0
   maxSpeedWhileTurning: 0
@@ -209,7 +212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac28c70d024b76d44a183a246dff30dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillHolder: {fileID: 0}
+  enabledSkills: {fileID: 0}
+  disabledSkills: {fileID: 0}
   skillSpawnLocation: {fileID: 0}
   mainEnergyStats: {fileID: 0}
   attack: {fileID: 0}
@@ -217,7 +221,7 @@ MonoBehaviour:
   skill1: {fileID: 8086380231930331825, guid: 7baba31fff5bac745af6bbd238ff310b, type: 3}
   skill2: {fileID: 0}
   activeList: []
---- !u!114 &3400534203737493898
+--- !u!114 &2260698279778302473
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -226,13 +230,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8274835415570502636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb08a13917653144cae837440f86dbe6, type: 3}
+  m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  niceName: HP
   baseValue: 100
   bonus: 0
   regenPerSecond: 0
---- !u!114 &6716095159894946195
+--- !u!114 &3439033683049381182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -241,9 +246,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8274835415570502636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a46d534f92a8ba64984ddab21309a7ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseValue: 0
+  niceName: MP
+  baseValue: 100
   bonus: 0
   regenPerSecond: 0

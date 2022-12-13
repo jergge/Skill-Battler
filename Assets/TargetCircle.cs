@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TerrainGeneration;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class TargetCircle : iTerrainGenerator
+public class TargetCircle : ITerrainGenerator
 {
     public float radius;
     public float maxRange;

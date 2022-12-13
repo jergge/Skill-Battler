@@ -7,7 +7,7 @@ namespace TerrainGeneration{
 public class WorldMeshGenerator : MonoBehaviour
 {
 
-    public bool generateRandomInBuild = false;
+    public bool randomInBuild = false;
 
     public float worldSizeX;
     public float worldSizeZ;

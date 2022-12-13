@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-[CustomEditor(typeof(iTerrainGenerator), true)]
-public class iTerrainGeneratorGUI : Editor
+namespace TerrainGeneration
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(ITerrainGenerator), true)]
+    public class iTerrainGeneratorGUI : Editor
     {
-        base.OnInspectorGUI();
-
-        iTerrainGenerator t = (iTerrainGenerator)target;
-
-        if (GUILayout.Button("Generate"))
+        public override void OnInspectorGUI()
         {
-            t.GenerateAll();
+            base.OnInspectorGUI();
+
+            ITerrainGenerator t = (ITerrainGenerator)target;
+
+            if (GUILayout.Button("Generate"))
+            {
+                t.GenerateAll();
+            }
         }
     }
 }
