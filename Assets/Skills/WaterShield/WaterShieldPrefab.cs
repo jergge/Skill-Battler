@@ -9,7 +9,7 @@ public class WaterShieldPrefab : MonoBehaviour
     public float expansionTime;
     public bool expandOnStart = true;
     public GameObject source;
-    // Start is called before the first frame update
+    
     void Start()
     {
        transform.SetParent(source.transform); 

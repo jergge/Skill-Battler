@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Jergge.Extensions;
-using UnityEngine;
-using SkillSystem.Properties;
 using DamageSystem;
+using Jergge.Extensions;
+using SkillSystem.Properties;
+using UnityEngine;
 
 namespace SkillSystem{
 public class MissilePrefab : MonoBehaviour
@@ -20,13 +20,13 @@ public class MissilePrefab : MonoBehaviour
 
     List<IDamageable> alreadyDamagedInFrame = new List<IDamageable>();
 
-    public GameObject source;
+    public GameObject source { get; protected set; }
 
     LayerMask collisionDamage;
     LayerMask collisionDestroy;
 
-    public GameObject targetObject;
-    public Vector3 initialTarget;
+    GameObject targetObject;
+    Vector3 initialTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +74,7 @@ public class MissilePrefab : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Skill " + name + " colliding with " + other.name);
+        Debug.Log("Skill " + name + " colliding with " + other.gameObject.name);
         if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();

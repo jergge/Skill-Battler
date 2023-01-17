@@ -27,7 +27,7 @@ public class WaterShield : Skill, IChanneledSkill
         }
     }
 
-    public void StopCast()
+    public void EndChannel()
     {
         if (casting)
         {

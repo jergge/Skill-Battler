@@ -29,4 +29,14 @@ public static class Extensions
             return gameObject.AddComponent<T>();
         }
     }
+
+    public static T AddComponent<T>(this GameObject gameObject, Skill skill) where T: Buff
+    {
+            T tempBuff = gameObject.AddComponent<T>();
+
+            tempBuff.Configure(skill);
+
+            return tempBuff;
+        }
+
 }}

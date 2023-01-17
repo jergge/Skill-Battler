@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TerrainGeneration{
@@ -32,13 +34,13 @@ public class TerrainChunk : MonoBehaviour
     
     public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position,float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseSampler noiseSampler, AnimationCurve heightCurve, float heightScale, Material material)
     {
-        this.numVerticiesX = numVerticiesX;
-        this.numVerticiesZ = numVerticiesZ;
-
         if(numVerticiesX > maxSideVertexCount || numVerticiesZ > maxSideVertexCount)
         {
-            throw new System.ArgumentOutOfRangeException("You cannot assign more verticies to a chunk that the set limit of: " + maxSideVertexCount);
+            throw new System.ArgumentOutOfRangeException("You cannot assign more verticies to a chunk than the set limit of: " + maxSideVertexCount);
         }
+
+        this.numVerticiesX = numVerticiesX;
+        this.numVerticiesZ = numVerticiesZ;
 
         this.spaceBetweenVerticiesX = spaceBetweenVerticiesX;
         this.spaceBetweenVerticiesZ = spaceBetweenVerticiesZ;
@@ -48,7 +50,7 @@ public class TerrainChunk : MonoBehaviour
         this.heightCurve = heightCurve;
         this.heightScale = heightScale;
         this.material = material;
-        // StartUp();
+
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     }
@@ -98,30 +100,34 @@ public class TerrainChunk : MonoBehaviour
     {
         float minHeight = float.MaxValue;
         float maxHeight = float.MinValue;
-        for (int i = 0, z = 0; z < numVerticiesZ; z++) {
-            for (int x = 0; x < numVerticiesX; x++)
+        for (int i = 0; i < verticies.Length; i++) 
+        {
+            float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
+            verticies[i].y = newHeight;
+
+            if (newHeight > maxHeight)
             {
-                float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
-                verticies[i].y = newHeight;
-                if (newHeight > maxHeight)
-                {
-                    maxHeight = newHeight;
-                } else if (newHeight < minHeight)
-                {
-                    minHeight = newHeight;
-                }
-                i ++;
+                maxHeight = newHeight;
+            } else if (newHeight < minHeight)
+            {
+                minHeight = newHeight;
             }
         }
 
-        return (minHeight, maxHeight);
-    }
+        // Parallel.For(0, verticies.Length, i =>
+        // {
+        //     float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
+        //     verticies[i].y = newHeight;
+        //     Debug.Log(i);
+        // if (newHeight > maxHeight)
+        // {
+        //     maxHeight = newHeight;
+        // } else if (newHeight < minHeight)
+        // {
+        //     minHeight = newHeight;
+        // }
 
-    public (float minHeight, float maxHeight) ApplyHeightGPU(float minNoise, float maxNoise)
-    {
-        float minHeight = float.MaxValue;
-        float maxHeight = float.MinValue;
-
+        // return (-50, 50);
         return (minHeight, maxHeight);
     }
 

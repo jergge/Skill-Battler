@@ -22,5 +22,8 @@ public class BigDamageBuff : Buff, IModifySkillProperty
         return temp;
     }
 
-    
+    public override void Configure(Skill skill)
+    {
+        throw new System.NotImplementedException();
+    }
 }

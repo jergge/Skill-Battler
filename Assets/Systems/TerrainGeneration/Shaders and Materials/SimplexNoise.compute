@@ -75,6 +75,7 @@ float persistence;
 float lacunarity;
 float2 sampleOffset;
 float2 samplePoint;
+float2 octaveSampleChange = float2(1000, 1000);
 
 //0
 #pragma kernel Sample
@@ -84,24 +85,22 @@ void Sample (uint3 id : SV_DispatchThreadID)
     float amplitude = 1;
     float frequency = 1;
 
-    float noiseInfo;
-
-    //float3 input = noise[id.x];
+    float sampledNoise;
     
     for (int j = 0; j < octaves; j++)
     {
-        float sampleX = (samplePoint.x + sampleOffset.x) / scale * frequency + octaves*1000;
-        float sampleY = (samplePoint.y + sampleOffset.y) / scale * frequency + octaves*2000;
+        float sampleX = (samplePoint.x + sampleOffset.x) / scale * frequency + octaveSampleChange.x;
+        float sampleY = (samplePoint.y + sampleOffset.y) / scale * frequency + octaveSampleChange.y;
 
         float noiseValue = snoise(float2(sampleX, sampleY));
 
-        noiseInfo += noiseValue * amplitude;
+        sampledNoise += noiseValue * amplitude;
 
         amplitude *= persistence;
         frequency *= lacunarity;
     }
 
-    noise[id.x] = noiseInfo;
+    noise[id.x] = sampledNoise;
 }
 
 //1

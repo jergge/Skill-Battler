@@ -21,7 +21,7 @@ public class CameraTester : Skill, IChanneledSkill
         }
     }
 
-    public void StopCast()
+    public void EndChannel()
     {
         casting = false;
     }

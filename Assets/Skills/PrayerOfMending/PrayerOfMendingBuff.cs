@@ -4,7 +4,7 @@ using UnityEngine;
 using SkillSystem;
 using DamageSystem;
 
-public class PrayerOfMendingBuff : MonoBehaviour
+public class PrayerOfMendingBuff : Buff
 {
     public int remainingCharges;
     LivingEntity livingEntityOn;
@@ -35,7 +35,7 @@ public class PrayerOfMendingBuff : MonoBehaviour
     {
         if(info.realHPLost >0 && !info.wasLethalHit)
         {
-            livingEntityOn.TakeHeal(sourceSkill.baseHealAmount);
+            livingEntityOn.TakeHeal((DamageUnit)sourceSkill.baseHealAmount);
             if (remainingCharges == 0)
             {
                 RemoveSelf();
@@ -56,4 +56,8 @@ public class PrayerOfMendingBuff : MonoBehaviour
 
     }
 
+    public override void Configure(Skill skill)
+    {
+        throw new System.NotImplementedException();
+    }
 }

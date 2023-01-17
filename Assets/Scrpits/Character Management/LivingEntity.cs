@@ -7,7 +7,7 @@ using DamageSystem;
 
 [RequireComponent(typeof(StatsTracker), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
-public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOnDeathEvents, IForceable, IOnCastEvents
+public class LivingEntity : MonoBehaviour, IDamageable, IOnDeathEvents, IForceable, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
@@ -38,9 +38,9 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOn
     }
 
     public event Action<DamageInfo> OnTakeDamage;
-    public DamageInfo? TakeDamage(float damage)
+    public DamageInfo? TakeDamage(DamageUnit damageUnit)
     {
-        HP -= damage;
+        HP -= damageUnit.baseAmount;
         var HPChangeInfo = HP.afterLastChange;
 
         Debug.Log(name + " took " + HPChangeInfo.delta + " damage");
@@ -58,9 +58,9 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOn
     }
 
 
-    public DamageInfo? TakeHeal(float h)
+    public DamageInfo? TakeHeal(DamageUnit damageUnit)
     {
-        HP += h;
+        HP += damageUnit.baseAmount;
 
         return new DamageInfo(HP.afterLastChange);
     }
@@ -79,8 +79,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOn
         Vector3 origin,
         float explosionRadius,
         float upwardsModifier,
-        ForceMode forceMode
-    )
+        ForceMode forceMode)
     {
         Rigidbody rb;
         if (gameObject.TryGetComponent<Rigidbody>(out rb))
@@ -89,29 +88,29 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnTakeDamageEvents, IOn
         }
     }
 
-        public void DisableColliders()
-    {
-        foreach (MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>())
-        {
-            mr.enabled = false;
-        }
-        foreach (Collider col in gameObject.GetComponentsInChildren<Collider>())
-        {
-            col.enabled = false;
-        }
-    }
+    //     public void DisableColliders()
+    // {
+    //     foreach (MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>())
+    //     {
+    //         mr.enabled = false;
+    //     }
+    //     foreach (Collider col in gameObject.GetComponentsInChildren<Collider>())
+    //     {
+    //         col.enabled = false;
+    //     }
+    // }
 
-    public void EnableColliders()
-    {
-        foreach (MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>())
-        {
-            mr.enabled = true;
-        }
-        foreach (Collider col in gameObject.GetComponentsInChildren<Collider>())
-        {
-            col.enabled = true;
-        }
-    }
+    // public void EnableColliders()
+    // {
+    //     foreach (MeshRenderer mr in gameObject.GetComponentsInChildren<MeshRenderer>())
+    //     {
+    //         mr.enabled = true;
+    //     }
+    //     foreach (Collider col in gameObject.GetComponentsInChildren<Collider>())
+    //     {
+    //         col.enabled = true;
+    //     }
+    // }
 
     void Die()
     {

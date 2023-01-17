@@ -40,7 +40,7 @@ public class Ignition : MonoBehaviour, IStackableComponent
         IDamageable target;
         if (gameObject.TryGetComponent<IDamageable>(out target))
         {
-            target.TakeDamage(damageAtStacks);
+            target.TakeDamage( (DamageUnit)damageAtStacks );
         }
 
         Destroy(this);

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoUpdate: 0
   seed: 0
-  scale: 233.7
-  perlinOffset: {x: 0, y: 0}
+  scale: 212
+  offset: {x: 6, y: 936}
   octaves: 3
   persistence: 0.139
   lacunarity: 2.39
-  GPUShader: {fileID: 7200000, guid: db8d5f59ba17cc741b717e6800a86492, type: 3}
+  Shader: {fileID: 7200000, guid: db8d5f59ba17cc741b717e6800a86492, type: 3}

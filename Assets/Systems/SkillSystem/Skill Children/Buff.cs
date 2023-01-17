@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff : MonoBehaviour
+namespace SkillSystem
 {
-    // Start is called before the first frame update
-    void Start()
+    public abstract class Buff : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public abstract void Configure(Skill skill);
     }
 }

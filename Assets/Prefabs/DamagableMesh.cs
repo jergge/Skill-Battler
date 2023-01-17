@@ -24,12 +24,12 @@ public class DamagableMesh : MonoBehaviour, IDamageable
         return IDamageable.IsDead();
     }
 
-    public DamageInfo? TakeDamage(float damage)
+    public DamageInfo? TakeDamage(DamageUnit damage)
     {
         return IDamageable.TakeDamage(damage);
     }
 
-    public DamageInfo? TakeHeal(float heal)
+    public DamageInfo? TakeHeal(DamageUnit heal)
     {
         return IDamageable.TakeHeal(heal);
     }

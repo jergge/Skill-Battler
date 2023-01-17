@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Jergge.Extensions;
-using UnityEngine.InputSystem;
-using SkillSystem;
 using DamageSystem;
+using Jergge.Extensions;
+using SkillSystem;
+using SkillSystem.Extensions;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PrayerOfMending : Skill, IActiveSkill
 {
@@ -23,27 +24,9 @@ public class PrayerOfMending : Skill, IActiveSkill
         if (targetInfo.target.gameObject.TryGetComponent<LivingEntity>(out livingEntityTarget))
         {
             //var missile = Instantiate(missilePrefab);
-            var pom = livingEntityTarget.gameObject.AddComponent<PrayerOfMendingBuff>();
+            var pom = livingEntityTarget.gameObject.AddComponent<PrayerOfMendingBuff>(this);
             pom.remainingCharges = baseChargesCount;
             pom.sourceSkill = this;
         }
     }
-
-    void TriggerHeal(DamageInfo info)
-    {
-        if (info.realHPLost >0 && !info.wasLethalHit)
-        {
-            var le = gameObject.GetComponent<LivingEntity>();
-            le.TakeHeal(((int)baseHealAmount));
-            le.OnTakeDamage -= TriggerHeal;
-            if (remainingCharges > 0 )
-            {
-                LivingEntity newTarget = GetInDistance<LivingEntity>(baseJumpRange).Random<LivingEntity>();
-
-                var pom = newTarget.gameObject.AddComponent<PrayerOfMending>();
-                pom.remainingCharges = remainingCharges -1;
-            }
-            Destroy(this);
-        }
-    } 
 }

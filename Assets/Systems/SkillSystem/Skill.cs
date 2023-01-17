@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DamageSystem;
 using SkillSystem.Properties;
 using UnityEngine;
@@ -12,18 +11,18 @@ namespace SkillSystem
     /// <summary>
     /// The base class for all Skills
     /// </summary>   
-    public abstract class Skill : MonoBehaviour //IOnDealDamageEvents
+    public abstract class Skill : MonoBehaviour, IOnDealDamageEvents
     {
         protected GameObject source;
         public GameObject GetSource() => source;
 
         /// <summary>
-        /// The Skill's name (not the same as the Unity Object name in the inspector). Used for windows in game
+        /// The Skill's name (not the same as the Unity Object name in the inspector). Used for display text in game
         /// </summary>
         public string skillName;
 
         /// <summary>
-        /// Used for windoes in game to explain to the player what the Skill does
+        /// Used for display text in game to explain to the player what the Skill does
         /// </summary>
         public string basicDescription;
 
@@ -47,7 +46,7 @@ namespace SkillSystem
         public ValidTargets validTargets;
 
         /// <summary>
-        /// The base interval between successive uses of the Skill (modified by the cooldownRate)
+        /// The base interval between successive uses of the Skill
         /// </summary>
         public float cooldown = 2;
 
@@ -85,7 +84,7 @@ namespace SkillSystem
         /// </summary>
         public bool CoolingDown()
         {
-            Debug.Log(remainingCooldown);
+            // Debug.Log(remainingCooldown);
             return (remainingCooldown > 0) ? true : false;
         }
 
@@ -97,7 +96,14 @@ namespace SkillSystem
             remainingCooldown = cooldown;
         }
 
+        /// <summary>
+        /// Fired when the skill is made active, or aquired directly to active skills
+        /// </summary>
         public virtual void OnMadeActive() { }
+
+        /// <summary>
+        /// Fired when the skill is made inactive, or added directly to inactive skills (the spellbook)
+        /// </summary>
         public virtual void OnMadeInActive() { }
 
         //protected int layerMaskFromTargets => 255;
@@ -106,7 +112,7 @@ namespace SkillSystem
         /// Uses LayerMasks to determine if this Skill can interact with another object
         /// </summary>
         /// <param name="source">The source of the Skill</param>
-        /// <param name="target">The object to interact with</param>
+        /// <param name="target">The object that the skill could interact with</param>
         /// <returns>True if the Skill can interact, false otherwise</returns>
         protected bool IsValidTarget(GameObject source, GameObject target)
         {
@@ -198,18 +204,24 @@ namespace SkillSystem
             return ModifiableSkillProperty.GetModifiedValue(propertyIdentifier, baseAmount, source);
         }
 
-        protected List<T> GetInDistance<T>(float range) where T : MonoBehaviour
+        /// <summary>
+        /// Finds all objects of a certian type withint a certain range
+        /// </summary>
+        /// <typeparam name="T">The MonoBehaviour to look for</typeparam>
+        /// <param name="range">The range to search in</param>
+        /// <returns></returns>
+        protected List<T> GetInDistancePhysics<T>(float range) where T : MonoBehaviour
         {
-            var physicsList = Physics.OverlapSphere(gameObject.transform.position, range, Physics.AllLayers, QueryTriggerInteraction.UseGlobal);
+            var overlapSphere = Physics.OverlapSphere(gameObject.transform.position, range, Physics.AllLayers, QueryTriggerInteraction.UseGlobal);
 
             var list = new List<T>();
 
-            foreach (var item in physicsList)
+            foreach (var collider in overlapSphere)
             {
-                T tempT;
-                if (item.gameObject.TryGetComponent<T>(out tempT))
+                T componentType;
+                if (collider.gameObject.TryGetComponent<T>(out componentType))
                 {
-                    list.Add(tempT);
+                    list.Add(componentType);
                 }
             }
 

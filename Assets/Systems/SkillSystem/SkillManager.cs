@@ -24,14 +24,13 @@ namespace SkillSystem
 
         //public List<Skill> InitialSkills;
         protected List<Skill> spellBook = new List<Skill>();
+        //bool currentlyCasting = false;
+        List<Skill> currentlyCasting = new List<Skill>();
 
         public Skill attack;
         public Skill block;
         public Skill skill1;
         public Skill skill2;
-
-        //bool currentlyCasting = false;
-        List<Skill> currentlyCasting = new List<Skill>();
 
         public event Action<CastEventInfo, CheckForAny> CanICast;
         public event Action<CastEventInfo> OnBeforeCast;
@@ -73,6 +72,12 @@ namespace SkillSystem
 
         }
 
+        /// <summary>
+        /// Adds a skill to the skill manager
+        /// </summary>
+        /// <param name="skillToAquire">The skill to be aquired</param>
+        /// <param name="addToActiveBook">Should the skill be made active when aquired?</param>
+        /// <returns></returns>
         public Skill Aquire(Skill skillToAquire, bool addToActiveBook = false)
         {
             Skill newSkill = GameObject.Instantiate(skillToAquire);
@@ -82,32 +87,34 @@ namespace SkillSystem
             
             if (addToActiveBook)
             {
-                AddSkillToEnabled(newSkill);
+                ActivateSkill(newSkill);
             }
             else
             {
-                AddSkillToDisabled(newSkill);
+                DeactivateSkill(newSkill);
             }
 
             return newSkill;
         }
 
-        void AddSkillToEnabled(Skill skill)
+        void ActivateSkill(Skill skill)
         {
             skill.gameObject.SetActive(true);
             skill.OnMadeActive();
             disabledSkillsList.Remove(skill);
             enabledSkillsList.Add(skill);
             skill.transform.SetParent(enabledSkills.transform);
+            skill.OnMadeActive();
         }
 
-        void AddSkillToDisabled(Skill skill)
+        void DeactivateSkill(Skill skill)
         {
             skill.gameObject.SetActive(false);
             skill.OnMadeInActive();
             enabledSkillsList.Remove(skill);
             disabledSkillsList.Add(skill);
             skill.transform.SetParent(disabledSkills.transform);
+            skill.OnMadeInActive();
         }
 
         void AquireInitialSkill(ref Skill skill)
@@ -176,6 +183,11 @@ namespace SkillSystem
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skill">The Skill that is being used / cast</param>
+        /// <param name="triggerDown">True if fired on key down, fasle if fired on key up</param>
         protected void UseSkill(Skill skill, bool triggerDown)
         {
             if (skill is null)
@@ -196,8 +208,8 @@ namespace SkillSystem
 
             if (skill is IChanneledSkill channeledSkill && !triggerDown)
             {
-                Debug.Log("Skill is IChanneledSkill");
-                channeledSkill.StopCast();
+                // Debug.Log("Skill is IChanneledSkill");
+                channeledSkill.EndChannel();
                 //currentlyCasting.Remove(skill);
                 return;
             }
@@ -211,7 +223,7 @@ namespace SkillSystem
 
             if (skill is IActiveSkill activeSkill && triggerDown)
             {
-                Debug.Log("skill is IActiveSkill");
+                // Debug.Log("skill is IActiveSkill");
                 //currentlyCasting = true;
 
                 CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
@@ -222,7 +234,7 @@ namespace SkillSystem
 
                 if (checker.Found() || skill.CoolingDown())
                 {
-                    Debug.Log("Checker says skill cannot be cast: Found():" + checker.Found() + "   OnCooldown():" + skill.CoolingDown());
+                    Debug.Log("Checker says skill cannot be cast: Found(): " + checker.Found() + " ||  OnCooldown(): " + skill.CoolingDown());
                     return;
                 }
 

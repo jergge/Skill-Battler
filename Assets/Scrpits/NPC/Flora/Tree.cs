@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using DamageSystem;
+using UnityEngine;
 
 public class Tree : Flora, IDamageable
 {
@@ -12,17 +12,17 @@ public class Tree : Flora, IDamageable
         throw new System.NotImplementedException();
     }
 
-    public DamageInfo? TakeDamage(float damage)
+    public DamageInfo? TakeDamage(DamageUnit damage)
     {
-        if ( damage >= SingleHitDestroyAmount )
+        if ( damage.baseAmount >= SingleHitDestroyAmount )
         {
             Die();
-            return new DamageInfo(true, damage, 0, damage);
+            return new DamageInfo(true, (float)damage, 0, (float)damage);
         }
-        else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount), damage);
+        else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount), (float)damage);
     }
 
-    public DamageInfo? TakeHeal(float heal)
+    public DamageInfo? TakeHeal(DamageUnit healUnit)
     {
         return null;
     }

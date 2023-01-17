@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TerrainGeneration;
-using System;
+using UnityEngine;
 
 //should return values between -1 and 1
 public abstract class NoiseSampler : UpdateableData
@@ -10,6 +10,7 @@ public abstract class NoiseSampler : UpdateableData
 
     public int seed;
     public float scale = 1;
+    public Vector2 offset;
 
     protected Vector2 minMaxNoise;
     public float minNoiseHeight => minMaxNoise.x;

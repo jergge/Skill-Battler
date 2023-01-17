@@ -1,42 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace TerrainGeneration{
 public class WorldMeshGenerator : MonoBehaviour
 {
-
+    [Header("Noise Sampler Settings")]
+    public NoiseSampler noiseSampler;
     public bool randomInBuild = false;
+    public Vector2 randomOffsetMinMax;
+    Vector2 randomOffset;
+    public Vector2 randomScaleMinMax;
+    float randomScale;
 
+    [Header("World Size")]
     public float worldSizeX;
     public float worldSizeZ;
-    public float heightToTestHeightFrom = 200;
-
-    //verticies per unity unit
-    [Range(.05f, 3)] public float verteciesPerUnitEditor = 1f;
-    [Range(.05f, 3)] public float verteciesPerUnitGame = 2f;
-    float verticiesPerUnit => (Application.isPlaying) ? verteciesPerUnitGame : verteciesPerUnitEditor;
-
-    public bool bakeCollider;
-
-    public Material heightMapMaterial;
-    public bool generateWaterMesh = true;
-    public Material flatWaterMaterial;
-
-    public NoiseSampler noiseSampler;
-
     public AnimationCurve heightCurve;
     [Range(0,100)]
     public float heightScale;
 
+    [Header("Vertex Resolution")]
+    //verticies per unity unit
+    [Range(.05f, 3)] public float verteciesPerUnitEditor = 1f;
+    [Range(.05f, 3)] public float verteciesPerUnitGame = 2f;
+    float verticiesPerUnit => (Application.isPlaying) ? verteciesPerUnitGame : verteciesPerUnitEditor;
     public bool autoUpdate;
+
+    [Header("Physics Settings")]
+    public bool bakeCollider;
+    public float raycastTestHeight = 200;
+
+    [Header("Matieral Settings")]
+    public Material heightMapMaterial;
+    public bool generateWaterMesh = true;
+    public Material flatWaterMaterial;
+    public Layer[] layers = new Layer[8];
 
 
     int totalVerticiesX;
     int totalVerticiesZ;
 
-    public Layer[] layers = new Layer[8];
 
     float maxMeshHeight;
     float minMeshHeight;
@@ -48,7 +53,7 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         RaycastHit hitInfo;
         //Debug.Log("Testing height at point " + point);
-        if(Physics.Raycast(new Vector3(point.x, heightToTestHeightFrom + maxMeshHeight, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
+        if(Physics.Raycast(new Vector3(point.x, raycastTestHeight + maxMeshHeight, point.y), Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask("Walls and Floors"), QueryTriggerInteraction.UseGlobal))
         {
             return hitInfo.point.y;
         }
@@ -88,9 +93,22 @@ public class WorldMeshGenerator : MonoBehaviour
 
     void Awake()
     {
+        if (randomInBuild)
+        {
+            GenerateNewRandom();
+        }
         noiseSampler.Reset();
         GenerateNewChuks();
         //GenerateWater();
+    }
+
+    void GenerateNewRandom()
+    {
+        randomOffset = new Vector2(Random.Range(-1000, 1000), Random.Range(-1000, 1000));
+        randomScale = Random.Range(100,300);
+
+        noiseSampler.scale = randomScale;
+        noiseSampler.offset = randomOffset;
     }
 
     void GenerateWater()
@@ -216,6 +234,7 @@ public class WorldMeshGenerator : MonoBehaviour
         
 
     }
+
     public void RegenerateMeshFromNewNoise()
     {
         foreach(Transform t in transform)
@@ -233,6 +252,7 @@ public class WorldMeshGenerator : MonoBehaviour
 
         noiseSampler.OnVaulesUpdated += RegenerateMeshFromNewNoise;
     }
+    
     public void ClearChunks()
     {
         noiseSampler.OnVaulesUpdated -= RegenerateMeshFromNewNoise;

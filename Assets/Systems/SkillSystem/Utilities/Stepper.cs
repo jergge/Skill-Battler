@@ -5,7 +5,7 @@ using System;
 using SkillSystem.Properties;
 using DamageSystem;
 
-namespace SkillSystem { namespace Utilities {
+namespace SkillSystem.Utilities {
 
 public class Stepper
 {
@@ -39,7 +39,7 @@ public class Stepper
     {
         while (secondsRemaining > 0)
         {
-            target.TakeDamage(Mathf.RoundToInt(damageSum));
+            target.TakeDamage( (DamageUnit)damageSum );
             damageSum = 0;
             secondsRemaining--;
             yield return new WaitForSeconds(1);
@@ -50,4 +50,4 @@ public class Stepper
             GameObject.Destroy(script);
         }
     }
-}}}
+}}

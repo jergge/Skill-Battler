@@ -6,16 +6,14 @@ using UnityEngine;
 
 namespace SkillSystem
 {
+    /// <summary>
+    /// This is a skill the deals damage to a target
+    /// </summary>
     public interface IDamagingSkill : IOnDealDamageEvents
     {
-        new public event Action<DamageInfo?> OnDealDamage;
-
         public DamageInfo? DealDamageTo(DamageUnit damageUnit, IDamageable target)
         {
-            var damageInfo = target.TakeDamage(damageUnit);
-            //OnDealDamage?.Invoke(damageInfo);
-            //OnDealDamage(damageInfo);
-            return damageInfo;
+            return target.TakeDamage(damageUnit);
         }
     }
 }
