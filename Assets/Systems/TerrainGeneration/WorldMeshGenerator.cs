@@ -7,6 +7,7 @@ namespace TerrainGeneration{
 public class WorldMeshGenerator : MonoBehaviour
 {
     [Header("Noise Sampler Settings")]
+    [ExposedScriptableObject]
     public NoiseSampler noiseSampler;
     public bool randomInBuild = false;
     public Vector2 randomOffsetMinMax;
@@ -119,7 +120,6 @@ public class WorldMeshGenerator : MonoBehaviour
         }
         //Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
         float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
-        // float topOfWater = 100f;
 
         Vector3[] verticies = new Vector3[4] 
         {
@@ -128,12 +128,12 @@ public class WorldMeshGenerator : MonoBehaviour
             new Vector3(worldSizeX, topOfWater, 0           ),      //bottom right
             new Vector3(worldSizeX, topOfWater, worldSizeZ  )       //top right
         };
+
         int[] triangles = new int[6] 
         {
             0, 1, 2,
             1, 3, 2
         };
-
 
         GameObject waterObj = new GameObject("Water Mesh");
         waterObj.AddComponent<MeshRenderer>();
@@ -249,8 +249,6 @@ public class WorldMeshGenerator : MonoBehaviour
             chunk.UpdateMesh();
             }
         }
-
-        noiseSampler.OnVaulesUpdated += RegenerateMeshFromNewNoise;
     }
     
     public void ClearChunks()
