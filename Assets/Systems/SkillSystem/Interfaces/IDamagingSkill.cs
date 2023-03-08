@@ -7,7 +7,7 @@ using UnityEngine;
 namespace SkillSystem
 {
     /// <summary>
-    /// This is a skill the deals damage to a target
+    /// This is a skill that deals damage to a target
     /// </summary>
     public interface IDamagingSkill : IOnDealDamageEvents
     {

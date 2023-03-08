@@ -12,6 +12,7 @@ public static class ModifiableSkillProperty {
         speed,
         cooldownRate,
         radius,
+        sizeScale,
         cost
     };
 
@@ -24,7 +25,7 @@ public static class ModifiableSkillProperty {
         foreach ( var list in allMods )
         {
             //Debug.Log("in first foreach loop");
-            foreach (var function in list.GetPropertyModifiers())
+            foreach (var function in list.GetPropertyModifiers(value))
             {
                 modifiedValue = (function.value == value) ? function.Evaluate(modifiedValue) : modifiedValue;
             }

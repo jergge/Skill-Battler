@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using SkillSystem.Properties;
 using DamageSystem;
+using SkillSystem.Properties;
+using UnityEngine;
 
 namespace SkillSystem{
 public abstract class Missile : Skill
@@ -23,8 +23,20 @@ public abstract class Missile : Skill
     public float maxTravelDistance =>
         GetModifiedValue(ModifiableSkillProperty.ModifyValue.range, BaseMaxTravelDistance);
 
-    public float MaxTravelTime = 10;
+    public float baseSizeScale = 1;
+    public float sizeScale =>
+        GetModifiedValue(ModifiableSkillProperty.ModifyValue.radius, baseSizeScale);
+
+    public float maxTravelTime = 10;
 
     public LayerMask collisionOffload;
     public LayerMask collisionSelfDestruct;
+
+    protected MissilePrefab CreateFromPrefab(Vector3 position,  Quaternion rotation, TargetInfo targetInfo)
+    {
+        MissilePrefab missilePrefab = GameObject.Instantiate<MissilePrefab>(misslePrefab, position, rotation);
+        missilePrefab.Configure(this, targetInfo);
+
+        return misslePrefab;
+    }
 }}

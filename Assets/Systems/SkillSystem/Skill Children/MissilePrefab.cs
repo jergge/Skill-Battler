@@ -16,13 +16,15 @@ public class MissilePrefab : MonoBehaviour
     float distanceTraveled;
     float MaxTravelTime;
     float timeAlive;
+    float radius;
     Skill.ValidTargets validTargets;
 
     List<IDamageable> alreadyDamagedInFrame = new List<IDamageable>();
+    List<IDamageable> alreadyDamagedEver = new List<IDamageable>();
 
     public GameObject source { get; protected set; }
 
-    LayerMask collisionDamage;
+    LayerMask collisionOffload;
     LayerMask collisionDestroy;
 
     GameObject targetObject;
@@ -41,12 +43,13 @@ public class MissilePrefab : MonoBehaviour
         targetObject = targetInfo.target;
         initialTarget = targetInfo.position;
         maxTravelDistance = m.maxTravelDistance;
-        MaxTravelTime = m.MaxTravelTime;
-        collisionDamage = m.collisionOffload;
+        MaxTravelTime = m.maxTravelTime;
+        collisionOffload = m.collisionOffload;
         collisionDestroy = m.collisionSelfDestruct;
         source = m.GetSource();
         validTargets = m.validTargets;
-    }
+        gameObject.transform.localScale = gameObject.transform.localScale * m.sizeScale;
+        }
     // Update is called once per frame
     void Update()
     {
@@ -72,13 +75,13 @@ public class MissilePrefab : MonoBehaviour
         } 
     }
 
-    void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         Debug.Log("Skill " + name + " colliding with " + other.gameObject.name);
         if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();
-        } else if ( collisionDamage.Contains(other.gameObject) && Skill.IsValidTarget(source, other.gameObject, validTargets))
+        } else if ( collisionOffload.Contains(other.gameObject) && Skill.IsValidTarget(source, other.gameObject, validTargets))
         {
             IDamageable damagable;
             if(other.gameObject.TryGetComponent<IDamageable>(out damagable))
@@ -86,6 +89,7 @@ public class MissilePrefab : MonoBehaviour
                 if(!alreadyDamagedInFrame.Contains(damagable))
                 {
                     alreadyDamagedInFrame.Add(damagable);
+                    alreadyDamagedEver.Add(damagable);
                     Debug.Log("Skill " + name + " dealing damage to " + other.name);
                     // damagable.TakeDamage(damage);
                     damagable.TakeDamage(new DamageUnit(damage, damageType, source));
@@ -98,6 +102,7 @@ public class MissilePrefab : MonoBehaviour
     void Die()
     {
         //do some stuff beforehand...
+        Debug.Log(this.name + "'s Die() function has been called");
 
         Destroy(gameObject);
     }

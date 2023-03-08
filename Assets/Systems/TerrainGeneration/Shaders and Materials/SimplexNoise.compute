@@ -77,30 +77,31 @@ float2 sampleOffset;
 float2 samplePoint;
 float2 octaveSampleChange = float2(1000, 1000);
 
-//0
-#pragma kernel Sample
-[numthreads(10 ,1, 1)]
-void Sample (uint3 id : SV_DispatchThreadID)
+#pragma kernel Sample2D
+[numthreads(128 ,1, 1)]
+void Sample2D (uint3 id : SV_DispatchThreadID)
 {
     float amplitude = 1;
     float frequency = 1;
 
-    float sampledNoise;
+    float noise;
+
+    float2 input = inputs2[id.x];
     
     for (int j = 0; j < octaves; j++)
     {
-        float sampleX = (samplePoint.x + sampleOffset.x) / scale * frequency + octaveSampleChange.x;
-        float sampleY = (samplePoint.y + sampleOffset.y) / scale * frequency + octaveSampleChange.y;
+        float sampleX = (input.x + sampleOffset.x) / scale * frequency + octaveSampleChange.x;
+        float sampleY = (input.y + sampleOffset.y) / scale * frequency + octaveSampleChange.y;
 
         float noiseValue = snoise(float2(sampleX, sampleY));
 
-        sampledNoise += noiseValue * amplitude;
+        noise += noiseValue * amplitude;
 
         amplitude *= persistence;
         frequency *= lacunarity;
     }
 
-    noise[id.x] = sampledNoise;
+    outputs1[id.x] = noise;
 }
 
 //1
@@ -129,4 +130,11 @@ void OverrideV3 (uint3 id : SV_DispatchThreadID)
     }
 
     outputs3[id.x] = float3(input.x, noise, input.z);
+}
+
+#pragma kernal Sample2DMulti
+[numthreads(128, 1, 1)]
+void Sample2DMulti ()
+{
+    
 }

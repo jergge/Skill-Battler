@@ -18,13 +18,30 @@ public static class Extensions
     public static T Random<T>(this List<T> list)
     {
         int count = list.Count;
-        int randomIndex =  UnityEngine.Random.Range(0, count);
+        int randomIndex =  UnityEngine.Random.Range(0, count -1);
         return list[randomIndex];
     }
         
     public static bool Contains(this LayerMask layerMask, GameObject gameObject)
     {
         return (layerMask == (layerMask | (1<<gameObject.layer)));
+    }
+
+    public static List<T> GetInRange<T>(this MonoBehaviour monoBehaviour, float range) where T:MonoBehaviour
+    {
+        List<T> things = new List<T>();
+        var allT = GameObject.FindObjectsOfType<T>();
+
+        float squareRange = range * range;
+
+        foreach (var obj in allT)
+        {
+            if (Vector3.Distance(obj.transform.position, monoBehaviour.transform.position) <= range)
+            {
+                things.Add(obj);
+            }
+        }
+        return things;
     }
 
     // swizzles

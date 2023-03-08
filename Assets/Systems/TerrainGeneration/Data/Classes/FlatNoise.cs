@@ -1,17 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Jergge.Extensions;
+using UnityEngine;
 
-[CreateAssetMenu()]
+[CreateAssetMenu(menuName = "Noise/Flat")]
 public class FlatNoise : NoiseSampler
 {
-    public float flatNoiseValue =0f;
+    //[Range(-1, 1)]
+    public float flatNoiseValue = 0f;
 
-    public override void Reset()
-    {
-       
-    }
+    public override void Reset(){}
 
     public override float Sample(float input)
     {
@@ -31,6 +29,38 @@ public class FlatNoise : NoiseSampler
     public override float Sample(Vector4 input)
     {
         return flatNoiseValue;
+    }
+
+    protected float[] GenerateFlatNoise(int size)
+    {
+        float[] result = new float[size];
+        for (int i = 0; i < size; i++)
+        {
+            result[i] = flatNoiseValue;
+        }
+
+        noiseResult = result;
+        return result;
+    }
+
+    public override float[] Sample(float[] input, float offset)
+    {
+        return GenerateFlatNoise(input.Length);
+    }
+
+    public override float[] Sample(Vector2[] input, Vector2 offset)
+    {
+        return GenerateFlatNoise(input.Length);
+    }
+
+    public override float[] Sample(Vector3[] input, Vector3 offset)
+    {
+        return GenerateFlatNoise(input.Length);
+    }
+
+    public override float[] Sample(Vector4[] input, Vector4 offset)
+    {
+        return GenerateFlatNoise(input.Length);
     }
 
     public override Vector2[] SampleOverride(Vector2[] input, ReplaceComponent replace, Vector2 offset)

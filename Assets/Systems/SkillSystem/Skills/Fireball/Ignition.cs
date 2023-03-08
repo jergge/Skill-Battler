@@ -46,7 +46,7 @@ public class Ignition : MonoBehaviour, IStackableComponent
         Destroy(this);
     }
 
-    public void AddStacks(int s)
+    public void AddStack(int s)
     {
         stackCount += s;
         timeRemaining = baseDuration;

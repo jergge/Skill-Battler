@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu()]
+[CreateAssetMenu(menuName = "Noise/Simplex GPU")]
 public class GPUSimplexNoise : NoiseSampler
 {
     [Range(1,5)]    
@@ -12,7 +12,6 @@ public class GPUSimplexNoise : NoiseSampler
     [Range(1,10)]
     public float lacunarity = .2f;
 
-    //public bool useGPUShader = false;
     public ComputeShader Shader;
 
     Vector2[] octaveOffsets;
@@ -20,7 +19,9 @@ public class GPUSimplexNoise : NoiseSampler
 
     public override void Reset()
     {
-        //throw new System.NotImplementedException();
+        if (noiseResult is not null){
+            System.Array.Clear(noiseResult, 0, noiseResult.Length);
+        }
     }
 
     public override float Sample(float input)
@@ -53,7 +54,7 @@ public class GPUSimplexNoise : NoiseSampler
 
     public override float[] Sample(Vector2[] input, Vector2 manualOffset)
     {
-        int kernalID = Shader.FindKernel("Sample");
+        int kernalID = Shader.FindKernel("Sample2D");
 
         float[] output = new float[input.Length];
 

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de526ba172e7bd4098af576f752e3f9, type: 3}
   m_Name: FlatNoise
   m_EditorClassIdentifier: 
-  autoUpdate: 0
+  autoUpdate: 1
   seed: 0
-  scale: 1
-  flatNoiseValue: 5
+  scale: 0.5
+  offset: {x: 0, y: 0}
+  flatNoiseValue: 9.8

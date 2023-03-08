@@ -10,13 +10,27 @@ namespace TerrainGeneration{
 public class TerrainChunk : MonoBehaviour
 {
     public static int maxSideVertexCount = 255;
-    
-    public Mesh mesh;
 
+    MinMaxTracker tracker;
+    public void SetTracker(MinMaxTracker tracker)
+    {
+        this.tracker = tracker;
+    }
+
+    Vector3[,] verticies2DArray;
+    Vector2[,] verticies2DArrayXZ;
+    float[,] noise2DArray;
+
+    //Things for the mesh
+    public Mesh mesh;
     Vector3[] verticies;
     int[] triangles;
+        //Things for the height (noise and calculations)
+        Vector2[] verticiesXZ;
+        float[] noise;
 
     public bool showVertexGizmos = false;
+    bool useHeightCurve = true;
 
     float spaceBetweenVerticiesX;
     float spaceBetweenVerticiesZ;
@@ -32,7 +46,7 @@ public class TerrainChunk : MonoBehaviour
     Material material;
     AnimationCurve heightCurve;
     
-    public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position,float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseSampler noiseSampler, AnimationCurve heightCurve, float heightScale, Material material)
+    public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position,float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseSampler noiseSampler, AnimationCurve heightCurve, float heightScale, Material material, bool useHeightCurve)
     {
         if(numVerticiesX > maxSideVertexCount || numVerticiesZ > maxSideVertexCount)
         {
@@ -50,24 +64,34 @@ public class TerrainChunk : MonoBehaviour
         this.heightCurve = heightCurve;
         this.heightScale = heightScale;
         this.material = material;
+        this.useHeightCurve = useHeightCurve;
 
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void SetNoiseData(NoiseSampler sampler)
+    public void SetNoiseSampler(NoiseSampler sampler)
     {
         this.noiseSampler = sampler;
     }
 
     public void CreateMesh() {
         verticies = new Vector3[numVerticiesX * numVerticiesZ];
+        //verticies2DArray = new Vector3[numVerticiesX, numVerticiesZ];
+        //verticies2DArrayXZ = new Vector2[numVerticiesX, numVerticiesZ];
+        verticiesXZ = new Vector2[verticies.Length];
         triangles = new int[numVerticiesX * numVerticiesZ * 6];
         
         for (int i = 0, z = 0; z < numVerticiesZ; z++) {
             for (int x = 0; x < numVerticiesX; x++)
             {
-                verticies[i] = new Vector3(x*spaceBetweenVerticiesX, 0, z*spaceBetweenVerticiesZ);
+                Vector3 newCoord = new Vector3(x*spaceBetweenVerticiesX, 0, z*spaceBetweenVerticiesZ);
+                verticies[i] = newCoord;
+                //verticies2DArray[x, z] = newCoord;
+
+                Vector2 new2Coord = new Vector2(x * spaceBetweenVerticiesX, z * spaceBetweenVerticiesZ);
+                verticiesXZ[i] = new2Coord;
+                //verticies2DArrayXZ[x, z] = new2Coord;
                 i ++;
             }
         }
@@ -91,9 +115,21 @@ public class TerrainChunk : MonoBehaviour
         }
     }
 
+    [System.Obsolete("Seperate the noise creation from the noise application")]
     public void SetNoiseToHeight()
     {
         verticies = noiseSampler.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
+    }
+
+    public void GenerateNoise()
+    {
+        noise = noiseSampler.Sample(verticiesXZ, new Vector2(transform.position.x, transform.position.z));
+        //noise2DArray = noiseSampler.Sample(verticies2DArrayXZ, new Vector2(transform.position.z, transform.position.z));
+    }
+
+    public void RescaleNoise(float lower, float upper)
+    {
+        noise = noiseSampler.RescaleNoise(noise, lower, upper);
     }
 
     public (float minHeight, float maxHeight) ApplyHeight(float minNoise, float maxNoise)
@@ -102,7 +138,8 @@ public class TerrainChunk : MonoBehaviour
         float maxHeight = float.MinValue;
         for (int i = 0; i < verticies.Length; i++) 
         {
-            float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
+            //float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
+            float newHeight = (useHeightCurve) ? ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, noise[i]))) * 2 -1 ) * heightScale) : noise[i] * heightScale;
             verticies[i].y = newHeight;
 
             if (newHeight > maxHeight)
@@ -114,20 +151,6 @@ public class TerrainChunk : MonoBehaviour
             }
         }
 
-        // Parallel.For(0, verticies.Length, i =>
-        // {
-        //     float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
-        //     verticies[i].y = newHeight;
-        //     Debug.Log(i);
-        // if (newHeight > maxHeight)
-        // {
-        //     maxHeight = newHeight;
-        // } else if (newHeight < minHeight)
-        // {
-        //     minHeight = newHeight;
-        // }
-
-        // return (-50, 50);
         return (minHeight, maxHeight);
     }
 

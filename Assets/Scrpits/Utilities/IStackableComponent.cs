@@ -6,11 +6,8 @@ namespace SkillSystem
 {
     public interface IStackableComponent
     {
-        public int stackCount { get; set; }
+        //public int stackCount { get; set; }
 
-        public virtual void AddStacks(int count)
-        {
-            stackCount += count;
-        }
+        public abstract void AddStack(int count);
     }
 }

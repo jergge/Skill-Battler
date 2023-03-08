@@ -1,29 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using SkillSystem.Properties;
 using SkillSystem;
+using SkillSystem.Properties;
+using UnityEngine;
 
 public class BigDamageBuff : Buff, IModifySkillProperty
 {
     List<SkillPropertyModifier> temp = new List<SkillPropertyModifier>();
 
+
     void Start()
     {
         temp.Add(new SkillPropertyModifier(
             ModifiableSkillProperty.ModifyValue.damage,
-            (x) => x = x*2
+            (damage) => damage = damage*2
         ));
 
     }
 
-    public List<SkillPropertyModifier> GetPropertyModifiers()
+    public List<SkillPropertyModifier>? GetPropertyModifiers(ModifiableSkillProperty.ModifyValue type)
     {
-        return temp;
+        if (type == ModifiableSkillProperty.ModifyValue.damage)
+        {
+            return temp;
+        }
+        return null;
     }
 
     public override void Configure(Skill skill)
     {
         throw new System.NotImplementedException();
     }
+
+    public override void AddStack(int count)
+    {
+        throw new System.NotImplementedException();
+    }
+
 }

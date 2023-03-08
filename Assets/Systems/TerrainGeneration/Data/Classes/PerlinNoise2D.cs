@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Jergge.Extensions;
 using UnityEngine;
 
-[CreateAssetMenu()]
+[CreateAssetMenu(menuName = "Nosie/Perlin")]
 public class PerlinNoise2D : NoiseSampler
 {
     
@@ -16,9 +16,6 @@ public class PerlinNoise2D : NoiseSampler
     public float persistence;
     [Range(1,10)]
     public float lacunarity;
-
-    //public bool useGPUShader = false;
-    //public ComputeShader GPUShader;
 
     Vector2[] octaveOffsets;
     System.Random prng;
@@ -89,12 +86,6 @@ public class PerlinNoise2D : NoiseSampler
                     for (int i = 0; i < input.Length; i++)
                         input[i] = new Vector3(input[i].x, Sample(input[i].XZ() + offset.XZ()), input[i].z);
                     break;
-
-                    // Parallel.For(0, input.Length, i =>
-                    // {
-                    //     input[i] = new Vector3(input[i].x, Sample(input[i].XZ() + offset.XZ()), input[i].z);
-                    // });
-                    // break;
 
                 case ReplaceComponent.z:
                     for (int i = 0; i < input.Length; i++)

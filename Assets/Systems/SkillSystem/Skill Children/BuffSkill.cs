@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SkillSystem;
 
-public abstract class BuffSkill<T> : Skill where T:MonoBehaviour
+public abstract class BuffSkill<T> : Skill where T : Buff
 {
     T buff;
     // Start is called before the first frame update

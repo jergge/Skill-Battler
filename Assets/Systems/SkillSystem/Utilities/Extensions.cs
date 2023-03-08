@@ -11,7 +11,7 @@ public static class Extensions
         T test;
         if (gameObject.TryGetComponent<T>(out test))
         {
-            test.AddStacks(count);
+            test.AddStack(count);
             return test;
         } else{
             return gameObject.AddComponent<T>();
@@ -23,7 +23,7 @@ public static class Extensions
         T test;
         if (gameObject.TryGetComponent<T>(out test))
         {
-            test.AddStacks(count);
+            test.AddStack(count);
             return test;
         } else{
             return gameObject.AddComponent<T>();

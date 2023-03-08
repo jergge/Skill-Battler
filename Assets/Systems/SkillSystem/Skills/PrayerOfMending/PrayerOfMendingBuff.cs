@@ -7,19 +7,19 @@ using DamageSystem;
 public class PrayerOfMendingBuff : Buff
 {
     public int remainingCharges;
-    LivingEntity livingEntityOn;
+    LivingEntity livingEntity;
     public PrayerOfMending sourceSkill;
     float timeAlive;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(!gameObject.TryGetComponent<LivingEntity>(out livingEntityOn))
+        if(!gameObject.TryGetComponent<LivingEntity>(out livingEntity))
         {
             Destroy(this);
             return;
         }
-        livingEntityOn.OnTakeDamage += TriggerHeal;
+        livingEntity.OnTakeDamage += TriggerHeal;
     }
 
     void Update()
@@ -35,7 +35,7 @@ public class PrayerOfMendingBuff : Buff
     {
         if(info.realHPLost >0 && !info.wasLethalHit)
         {
-            livingEntityOn.TakeHeal((DamageUnit)sourceSkill.baseHealAmount);
+            livingEntity.TakeHeal((DamageUnit)sourceSkill.baseHealAmount);
             if (remainingCharges == 0)
             {
                 RemoveSelf();
@@ -47,7 +47,7 @@ public class PrayerOfMendingBuff : Buff
 
     void RemoveSelf()
     {
-        livingEntityOn.OnTakeDamage -= TriggerHeal;
+        livingEntity.OnTakeDamage -= TriggerHeal;
         Destroy(this);
     }
 
@@ -57,6 +57,11 @@ public class PrayerOfMendingBuff : Buff
     }
 
     public override void Configure(Skill skill)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void AddStack(int count)
     {
         throw new System.NotImplementedException();
     }
