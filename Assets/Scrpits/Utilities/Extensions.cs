@@ -27,7 +27,7 @@ public static class Extensions
         return (layerMask == (layerMask | (1<<gameObject.layer)));
     }
 
-    public static List<T> GetInRange<T>(this MonoBehaviour monoBehaviour, float range) where T:MonoBehaviour
+    public static List<T> GetInRange<T>(this GameObject gameObject, float range) where T:MonoBehaviour
     {
         List<T> things = new List<T>();
         var allT = GameObject.FindObjectsOfType<T>();
@@ -36,7 +36,7 @@ public static class Extensions
 
         foreach (var obj in allT)
         {
-            if (Vector3.Distance(obj.transform.position, monoBehaviour.transform.position) <= range)
+            if (Vector3.Distance(obj.transform.position, gameObject.transform.position) <= range)
             {
                 things.Add(obj);
             }

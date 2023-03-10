@@ -19,6 +19,12 @@ public class MissilePrefab : MonoBehaviour
     float radius;
     Skill.ValidTargets validTargets;
 
+    protected delegate void Del();
+    Del triggerOnCollisionOffload;
+
+    protected delegate void Damage();
+    Damage triggerDamage;
+
     List<IDamageable> alreadyDamagedInFrame = new List<IDamageable>();
     List<IDamageable> alreadyDamagedEver = new List<IDamageable>();
 
@@ -49,7 +55,8 @@ public class MissilePrefab : MonoBehaviour
         source = m.GetSource();
         validTargets = m.validTargets;
         gameObject.transform.localScale = gameObject.transform.localScale * m.sizeScale;
-        }
+        triggerOnCollisionOffload = m.TriggerOnCollisionOffload;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -93,6 +100,7 @@ public class MissilePrefab : MonoBehaviour
                     Debug.Log("Skill " + name + " dealing damage to " + other.name);
                     // damagable.TakeDamage(damage);
                     damagable.TakeDamage(new DamageUnit(damage, damageType, source));
+                    triggerOnCollisionOffload();
                     Die();
                 }
             }
@@ -102,7 +110,7 @@ public class MissilePrefab : MonoBehaviour
     void Die()
     {
         //do some stuff beforehand...
-        Debug.Log(this.name + "'s Die() function has been called");
+        //Debug.Log(this.name + "'s Die() function has been called");
 
         Destroy(gameObject);
     }

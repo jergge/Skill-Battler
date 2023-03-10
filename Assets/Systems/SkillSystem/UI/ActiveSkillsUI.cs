@@ -22,7 +22,7 @@ public class ActiveSkillsUI : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-        foreach (Skill skill in skillManager.GetActiveSkills()) {
+        foreach (Skill skill in skillManager.enabledSkillsList) {
             SkillUI tmp = GameObject.Instantiate(SkillUIPrefab);
             tmp.transform.SetParent(transform);
             tmp.skill = skill;

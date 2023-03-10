@@ -9,8 +9,18 @@ namespace SkillSystem
     {
         public bool active = true;
 
-        public float baseDuration;
-        public float remainingTime;
+        public float baseDuration = Mathf.Infinity;
+        public float remainingTime = Mathf.Infinity;
+        
+        protected void ReduceDuration()
+        {
+            remainingTime -= Time.deltaTime;
+            if (remainingTime <= 0)
+            {
+                OnBuffExpired?.Invoke();
+                Destroy(this);
+            }
+        }
 
         GameObject source;
 
@@ -19,5 +29,10 @@ namespace SkillSystem
 
         public abstract void AddStack(int count);
         public abstract void Configure(Skill skill);
+
+        protected void UseMaxTime()
+        {
+            
+        }
     }
 }

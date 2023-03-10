@@ -23,9 +23,9 @@ public interface IOnCastEvents
 #nullable enable
 public class CastEventInfo
 {
-    public GameObject source;
-    public Skill skill;
-    public GameObject? target;
+    public readonly GameObject source;
+    public readonly Skill skill;
+    public readonly GameObject? target;
 
     public CastEventInfo(GameObject source, Skill skill, GameObject? target)
     {

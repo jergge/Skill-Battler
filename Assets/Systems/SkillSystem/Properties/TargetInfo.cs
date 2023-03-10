@@ -14,11 +14,11 @@ public class TargetInfo
 
     public Vector3 direction;
 
-    public TargetInfo(GameObject target, float distanceToTarget, Vector3 position)
+    public TargetInfo(GameObject target, float distanceToTarget, Vector3 targetPosition)
     {
         this.target = target;
         this.distanceToTarget = distanceToTarget;
-        this.position = position;
+        this.position = targetPosition;
     }
     public TargetInfo(){
         

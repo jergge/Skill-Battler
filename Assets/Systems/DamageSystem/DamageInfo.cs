@@ -8,12 +8,12 @@ namespace DamageSystem
     /// <summary>
     /// Provides information on what happened to the receiver of the damage during their last TakeDamage call
     /// </summary>
-    public struct DamageInfo
+    public readonly struct DamageInfo
     {
-        public bool wasLethalHit;
-        public float damageAmount;
-        public float realHPLost;
-        public float remainingHP;
+        public readonly bool wasLethalHit;
+        public readonly float damageAmount;
+        public readonly float realHPLost;
+        public readonly float remainingHP;
 
         [Obsolete("Better to pass in StatsTracker.InfoFromLastOperator instead")]
         public DamageInfo(bool lethalHit, float amountDone, float remainingHP, float damageAmount)

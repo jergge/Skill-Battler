@@ -10,8 +10,8 @@ namespace SkillSystem
     [RequireComponent(typeof(StatsTracker))]
     public class SkillManager : MonoBehaviour, IOnCastEvents
     {
-        public GameObject enabledSkills;
-        List<Skill> enabledSkillsList = new List<Skill>();
+        GameObject enabledSkills;
+        public List<Skill> enabledSkillsList = new List<Skill>();
 
         public GameObject disabledSkills;
         List<Skill> disabledSkillsList = new List<Skill>();
@@ -70,6 +70,8 @@ namespace SkillSystem
             AquireInitialSkill(ref skill1);
             AquireInitialSkill(ref skill2);
 
+            Debug.Log("there are " + enabledSkillsList.Count + " skills in the active list");
+
         }
 
         /// <summary>
@@ -117,6 +119,23 @@ namespace SkillSystem
             skill.OnMadeInActive();
         }
 
+        public bool TryGetActiveSkill<SkillType>(out SkillType skill) where SkillType : Skill
+        {
+            Debug.Log("Try get acticve skill called with " + enabledSkillsList.Count + " active skills in the list");
+            foreach ( Skill s in enabledSkillsList)
+            {
+                Debug.Log("Checking if skill: [" + s.name + "] is of type [" + typeof(SkillType).ToString());
+                if ( s is SkillType )
+                {
+                    skill = (SkillType)s;
+                    return true;
+                }
+            }
+
+            skill = null;
+            return false;
+        }
+
         void AquireInitialSkill(ref Skill skill)
         {
             if (skill != null)
@@ -135,23 +154,23 @@ namespace SkillSystem
             }
         }
 
-        public List<Skill> activeList = new List<Skill>();
-        public List<Skill> GetActiveSkills()
-        {
-            activeList.Clear();
-            foreach (Transform t in enabledSkills.transform)
-            {
-                IActiveSkill active;
+        // public List<Skill> activeList = new List<Skill>();
+        // public List<Skill> GetActiveSkills()
+        // {
+        //     activeList.Clear();
+        //     foreach (Transform t in enabledSkills.transform)
+        //     {
+        //         IActiveSkill active;
 
-                if (t.gameObject.TryGetComponent<IActiveSkill>(out active))
-                {
-                    activeList.Add(t.GetComponent<Skill>());
-                    // Debug.Log("getting something");
+        //         if (t.gameObject.TryGetComponent<IActiveSkill>(out active))
+        //         {
+        //             activeList.Add(t.GetComponent<Skill>());
+        //             // Debug.Log("getting something");
 
-                }
-            }
-            return activeList;
-        }
+        //         }
+        //     }
+        //     return activeList;
+        // }
 
         void OnAttack(InputValue inputValue)
         {
@@ -195,7 +214,9 @@ namespace SkillSystem
                 return;
             }
 
-            Debug.Log("using skill: " + skill.name);
+            //Debug.Log("using skill: " + skill.name);
+
+
             if (skill is IUpdateDPad dPadSkill && triggerDown)
             {
                 Debug.Log("Skill is IUpdateDPad");
@@ -206,6 +227,7 @@ namespace SkillSystem
 
             }
 
+            //If you're releasing the key for a channeled skill
             if (skill is IChanneledSkill channeledSkill && !triggerDown)
             {
                 // Debug.Log("Skill is IChanneledSkill");
@@ -214,17 +236,23 @@ namespace SkillSystem
                 return;
             }
 
+            //If you are already casting something, or you don't have the energy to pay for it, or it's null
             if (skill == null || currentlyCasting.Count() > 0 || skill.baseCost > mainEnergyStats.current)
             {
                 Debug.Log("Skill is null or something already casting or costs too much");
                 return;
             }
 
-
+            //If you are activating an active skill
             if (skill is IActiveSkill activeSkill && triggerDown)
             {
                 // Debug.Log("skill is IActiveSkill");
                 //currentlyCasting = true;
+
+                if (skill.remainingCooldown > 0)
+                {
+                    return;
+                }
 
                 CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
 

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1913059007874363862}
   - component: {fileID: 1913059007874363861}
   - component: {fileID: 1913059007874363860}
-  - component: {fileID: 1913059007874363883}
   - component: {fileID: 545934043473865816}
   m_Layer: 0
   m_Name: FireballPrefab
@@ -99,33 +98,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1913059007874363883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913059007874363882}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7175a7361e2d78b429b162fdcbc54074, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spellName: Fireball 1
-  basicDescription: 
-  icon: {fileID: 21300000, guid: a361edf68a2719a4b89313c1ef0d83fa, type: 3}
-  cost: 20
-  validTargets: 4
-  cooldown: 1
-  remainingCooldown: 0
-  tracksTarget: 0
-  trackableTargetLayers:
-    serializedVersion: 2
-    m_Bits: 30720
-  baseMissleSpeed: 40
-  baseMaxTravelDistance: 50
-  baseMaxTravelTime: 10
-  baseDamage: 5
 --- !u!114 &545934043473865816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,5 +110,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5961998c0c27ebc45a79c484dc1fd6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetObject: {fileID: 0}
-  initialTarget: {x: 0, y: 0, z: 0}

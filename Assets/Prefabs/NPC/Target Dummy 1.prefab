@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 3599149030808184444}
   - component: {fileID: 3599149030808184440}
   - component: {fileID: 3599149030808184441}
+  - component: {fileID: 2063709579718840551}
+  - component: {fileID: 6723619507336214121}
+  - component: {fileID: 842810873747477411}
   m_Layer: 13
   m_Name: Target Dummy 1
   m_TagString: Untagged
@@ -112,19 +115,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1fe27ef1a226847879192a7c96f7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP:
-    currentHP: 500
-    baseHP: 500
-  MP:
-    current: 0
-    baseMP: 0
-    bonus: 0
-    max: 0
-  MPRegenPerSecond: 0
-  skillHolder: {fileID: 0}
-  skills:
-  - {fileID: 1913059007874363883, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
-  skillSpawnLocation: {fileID: 0}
+  NPCHeadTarget: {fileID: 0}
+  NPCBodyTarget: {fileID: 0}
+  HP: {fileID: 2063709579718840551}
+  MP: {fileID: 0}
+  skillManager: {fileID: 0}
+  animator: {fileID: 0}
+  disableOnDie: []
   basicCircularMovement: 1
   basicCircleMovementRadius: 10
 --- !u!54 &3599149030808184441
@@ -143,3 +140,60 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &2063709579718840551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599149030808184435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243fd6442f00cae4a9bb84cfe2a78e5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  niceName: HP
+  baseValue: 100
+  bonus: 0
+  regenPerSecond: 0
+--- !u!114 &6723619507336214121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599149030808184435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac28c70d024b76d44a183a246dff30dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabledSkills: {fileID: 0}
+  disabledSkills: {fileID: 0}
+  skillSpawnLocation: {fileID: 0}
+  mainEnergyStats: {fileID: 0}
+  attack: {fileID: 0}
+  block: {fileID: 0}
+  skill1: {fileID: 0}
+  skill2: {fileID: 0}
+  activeList: []
+--- !u!95 &842810873747477411
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599149030808184435}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

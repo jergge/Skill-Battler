@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DamageSystem;
 using SkillSystem.Properties;
 using UnityEngine;
 
-namespace SkillSystem{
+namespace SkillSystem {
 public abstract class Missile : Skill
 {
     public MissilePrefab misslePrefab;
@@ -38,5 +39,12 @@ public abstract class Missile : Skill
         missilePrefab.Configure(this, targetInfo);
 
         return misslePrefab;
+    }
+
+    public event Action OnCollisionOffload;
+
+    public void TriggerOnCollisionOffload()
+    {
+        OnCollisionOffload?.Invoke();
     }
 }}

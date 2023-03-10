@@ -11,7 +11,7 @@ namespace SkillSystem
     /// <summary>
     /// The base class for all Skills
     /// </summary>   
-    public abstract class Skill : MonoBehaviour, IOnDealDamageEvents
+    public abstract class Skill : MonoBehaviour//, IOnDealDamageEvents
     {
         protected GameObject source;
         public GameObject GetSource() => source;
