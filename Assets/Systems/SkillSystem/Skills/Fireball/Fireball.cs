@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 
 public class Fireball : Missile, IActiveSkill, IOnDealDamageEvents
 {
-    public event Action<DamageInfo?> OnDealDamage;
+    public new event Action<DamageInfo?> OnDealDamage;
 
     void Update()
     {

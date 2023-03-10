@@ -15,7 +15,7 @@ namespace DamageSystem
         public readonly float realHPLost;
         public readonly float remainingHP;
 
-        [Obsolete("Better to pass in StatsTracker.InfoFromLastOperator instead")]
+        [Obsolete("Better to pass in StatsTracker.InfoFromLastOperator")]
         public DamageInfo(bool lethalHit, float amountDone, float remainingHP, float damageAmount)
         {
             this.wasLethalHit = lethalHit;
