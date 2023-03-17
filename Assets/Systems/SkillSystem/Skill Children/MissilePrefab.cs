@@ -18,6 +18,7 @@ public class MissilePrefab : MonoBehaviour
     float timeAlive;
     float radius;
     Skill.ValidTargets validTargets;
+    List<GameObject> createOnOffloadTrigger = new List<GameObject>();
 
     protected delegate void Del();
     Del triggerOnCollisionOffload;
@@ -56,7 +57,8 @@ public class MissilePrefab : MonoBehaviour
         validTargets = m.validTargets;
         gameObject.transform.localScale = gameObject.transform.localScale * m.sizeScale;
         triggerOnCollisionOffload = m.TriggerOnCollisionOffload;
-    }
+        createOnOffloadTrigger = m.createOnOffloadTrigger;
+        }
     // Update is called once per frame
     void Update()
     {
@@ -113,5 +115,19 @@ public class MissilePrefab : MonoBehaviour
         //Debug.Log(this.name + "'s Die() function has been called");
 
         Destroy(gameObject);
+    }
+
+    void SpawnOffloadObjects()
+    {
+        if ( createOnOffloadTrigger is not null)
+        {
+            foreach (var obj in createOnOffloadTrigger)
+            {
+                if (obj is not null)
+                {
+                    GameObject.Instantiate<GameObject>(obj, transform.position, Quaternion.Euler(Vector3.up));
+                }
+            }
+        }
     }
 }}

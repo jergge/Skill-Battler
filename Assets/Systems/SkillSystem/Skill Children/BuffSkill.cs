@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using SkillSystem;
+using UnityEngine;
 
 public abstract class BuffSkill<T> : Skill where T : Buff
 {
     T buff;
-    // Start is called before the first frame update
-    void OnEnable()
+
+    public override void Enabled()
     {
-        buff = source.AddComponent<T>();
+        if (buff is null)
+        {
+            buff = source.AddComponent<T>();
+        }
+        buff?.gameObject.SetActive(true);
     }
 
-    
-    void OnDisable()
+    public override void Disabled()
     {
-        Destroy(buff);
+        buff?.gameObject.SetActive(false);
     }
 }

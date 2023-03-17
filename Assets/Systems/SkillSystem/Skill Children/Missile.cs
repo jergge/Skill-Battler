@@ -31,6 +31,7 @@ public abstract class Missile : Skill
     public float maxTravelTime = 10;
 
     public LayerMask collisionOffload;
+    public List<GameObject> createOnOffloadTrigger = new List<GameObject>();
     public LayerMask collisionSelfDestruct;
 
     protected MissilePrefab CreateFromPrefab(Vector3 position,  Quaternion rotation, TargetInfo targetInfo)
