@@ -43,7 +43,7 @@ public class StatsTracker : MonoBehaviour
         float valueBefore = stats.current;
         stats.current = Mathf.Min(stats.current + value, stats.maxValue);
         stats.afterLastChange = new InfoFromLastOperator
-            {operatorValueInput = value, delta = stats.current - valueBefore, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+            {preMitigationChange = value, postMitigationChange = stats.current - valueBefore, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
         return stats;
     }
 
@@ -58,14 +58,14 @@ public class StatsTracker : MonoBehaviour
         float valueBefore = stats.current;
         stats.current = Mathf.Max(stats.current - input, 0);
         stats.afterLastChange = new InfoFromLastOperator
-            {operatorValueInput = input, delta = valueBefore - stats.current, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+            {preMitigationChange = input, postMitigationChange = valueBefore - stats.current, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
         return stats;
     }
 
     public struct InfoFromLastOperator
     {
-        public float operatorValueInput;
-        public float delta;
+        public float preMitigationChange;
+        public float postMitigationChange;
         public bool isZeroOrLess;
         public float current;
         public float percent;
