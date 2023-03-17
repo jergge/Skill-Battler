@@ -47,20 +47,21 @@ MonoBehaviour:
   skillName: Fireball
   basicDescription: Shoots a fast moving, long range ball of fire in the targeted
     direction
-  icon: {fileID: 0}
-  cost: 0
+  icon: {fileID: 21300000, guid: a361edf68a2719a4b89313c1ef0d83fa, type: 3}
+  baseCost: 0
   validTargets: 4
-  cooldown: 2
-  remainingCooldown: 0
+  cooldown: 1
   misslePrefab: {fileID: 545934043473865816, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
   baseDamage: 20
   damageType: 2
-  baseSpeed: 30
+  baseSpeed: 15
   BaseMaxTravelDistance: 50
-  MaxTravelTime: 4
+  baseSizeScale: 1
+  maxTravelTime: 10
   collisionOffload:
     serializedVersion: 2
     m_Bits: 30848
+  createOnOffloadTrigger: []
   collisionSelfDestruct:
     serializedVersion: 2
     m_Bits: 0
