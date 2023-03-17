@@ -8,24 +8,35 @@ namespace SkillSystem {
 public class ActiveSkillsUI : MonoBehaviour
 {
     public SkillManager skillManager;
-    public SkillUI SkillUIPrefab;
-    // Start is called before the first frame update
+    public SkillUI skillUIPrefab;
+
+    Dictionary<Skill, SkillUI> enabledSkills = new Dictionary<Skill, SkillUI>();
+
     void Start()
     {
-        
+
+        skillManager.OnSkillEnabled += OnSkillEnabled;
+        skillManager.OnSkillDisabled += OnSkillDisabled;
     }
 
-    // Update is called once per frame
-    void Update()
-    {   
-        foreach (Transform t in transform) 
+    void OnSkillEnabled(Skill skill)
+    {
+        if (!enabledSkills.ContainsKey(skill))
         {
-            Destroy(t.gameObject);
+            enabledSkills.Add(skill, CreateUIElement(skill));
         }
-        foreach (Skill skill in skillManager.enabledSkillsList) {
-            SkillUI tmp = GameObject.Instantiate(SkillUIPrefab);
-            tmp.transform.SetParent(transform);
-            tmp.skill = skill;
-        }
+    }
+
+    void OnSkillDisabled(Skill skill)
+    {
+        enabledSkills.Remove(skill);
+    }
+
+    SkillUI CreateUIElement(Skill skill)
+    {
+        SkillUI skillUI = GameObject.Instantiate(skillUIPrefab);
+        skillUI.transform.SetParent(transform);
+        skillUI.Configure(skill);
+        return skillUI;
     }
 }}

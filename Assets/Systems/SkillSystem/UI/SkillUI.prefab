@@ -170,5 +170,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46148eed8487a6e43ac4d86ee3ac6593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill: {fileID: 0}
   cooldownText: {fileID: 4398348503772815692}
+  icon: {fileID: 6144802773758733988}
