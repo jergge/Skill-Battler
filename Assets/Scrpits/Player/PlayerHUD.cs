@@ -12,13 +12,7 @@ public class PlayerHUD : PlayerUI
     public DPad dPad;
     List<PlayerMP> mps = new List<PlayerMP>();
 
-    public float gap;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    public float spaceBetweenStatsBars;
 
     // Update is called once per frame
     void Update()
@@ -30,12 +24,12 @@ public class PlayerHUD : PlayerUI
 
         int i = 0;
 
-        foreach(StatsTracker m in GetComponentsInParent<StatsTracker>())
+        foreach(StatsTracker statsTracker in GetComponentsInParent<StatsTracker>())
         {
              PlayerMP mp = GameObject.Instantiate(prefab);
              mp.transform.SetParent(energies.transform);
-             mp.stats = m;
-             mp.transform.localPosition = Vector3.zero + Vector3.down * gap * i;
+             mp.stats = statsTracker;
+             mp.transform.localPosition = Vector3.zero + Vector3.down * spaceBetweenStatsBars * i;
 
             i++;
              //mps.Add(mp);

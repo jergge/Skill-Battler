@@ -4,7 +4,7 @@ using UnityEngine;
 using SkillSystem;
 using DamageSystem;
 
-public class Ignition : MonoBehaviour, IStackableComponent
+public class Ignition : MonoBehaviour, UniqueComponent
 {
 
     public float timeRemaining;

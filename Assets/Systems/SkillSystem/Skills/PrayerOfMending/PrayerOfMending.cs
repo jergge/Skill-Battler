@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DamageSystem;
 using Jergge.Extensions;
 using SkillSystem;
-using SkillSystem.Extensions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,7 +23,8 @@ public class PrayerOfMending : Skill, IActiveSkill
         if (targetInfo.target.gameObject.TryGetComponent<LivingEntity>(out livingEntityTarget))
         {
             //var missile = Instantiate(missilePrefab);
-            var pom = livingEntityTarget.gameObject.AddComponent<PrayerOfMendingBuff>(this);
+            var pom = livingEntityTarget.gameObject.AddComponent<PrayerOfMendingBuff>();
+            pom.Configure(this);
             pom.remainingCharges = baseChargesCount;
             pom.sourceSkill = this;
         }

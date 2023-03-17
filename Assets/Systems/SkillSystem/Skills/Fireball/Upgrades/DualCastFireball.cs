@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DamageSystem;
 using Jergge.Extensions;
 using SkillSystem;
@@ -31,23 +32,39 @@ public class DualCastFireball : IModifySkill<Fireball>
 
     protected override void OnSkillCast(CastEventInfo castEventInfo)
     {
-        LivingEntity randomTarget = gameObject.GetInRange<LivingEntity>(detectionRange).Random<LivingEntity>();
-        Debug.Log("Casting the dualcast fireball @" + randomTarget.name);
+        Debug.Log(castEventInfo);
+        if( remaingDualCastProcTime > 0)
+        {
+            return;
+        }
+        // List<LivingEntity> livingEntities = gameObject.GetInRange<LivingEntity>(detectionRange);
+        // List<LivingEntity> enemies = (List<LivingEntity>)from le in livingEntities
+        //                                                  where Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies)
+        //                                                  select le;
+        // var randomEnemy = enemies.Random();
 
-        skill.Cast(gameObject.GetComponent<SkillManager>().skillSpawnLocation, 
-            new TargetInfo(randomTarget.gameObject, 20, randomTarget.transform.position));
+        LivingEntity randomEnemy = gameObject.GetInRange<LivingEntity>(detectionRange)
+            .Random((le) => Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies));
+
+        Debug.Log("Casting the dualcast fireball @" + randomEnemy.name);
+
+        Debug.Log(skillManager.skillSpawnLocation is null);
+        Debug.Log(randomEnemy is null);
+
+        skill.Cast(skillManager.skillSpawnLocation, 
+            new TargetInfo(randomEnemy.gameObject, 20, randomEnemy.transform.position));
 
         remaingDualCastProcTime = timeBetweenDualCastProcs;
     }
 
-    protected override void OnDealDamage(DamageInfo? damageInfo)
-    {
-        LivingEntity randomTarget = gameObject.GetInRange<LivingEntity>(detectionRange).Random<LivingEntity>();
-        Debug.Log("Casting the bonus on hit fireball @" + randomTarget.name);
+    // protected override void OnDealDamage(DamageInfo? damageInfo)
+    // {
+    //     LivingEntity randomTarget = gameObject.GetInRange<LivingEntity>(detectionRange).Random<LivingEntity>();
+    //     Debug.Log("Casting the bonus on hit fireball @" + randomTarget.name);
 
-        skill.Cast(gameObject.GetComponent<SkillManager>().skillSpawnLocation, 
-            new TargetInfo(randomTarget.gameObject, 20, randomTarget.transform.position));
+    //     skill.Cast(gameObject.GetComponent<SkillManager>().skillSpawnLocation, 
+    //         new TargetInfo(randomTarget.gameObject, 20, randomTarget.transform.position));
 
-        remaingOnDamageProcTime = timeBetweenDualCastProcs;
-    }
+    //     remaingOnDamageProcTime = timeBetweenDualCastProcs;
+    // }
 }

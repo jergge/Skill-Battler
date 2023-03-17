@@ -23,7 +23,6 @@ public class WaterShield : Skill, IChanneledSkill
         if (!CoolingDown())
         {
             StartCoroutine(Channel());
-
         }
     }
 
@@ -69,14 +68,14 @@ public class WaterShield : Skill, IChanneledSkill
         ResetCooldown();
     }
 
-    public override void OnMadeActive()
+    public override void Enabled()
     {
         energy = source.AddComponent<StatsTracker>();
         energy.baseValue = 50f;
         energy.regenPerSecond = 2;
     }
 
-    public override void OnMadeInActive()
+    public override void Disabled()
     {
         energy = null;
     }
