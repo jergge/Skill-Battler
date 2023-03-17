@@ -1,62 +1,115 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DamageSystem;
+using SkillSystem;
 using UnityEngine;
 
 namespace SkillSystem.Properties {
-public abstract class IModifySkill<T> : Buff where T:Skill
-{
-    SkillManager skillManager;
-    protected T skill;
     
+/// <summary>
+/// Attatches to a GameObject (with a Skill Manager) and provides modifications to Skills of Type<T>
+/// </summary>
+/// <typeparam name="S">The Skill Type to modify</typeparam>
+public abstract class IModifySkill<S> : Buff where S: Skill
+{
+    /// <summary>
+    /// A Reference to this object's SkillManager
+    /// </summary>
+    protected SkillManager? skillManager;
+
+    /// <summary>
+    /// That skill that will be modified
+    /// </summary>
+    protected S skill;
+
     void Start()
     {
-        if ( gameObject.TryGetComponent<SkillManager>(out skillManager) )
+        if ( !gameObject.TryGetComponent<SkillManager>(out skillManager) )
         {
-            skillManager.OnAfterCast += WhenOnSkillCast;
-
-            if ( skillManager.TryGetActiveSkill<T>(out skill) )
-            {
-                skill.OnDealDamage += OnDealDamage;
-            }
+            Destroy(this);
+        } else {
+            TryFindSkill();
         }
     }
 
-    private void WhenOnSkillCast(CastEventInfo info)
+    void TryFindSkill()
     {
-        if ( info.skill is T )
+        if (skillManager.TryGetEnabledSkill<S>(out skill))
         {
-            OnSkillCast(info);
+            RegisterEvents();
+        } else {
+            skillManager.OnSkillEnabled += CheckIfEnabled;
         }
     }
-    protected virtual void OnSkillCast(CastEventInfo castEventInfo) { }
 
-    // private void WhenOnSkillCollisionOffload()
-    // {
-    //     OnSkillCollisionOffload();
-    // }
-    protected virtual void OnSkillCollisionOffload() { }
-
-    // private void WhenOnDealDamage(DamageInfo damageInfo)
-    // {
-    //     OnDealDamage(damageInfo);
-    // }
-    protected virtual void OnDealDamage(DamageInfo? damageInfo) { }
-
-    public override void AddStack(int count)
+    void CheckIfEnabled(Skill skill)
     {
-        throw new System.NotImplementedException();
+        if (skill is S)
+        {
+            RegisterEvents();
+            skillManager.OnSkillDisabled += CheckIfDisabled;
+            skillManager.OnSkillEnabled -= CheckIfEnabled;
+        }
     }
 
-    public override void Configure(Skill skill)
+    void CheckIfDisabled(Skill skill)
+    {
+        if (skill == this.skill)
+        {
+            UnregisterEvents();
+            skillManager.OnSkillEnabled += CheckIfEnabled;
+            skillManager.OnSkillDisabled -= CheckIfDisabled;
+        }
+    }
+
+
+    void RegisterEvents()
+    {
+        skillManager.OnAfterCast += WhenOnSkillCast;             
+        if (skillManager.TryGetEnabledSkill<S>(out skill) )
+        {
+            skill.OnDealDamage += OnDealDamage;
+        }
+    }
+
+    void UnregisterEvents()
+    {
+        skillManager.OnAfterCast -= WhenOnSkillCast;
+        skill.OnDealDamage -= WhenOnDealDamage;        
+    }
+
+
+
+    private void WhenOnSkillCast(CastEventInfo castEventInfo)
+    {
+        if (castEventInfo.skill is S)
+        {
+            OnSkillCast(castEventInfo);
+        }
+    }
+        protected virtual void OnSkillCast(CastEventInfo castEventInfo) { }
+
+    private void WhenOnSkillCollisionOffload()
+    {
+        OnSkillCollisionOffload();
+    }
+        protected virtual void OnSkillCollisionOffload() { }
+
+    private void WhenOnDealDamage(DamageInfo? damageInfo)
+    {
+        OnDealDamage(damageInfo);
+    }
+        protected virtual void OnDealDamage(DamageInfo? damageInfo) { }
+
+    public override void Configure(SkillSystem.Skill skill)
     {
         throw new System.NotImplementedException();
     }
 
     void Destroy()
     {
-        skillManager.OnAfterCast -= WhenOnSkillCast;
-        skill.OnDealDamage -= OnDealDamage;
+        UnregisterEvents();
     }
 
 }}
