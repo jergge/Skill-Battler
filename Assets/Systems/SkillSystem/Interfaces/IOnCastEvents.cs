@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace SkillSystem {
 public interface IOnCastEvents
@@ -32,6 +32,12 @@ public class CastEventInfo
         this.source = source;
         this.skill = skill;
         this.target = target;
+    }
+
+    public override string ToString()
+    {
+        string message = source.name + " fired " + skill.name + " was fired at: " + ((target is null) ? "nothing in particualr" : target.name);
+        return message;
     }
 }}
 #nullable restore
