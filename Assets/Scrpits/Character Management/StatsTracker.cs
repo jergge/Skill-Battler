@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class StatsTracker : MonoBehaviour
 {
-    public string niceName;
+    //public string niceName;
+
+    public enum StatType { Health, Mana, Energy };
+    public StatType statType = StatType.Mana;
+
     public float baseValue = 100;
     public float bonus;
     public float current { get; protected set; }
