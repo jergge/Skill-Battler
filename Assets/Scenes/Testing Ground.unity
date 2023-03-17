@@ -377,6 +377,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2749952915575366070, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: skillUIPrefab
+      value: 
+      objectReference: {fileID: 582208564549400088, guid: cb2678f713854ed4d81809365aa63388, type: 3}
+    - target: {fileID: 3917176327155661982, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5023372781478248984, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -393,6 +401,10 @@ PrefabInstance:
       propertyPath: skillSpawnLocation
       value: 
       objectReference: {fileID: 86285627}
+    - target: {fileID: 6192808381332787026, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8003697038164437214, guid: 16a4ed19f72f3fd468b224b6a73e4daa, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 418687318
