@@ -43,7 +43,7 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnDeathEvents, IForceab
         HP -= damageUnit.baseAmount;
         var HPChangeInfo = HP.afterLastChange;
 
-        Debug.Log(name + " took " + HPChangeInfo.delta + " damage");
+        Debug.Log(name + " took " + HPChangeInfo.postMitigationChange + " damage");
 
         DamageInfo damageInfo = new DamageInfo(HPChangeInfo);
         //DamageInfo damageInfo = new DamageInfo((statsInfo.current == 0) ? true : false, damage, statsInfo.current);

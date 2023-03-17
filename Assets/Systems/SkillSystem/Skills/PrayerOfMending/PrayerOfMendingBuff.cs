@@ -33,7 +33,7 @@ public class PrayerOfMendingBuff : Buff
 
     protected void TriggerHeal(DamageInfo info)
     {
-        if(info.realHPLost >0 && !info.wasLethalHit)
+        if(info.damageTaken >0 && !info.wasLethalHit)
         {
             livingEntity.TakeHeal((DamageUnit)sourceSkill.baseHealAmount);
             if (remainingCharges == 0)
