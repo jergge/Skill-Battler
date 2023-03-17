@@ -32,9 +32,4 @@ public class BigDamageBuff : Buff, IModifySkillProperty
         throw new System.NotImplementedException();
     }
 
-    public override void AddStack(int count)
-    {
-        throw new System.NotImplementedException();
-    }
-
 }

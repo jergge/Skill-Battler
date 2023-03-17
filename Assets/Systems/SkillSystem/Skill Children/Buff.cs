@@ -5,9 +5,13 @@ using UnityEngine;
 
 namespace SkillSystem
 {
-    public abstract class Buff : MonoBehaviour, IStackableComponent
+    /// <summary>
+    /// Attatches to a GameObject and provides a benifit
+    /// </summary>
+    public abstract class Buff : MonoBehaviour, UniqueComponent
     {
-        public bool active = true;
+        [Header("Base Class - Buff settings")]
+        //public bool active = true;
 
         public float baseDuration = Mathf.Infinity;
         public float remainingTime = Mathf.Infinity;
@@ -27,7 +31,6 @@ namespace SkillSystem
         public event Action OnBuffExpired;
         public event Action OnBuffRemoved;
 
-        public abstract void AddStack(int count);
         public abstract void Configure(Skill skill);
 
         protected void UseMaxTime()
