@@ -4,10 +4,17 @@ using UnityEngine;
 
 namespace SkillSystem
 {
-    public interface IStackableComponent
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface UniqueComponent<TSelf> : UniqueComponent
     {
-        //public int stackCount { get; set; }
+        public abstract void AddNew(TSelf newComponent);
+        public abstract void AddNew();
+    }
 
-        public abstract void AddStack(int count);
+    public interface UniqueComponent
+    {
+
     }
 }
