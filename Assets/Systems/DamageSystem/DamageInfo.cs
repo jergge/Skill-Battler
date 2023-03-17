@@ -10,26 +10,26 @@ namespace DamageSystem
     /// </summary>
     public readonly struct DamageInfo
     {
-        public readonly bool wasLethalHit;
-        public readonly float damageAmount;
-        public readonly float realHPLost;
+        public readonly float damageSent;
+        public readonly float damageTaken;
         public readonly float remainingHP;
+        public readonly bool wasLethalHit;
 
         [Obsolete("Better to pass in StatsTracker.InfoFromLastOperator")]
         public DamageInfo(bool lethalHit, float amountDone, float remainingHP, float damageAmount)
         {
-            this.wasLethalHit = lethalHit;
-            this.realHPLost = amountDone;
+            this.damageSent = damageAmount;
+            this.damageTaken = amountDone;
             this.remainingHP = remainingHP;
-            this.damageAmount = damageAmount;
+            this.wasLethalHit = lethalHit;
         }
 
         public DamageInfo(StatsTracker.InfoFromLastOperator info)
         {
-            this.realHPLost = info.delta;
-            this.wasLethalHit = info.isZeroOrLess;
+            this.damageSent = info.preMitigationChange;
+            this.damageTaken = info.postMitigationChange;
             this.remainingHP = info.current;
-            this.damageAmount = info.operatorValueInput;
+            this.wasLethalHit = info.isZeroOrLess;
         }
     }
 }
