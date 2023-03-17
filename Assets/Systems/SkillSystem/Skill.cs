@@ -13,7 +13,11 @@ namespace SkillSystem
     /// </summary>   
     public abstract class Skill : MonoBehaviour//, IOnDealDamageEvents
     {
-        protected GameObject source;
+        /// <summary>
+        /// Who used or ownes the skill / where did the skill come from
+        /// </summary>
+        public GameObject source;
+        [Obsolete("Get the property from Skill.source instead")]
         public GameObject GetSource() => source;
 
         /// <summary>
@@ -31,6 +35,14 @@ namespace SkillSystem
         /// </summary>
         public Sprite icon;
 
+        /// <summary>
+        /// Which resource does the skill use;
+        /// </summary>
+        public StatsTracker.StatType? resourceType = null;
+
+        /// <summary>
+        /// How much of a resource it takes to use the skill
+        /// </summary>
         public float baseCost;
         public float cost => GetModifiedValue(ModifiableSkillProperty.ModifyValue.cost, baseCost);
 
@@ -50,9 +62,12 @@ namespace SkillSystem
         /// </summary>
         public float cooldown = 2;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected float cooldownRate =>
             GetModifiedValue(ModifiableSkillProperty.ModifyValue.cooldownRate, 1);
-        public float remainingCooldown;
+        public float remainingCooldown { get; protected set; }
 
         /// <summary>
         /// Controlls whether or not the Skill will reduce its cooldown each frame
@@ -97,17 +112,18 @@ namespace SkillSystem
         }
 
         /// <summary>
-        /// Fired when the skill is made active, or aquired directly to active skills
+        /// Called by SkillManager when the skill is made active, or aquired directly to active skills
         /// </summary>
-        public virtual void OnMadeActive() { }
+        public virtual void Enabled() { }
 
         /// <summary>
-        /// Fired when the skill is made inactive, or added directly to inactive skills (the spellbook)
+        /// Called by SkillManager when the skill is made inactive, or added directly to inactive skills (the spellbook)
         /// </summary>
-        public virtual void OnMadeInActive() { }
+        public virtual void Disabled() { }
 
         //protected int layerMaskFromTargets => 255;
 
+        [System.Obsolete("Object inheriting from Skill should use IsValidTarget(GameObject target) instead")]
         /// <summary>
         /// Uses LayerMasks to determine if this Skill can interact with another object
         /// </summary>
@@ -115,6 +131,46 @@ namespace SkillSystem
         /// <param name="target">The object that the skill could interact with</param>
         /// <returns>True if the Skill can interact, false otherwise</returns>
         protected bool IsValidTarget(GameObject source, GameObject target)
+        {
+            //Debug.Log("Layer Comparison between [" + source.name + " on layer (" + source.layer + ")] and [" + target.name + " on layer (" + target.layer + ")] based on rule {" + validTargets + "}");
+            if (target.layer == 0)
+                return false;
+
+            switch (validTargets)
+            {
+                case ValidTargets.All:
+                    return true;
+
+                case ValidTargets.Self:
+                    if (source == target)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                case ValidTargets.Others:
+                    return true;
+
+                case ValidTargets.Allies:
+                    return (source.layer == target.layer);
+
+                case ValidTargets.Enemies:
+                    //Debug.Log("Enemy Layer Compaere");
+                    return (source.layer != target.layer);
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Uses LayerMasks to determine if this Skill can interact with another object
+        /// </summary>
+        /// <param name="target">The object that the skill could interact with</param>
+        /// <returns>True if the Skill can interact, false otherwise</returns>
+        protected bool IsValidTarget(GameObject target)
         {
             //Debug.Log("Layer Comparison between [" + source.name + " on layer (" + source.layer + ")] and [" + target.name + " on layer (" + target.layer + ")] based on rule {" + validTargets + "}");
             if (target.layer == 0)
@@ -184,6 +240,7 @@ namespace SkillSystem
             }
         }
 
+        [System.Obsolete("Set the property with Skill.source instead")]
         /// <summary>
         /// Set's the Skill's source to a GameObject
         /// </summary>
