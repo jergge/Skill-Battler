@@ -6,19 +6,17 @@ using UnityEngine;
 namespace DamageSystem
 {
     /// <summary>
-    /// Object can be damaged and healed
+    /// A GameObject that can be damaged
     /// </summary>
     public interface IDamageable
     {
         /// <summary>
-        /// The default implementation calls TakeDamge(float damageUnit.baseAmount)
+        /// Causes Damage to the GameObject
         /// </summary>
         /// <param name="damageUnit"></param>
         /// <returns></returns>
         public abstract DamageInfo? TakeDamage(DamageUnit damageUnit);
 
         public bool IsDead();
-
-        public abstract DamageInfo? TakeHeal(DamageUnit healUnit);
     }
 }

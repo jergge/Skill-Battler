@@ -5,41 +5,11 @@ using UnityEngine;
 
 namespace DamageSystem
 {
-    public class DamageUnit
+    public class DamageUnit : ActionUnit
     {
-        public readonly float baseAmount;
 
-        [Flags]
-        public enum DamageType {
-            pure    = 1 ,
-            fire    = 2,
-            water   = 4,
-            wind    = 8,
-            earth   = 16,
-            solar   = 32,
-            lunar   = 64,
-            holy    = 128,
-            shadow  = 256,
-
-            steam   = fire  | water,
-            scorch  = fire  | wind,
-            lava    = fire  | earth,
-            vapour  = water | wind,
-            mud     = water | earth,
-            nature  = wind  | earth,
-            astral  = solar | lunar
-        };
-
-        public readonly DamageType damageType;
-
-        public readonly GameObject source;
-
-        public DamageUnit(float baseAmount, DamageType damageType, GameObject source)
-        {
-            this.baseAmount = baseAmount;
-            this.damageType = damageType;
-            this.source = source;
-        }
+        public DamageUnit(float baseAmount, Type type, GameObject source) : base(baseAmount, type, source)
+        {        }
 
         /// <summary>
         /// Combine 2 DamageUnits into one. Adds baseAmounts together and 'bitwise ors' the damageTypes.
@@ -55,8 +25,8 @@ namespace DamageSystem
                 throw new NotSupportedException("Cannot combine DamgeUnits from different sources");
             }
             float newBaseAmoumt = a.baseAmount + b.baseAmount;
-            DamageType newDamageType = a.damageType | b.damageType;
-            return new DamageUnit(newBaseAmoumt, newDamageType, a.source);
+            Type type = a.type | b.type;
+            return new DamageUnit(newBaseAmoumt, type, a.source);
         }
 
         public DamageUnit Combine (DamageUnit other)

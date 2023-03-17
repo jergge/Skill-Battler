@@ -11,7 +11,7 @@ public class MissilePrefab : MonoBehaviour
 
     float speed;
     float damage;
-    DamageUnit.DamageType damageType;
+    DamageUnit.Type damageType;
     float maxTravelDistance;
     float distanceTraveled;
     float MaxTravelTime;

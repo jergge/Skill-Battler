@@ -14,7 +14,7 @@ public abstract class Missile : Skill
     public float damage =>
         GetModifiedValue(ModifiableSkillProperty.ModifyValue.damage, baseDamage);
 
-    public DamageUnit.DamageType damageType;
+    public DamageUnit.Type damageType;
 
     public float baseSpeed = 10;
     public float speed =>

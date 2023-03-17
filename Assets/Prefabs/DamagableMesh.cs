@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using DamageSystem;
+using UnityEngine;
 
 public class DamagableMesh : MonoBehaviour, IDamageable
 {
     public GameObject passToIDamageable;
+    public GameObject passToIHealable;
     IDamageable IDamageable;
+    IHealable IHealable;
 
     void Start()
     {
-        if ( passToIDamageable.TryGetComponent<IDamageable>(out IDamageable))
+        if ( passToIDamageable.TryGetComponent<IDamageable>(out IDamageable) && passToIHealable.TryGetComponent<IHealable>(out IHealable))
         {
 
         } else 
@@ -29,8 +31,8 @@ public class DamagableMesh : MonoBehaviour, IDamageable
         return IDamageable.TakeDamage(damage);
     }
 
-    public DamageInfo? TakeHeal(DamageUnit heal)
+    public HealInfo? TakeHeal(HealUnit heal)
     {
-        return IDamageable.TakeHeal(heal);
+        return IHealable.TakeHeal(heal);
     }
 }
