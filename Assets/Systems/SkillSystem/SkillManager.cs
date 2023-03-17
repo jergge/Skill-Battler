@@ -7,14 +7,19 @@ using UnityEngine.InputSystem;
 
 namespace SkillSystem
 {
+    /// <summary>
+    /// Manages the Skills for a GameObject
+    /// </summary>
     [RequireComponent(typeof(StatsTracker))]
     public class SkillManager : MonoBehaviour, IOnCastEvents
     {
-        GameObject enabledSkills;
-        public List<Skill> enabledSkillsList = new List<Skill>();
+        public GameObject enabledSkills;
+        List<Skill> enabledSkillsList = new List<Skill>();
+        public event Action<Skill> OnSkillEnabled;
 
         public GameObject disabledSkills;
         List<Skill> disabledSkillsList = new List<Skill>();
+        public event Action<Skill> OnSkillDisabled;
 
         public Transform skillSpawnLocation;
         public TargetInfo targetInfo = new TargetInfo();
@@ -35,7 +40,6 @@ namespace SkillSystem
         public event Action<CastEventInfo, CheckForAny> CanICast;
         public event Action<CastEventInfo> OnBeforeCast;
         public event Action<CastEventInfo> OnAfterCast;
-
 
         void Awake()
         {
@@ -65,13 +69,16 @@ namespace SkillSystem
                 Destroy(t.gameObject);
             }
 
+            Invoke("AquireInitialSkills", .5f);
+
+        }
+
+        void AquireInitialSkills()
+        {
             AquireInitialSkill(ref attack);
             AquireInitialSkill(ref block);
             AquireInitialSkill(ref skill1);
-            AquireInitialSkill(ref skill2);
-
-            Debug.Log("there are " + enabledSkillsList.Count + " skills in the active list");
-
+            AquireInitialSkill(ref skill2);            
         }
 
         /// <summary>
@@ -89,45 +96,47 @@ namespace SkillSystem
             
             if (addToActiveBook)
             {
-                ActivateSkill(newSkill);
+                EnableSkill(newSkill);
             }
             else
             {
-                DeactivateSkill(newSkill);
+                DisableSkill(newSkill);
             }
 
             return newSkill;
         }
 
-        void ActivateSkill(Skill skill)
+        void EnableSkill(Skill skill)
         {
-            skill.gameObject.SetActive(true);
-            skill.OnMadeActive();
+            //skill.gameObject.SetActive(true);
+            //skill.MakeActive();
             disabledSkillsList.Remove(skill);
             enabledSkillsList.Add(skill);
             skill.transform.SetParent(enabledSkills.transform);
-            skill.OnMadeActive();
+            skill.Enabled();
+            OnSkillEnabled?.Invoke(skill);
         }
 
-        void DeactivateSkill(Skill skill)
+        void DisableSkill(Skill skill)
         {
-            skill.gameObject.SetActive(false);
-            skill.OnMadeInActive();
+            //skill.gameObject.SetActive(false);
+            //skill.MakeInactive();
             enabledSkillsList.Remove(skill);
             disabledSkillsList.Add(skill);
             skill.transform.SetParent(disabledSkills.transform);
-            skill.OnMadeInActive();
+            skill.Disabled();
+            OnSkillDisabled?.Invoke(skill);
         }
 
-        public bool TryGetActiveSkill<SkillType>(out SkillType skill) where SkillType : Skill
+        public bool TryGetEnabledSkill<SkillType>(out SkillType skill) where SkillType : Skill
         {
-            Debug.Log("Try get acticve skill called with " + enabledSkillsList.Count + " active skills in the list");
-            foreach ( Skill s in enabledSkillsList)
+            Debug.Log("TryGetEnabledSkill called with " + enabledSkillsList.Count + " active skills in the list");
+            foreach ( Skill enabledSkill in enabledSkillsList)
             {
-                Debug.Log("Checking if skill: [" + s.name + "] is of type [" + typeof(SkillType).ToString());
-                if ( s is SkillType )
+                //Debug.Log("Checking if skill: [" + s.name + "] is of type [" + typeof(SkillType).ToString());
+                if ( enabledSkill is SkillType )
                 {
-                    skill = (SkillType)s;
+                    skill = (SkillType)enabledSkill;
                     return true;
                 }
             }
