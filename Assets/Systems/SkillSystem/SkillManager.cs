@@ -11,7 +11,7 @@ namespace SkillSystem
     /// Manages the Skills for a GameObject
     /// </summary>
     [RequireComponent(typeof(StatsTracker))]
-    public class SkillManager : MonoBehaviour, IOnCastEvents
+    public class SkillManager : MonoBehaviour, IOnCastEvents, ISendToastNotifications
     {
         public GameObject enabledSkills;
         List<Skill> enabledSkillsList = new List<Skill>();
@@ -21,6 +21,18 @@ namespace SkillSystem
         List<Skill> disabledSkillsList = new List<Skill>();
         public event Action<Skill> OnSkillDisabled;
 
+        public List<Skill> allSkills
+        {
+            get
+            {
+                List<Skill> allSkills = new List<Skill>();
+                allSkills.AddRange(enabledSkillsList);
+                allSkills.AddRange(disabledSkillsList);
+
+                return allSkills;
+            }
+        }
+
         public Transform skillSpawnLocation;
         public TargetInfo targetInfo = new TargetInfo();
         public StatsTracker mainEnergyStats;
@@ -28,7 +40,7 @@ namespace SkillSystem
         public event Action<DPadMap> NewDPadMap;
 
         //public List<Skill> InitialSkills;
-        protected List<Skill> spellBook = new List<Skill>();
+        //protected List<Skill> spellBook = new List<Skill>();
         //bool currentlyCasting = false;
         List<Skill> currentlyCasting = new List<Skill>();
 
@@ -40,6 +52,8 @@ namespace SkillSystem
         public event Action<CastEventInfo, CheckForAny> CanICast;
         public event Action<CastEventInfo> OnBeforeCast;
         public event Action<CastEventInfo> OnAfterCast;
+
+        public event Action<ToastNotificationInfo> PushToast;
 
         void Awake()
         {
@@ -82,21 +96,37 @@ namespace SkillSystem
         }
 
         /// <summary>
-        /// Adds a skill to the skill manager
+        /// Adds a new skill to the skill manager
         /// </summary>
         /// <param name="skillToAquire">The skill to be aquired</param>
         /// <param name="addToActiveBook">Should the skill be made active when aquired?</param>
         /// <returns></returns>
         public Skill Aquire(Skill skillToAquire, bool addToActiveBook = false)
         {
+            //fist check to make sure we don't already know the skill
+            if (enabledSkillsList.Contains(skillToAquire) || disabledSkillsList.Contains(skillToAquire))
+            {
+                return null;
+            }
+
             Skill newSkill = GameObject.Instantiate(skillToAquire);
 
-            newSkill.SetSource(gameObject);
+            newSkill.source = gameObject;
             newSkill.transform.position = transform.position;
-            
-            if (addToActiveBook)
+
+            PushToast?.Invoke(new ToastNotificationInfo(newSkill.icon, "You have learned a new skill: " + newSkill.skillName));
+
+            if (addToActiveBook || skill1 is null || skill2 is null)
             {
                 EnableSkill(newSkill);
+
+                if (skill1 is null)
+                {
+                    skill1 = newSkill;
+                } else if (skill2 is null)
+                {
+                    skill2 = newSkill;
+                }
             }
             else
             {
@@ -155,7 +185,7 @@ namespace SkillSystem
 
         void Update()
         {
-            spellBook = enabledSkills.GetComponentsInChildren<Skill>().ToList<Skill>();
+            //spellBook = enabledSkills.GetComponentsInChildren<Skill>().ToList<Skill>();
             IHaveTargetInfo info;
             if (TryGetComponent<IHaveTargetInfo>(out info))
             {
@@ -163,23 +193,6 @@ namespace SkillSystem
             }
         }
 
-        // public List<Skill> activeList = new List<Skill>();
-        // public List<Skill> GetActiveSkills()
-        // {
-        //     activeList.Clear();
-        //     foreach (Transform t in enabledSkills.transform)
-        //     {
-        //         IActiveSkill active;
-
-        //         if (t.gameObject.TryGetComponent<IActiveSkill>(out active))
-        //         {
-        //             activeList.Add(t.GetComponent<Skill>());
-        //             // Debug.Log("getting something");
-
-        //         }
-        //     }
-        //     return activeList;
-        // }
 
         void OnAttack(InputValue inputValue)
         {
@@ -297,5 +310,8 @@ namespace SkillSystem
             IChanneledSkill c = skill as IChanneledSkill;
             c.CastEnded -= SkillEnded;
         }
+
     }
+
+    
 }
