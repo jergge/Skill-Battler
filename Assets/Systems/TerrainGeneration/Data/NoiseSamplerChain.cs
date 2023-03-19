@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TerrainGeneration
 {
-    [CreateAssetMenu(menuName = "Noise/Chain")]
+[CreateAssetMenu(menuName = "Terrian System/Noise/Chain")]
     public class NoiseSamplerChain : NoiseSampler
     {
         public Vector2 noiseBounds;

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Jergge.Extensions;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Nosie/Perlin")]
+[CreateAssetMenu(menuName = "Terrian System/Noise/Perlin")]
 public class PerlinNoise2D : NoiseSampler
 {
     

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Jergge.Extensions;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Noise/Flat")]
+[CreateAssetMenu(menuName = "Terrian System/Noise/Flat")]
 public class FlatNoise : NoiseSampler
 {
     //[Range(-1, 1)]

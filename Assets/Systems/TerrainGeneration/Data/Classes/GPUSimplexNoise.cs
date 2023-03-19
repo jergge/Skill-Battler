@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Noise/Simplex GPU")]
+[CreateAssetMenu(menuName = "Terrian System/Noise/GPU Simplex")]
 public class GPUSimplexNoise : NoiseSampler
 {
     [Range(1,5)]    

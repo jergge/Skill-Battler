@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-[CreateAssetMenu(menuName = "Nosie/Open Simplex")]
+[CreateAssetMenu(menuName = "Terrian System/Noise/Open Symplex")]
 public class OpenSimplexNoise : NoiseSampler
 {
     System.Random prng;
