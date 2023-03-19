@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using DamageSystem;
+using SkillSystem;
 using UnityEngine;
 
 public class DamagableMesh : MonoBehaviour, IDamageable
 {
     public GameObject passToIDamageable;
-    public GameObject passToIHealable;
     IDamageable IDamageable;
+    
+    public GameObject passToIHealable;
     IHealable IHealable;
+
+    public GameObject passToSkillManager;
+    SkillManager skillMananger;
 
     void Start()
     {
