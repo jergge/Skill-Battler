@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+// using UnityEngine.UIElements;
 
 public class PlayerHUD : PlayerUI
 {
@@ -14,7 +15,11 @@ public class PlayerHUD : PlayerUI
 
     public float spaceBetweenStatsBars;
 
-    // Update is called once per frame
+    void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     void Update()
     {
         foreach ( Transform t in energies.transform)
