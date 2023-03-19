@@ -63,6 +63,15 @@ public static class Extensions
         return things;
     }
 
+    public static float Remap(float input, float inputMin, float inputMax, float outputMin, float outputMax)
+    {
+            float noramlised = Mathf.InverseLerp(inputMin, inputMax, input);
+
+            float output = Mathf.Lerp(outputMin, outputMax, noramlised);
+
+            return output;
+    }
+
     // swizzles
     public static Vector3 ToV3(this Vector4 v)
     {
