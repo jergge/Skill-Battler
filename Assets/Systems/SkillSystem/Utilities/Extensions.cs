@@ -100,4 +100,16 @@ public static partial class Extensions
         return gameObject.AddComponent<C>();
     }
 
+    public static bool TryGetComponentInParent<C>(this GameObject gameObject, out C component) where C : MonoBehaviour
+    {
+        component = gameObject.GetComponentInParent<C>();
+
+        if ( component is not null )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }
