@@ -11,7 +11,7 @@ namespace SkillSystem
     /// <summary>
     /// The base class for all Skills
     /// </summary>   
-    public abstract class Skill : MonoBehaviour//, IOnDealDamageEvents
+    public abstract class Skill : MonoBehaviour
     {
         /// <summary>
         /// Who used or ownes the skill / where did the skill come from
@@ -285,11 +285,18 @@ namespace SkillSystem
             return list;
         }
 
+        [Obsolete(">>>???<<< I want a better way to manage this, not a hacky events workaround...")]
         public DamageInfo? DealDamageTo(DamageUnit damageUnit, IDamageable target)
         {
             var damageInfo = target.TakeDamage(damageUnit);
             OnDealDamage?.Invoke(damageInfo);
             return damageInfo;
         }
+
+        public SkillTooltip GetToolip()
+        {
+            return new SkillTooltip(this);
+        }
+
     }
 }
