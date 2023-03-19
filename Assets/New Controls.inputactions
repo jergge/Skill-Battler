@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SkillsMenu",
+                    "type": "Button",
+                    "id": "1f61be30-7d15-46c6-83e9-d41bf8eecebd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -415,6 +424,78 @@
                     "processors": "",
                     "groups": "XBox Controller",
                     "action": "PauseMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "105eb139-49e3-4d83-a72b-a60f443d2a2b",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "SkillsMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6ea5e889-8c03-4f50-9d6a-c8c4e52773fc",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XBox Controller",
+                    "action": "SkillsMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Menu Control",
+            "id": "100a3049-36c6-4b8c-ae12-4528aebe57cd",
+            "actions": [
+                {
+                    "name": "ExitMenu",
+                    "type": "Button",
+                    "id": "fc6245a5-ec46-46c0-861e-13d4a68f8671",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1bad685a-0279-43f0-aa0f-35c1dab6ac18",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "ExitMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88039701-5afc-48fb-96ba-52d9bd22e71b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XBox Controller",
+                    "action": "ExitMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aec41482-fb1d-4f47-bcf8-c80ae4699fd2",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "ExitMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
