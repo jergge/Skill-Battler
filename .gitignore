@@ -11,6 +11,7 @@
 /[Uu]ser[Ss]ettings/
 /[Aa]ssets/DownloadedAssets/
 /[Aa]ssets/TextMesh\ Pro/
+/Assets/Systems/Terrain Generation System/Assets/Materials/Megascans
 
 
 # MemoryCaptures can get excessive in size.
@@ -54,6 +55,10 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
+*.meta
+
+*.asset
+*.mat
 
 # Unity3D generated file on crash reports
 sysinfo.txt
