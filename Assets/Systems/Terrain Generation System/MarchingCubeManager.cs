@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Jergge.Extensions;
+using NoiseSystem;
 using UnityEngine;
 
 namespace TerrainGeneration
@@ -160,7 +161,7 @@ namespace TerrainGeneration
             for (int i = 0; i < singleCorners.Length; i++)
             {
                 Vector3 corner = singleCorners[i];
-                singleCornersWithNoise[i] = new Vector4(corner.x, corner.y, corner.z, noiseData.Sample(corner));
+                // singleCornersWithNoise[i] = new Vector4(corner.x, corner.y, corner.z, noiseData.Sample(corner));
             }
         }
 

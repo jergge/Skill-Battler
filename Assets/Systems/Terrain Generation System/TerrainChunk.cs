@@ -2,137 +2,159 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using NoiseSystem;
 using UnityEngine;
 
 namespace TerrainGeneration{
 
-[RequireComponent(typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider))]
-public class TerrainChunk : MonoBehaviour
-{
-    public static int maxSideVertexCount = 255;
-
-    MinMaxTracker tracker;
-    public void SetTracker(MinMaxTracker tracker)
+    [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider))]
+    public class TerrainChunk : MonoBehaviour
     {
-        this.tracker = tracker;
-    }
+        public static int maxSideVertexCount = 255;
 
-    Vector3[,] verticies2DArray;
-    Vector2[,] verticies2DArrayXZ;
-    float[,] noise2DArray;
+        MinMaxTracker tracker;
+        public void SetTracker(MinMaxTracker tracker)
+        {
+            this.tracker = tracker;
+        }
 
-    //Things for the mesh
-    public Mesh mesh;
-    Vector3[] verticies;
-    int[] triangles;
+        //Vector3[,] verticies2DArray;
+        //Vector2[,] verticies2DArrayXZ;
+        //float[,] noise2DArray;
+
+        //Things for the mesh
+        public Mesh mesh;
+
+        Vector3[] verticies;
+        /// <summary>
+        /// a 2D (x and z) array of verticies in world space used for the sampling function
+        /// </summary>
+        Vector2[] verticiesForSample;
+
+        int[] triangles;
         //Things for the height (noise and calculations)
-        Vector2[] verticiesXZ;
+        //Vector2[] verticiesXZ;
+
         float[] noise;
+        float[] normalizedNoise;
 
-    public bool showVertexGizmos = false;
-    bool useHeightCurve = true;
+        public bool showVertexGizmos = false;
+        bool useHeightCurve = true;
 
-    float spaceBetweenVerticiesX;
-    float spaceBetweenVerticiesZ;
+        float spaceBetweenVerticiesX;
+        float spaceBetweenVerticiesZ;
 
-    int numVerticiesX;
-    int numVerticiesZ;
+        int numVerticiesX;
+        int numVerticiesZ;
 
-    public bool bakeCollider = true;
+        public bool bakeCollider = true;
 
-    float heightScale;
+        float heightScale;
 
-    NoiseSampler noiseSampler;
-    Material material;
-    AnimationCurve heightCurve;
-    
-    public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position,float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseSampler noiseSampler, AnimationCurve heightCurve, float heightScale, Material material, bool useHeightCurve)
-    {
-        if(numVerticiesX > maxSideVertexCount || numVerticiesZ > maxSideVertexCount)
+        // NoiseSampler noiseSampler;
+        NoiseWrapper2D noiseWrapper2D;
+        Material material;
+        AnimationCurve heightCurve;
+
+        public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position, float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseWrapper2D noiseWrapper2D, AnimationCurve heightCurve, float heightScale, Material material, bool useHeightCurve)
         {
-            throw new System.ArgumentOutOfRangeException("You cannot assign more verticies to a chunk than the set limit of: " + maxSideVertexCount);
-        }
-
-        this.numVerticiesX = numVerticiesX;
-        this.numVerticiesZ = numVerticiesZ;
-
-        this.spaceBetweenVerticiesX = spaceBetweenVerticiesX;
-        this.spaceBetweenVerticiesZ = spaceBetweenVerticiesZ;
-
-        transform.position = position;
-        this.noiseSampler = noiseSampler;
-        this.heightCurve = heightCurve;
-        this.heightScale = heightScale;
-        this.material = material;
-        this.useHeightCurve = useHeightCurve;
-
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-    }
-
-    public void SetNoiseSampler(NoiseSampler sampler)
-    {
-        this.noiseSampler = sampler;
-    }
-
-    public void CreateMesh() {
-        verticies = new Vector3[numVerticiesX * numVerticiesZ];
-        //verticies2DArray = new Vector3[numVerticiesX, numVerticiesZ];
-        //verticies2DArrayXZ = new Vector2[numVerticiesX, numVerticiesZ];
-        verticiesXZ = new Vector2[verticies.Length];
-        triangles = new int[numVerticiesX * numVerticiesZ * 6];
-        
-        for (int i = 0, z = 0; z < numVerticiesZ; z++) {
-            for (int x = 0; x < numVerticiesX; x++)
+            if (numVerticiesX > maxSideVertexCount || numVerticiesZ > maxSideVertexCount)
             {
-                Vector3 newCoord = new Vector3(x*spaceBetweenVerticiesX, 0, z*spaceBetweenVerticiesZ);
-                verticies[i] = newCoord;
-                //verticies2DArray[x, z] = newCoord;
-
-                Vector2 new2Coord = new Vector2(x * spaceBetweenVerticiesX, z * spaceBetweenVerticiesZ);
-                verticiesXZ[i] = new2Coord;
-                //verticies2DArrayXZ[x, z] = new2Coord;
-                i ++;
+                throw new System.ArgumentOutOfRangeException("You cannot assign more verticies to a chunk than the set limit of: " + maxSideVertexCount);
             }
-        }
-        
-        int vert = 0, tri = 0;
-        for (int z = 0; z < numVerticiesZ-1; z++)
-        {
-            for (int x = 0; x < numVerticiesX-1; x++)
-            {
-                triangles[tri + 0] = vert + 0;
-                triangles[tri + 1] = vert + 0 + numVerticiesX;
-                triangles[tri + 2] = vert + 1;
-                triangles[tri + 3] = vert + 1;
-                triangles[tri + 4] = vert + 0 + numVerticiesX;
-                triangles[tri + 5] = vert + 1 + numVerticiesX;
 
+            this.numVerticiesX = numVerticiesX;
+            this.numVerticiesZ = numVerticiesZ;
+
+            this.spaceBetweenVerticiesX = spaceBetweenVerticiesX;
+            this.spaceBetweenVerticiesZ = spaceBetweenVerticiesZ;
+
+            transform.position = position;
+            this.noiseWrapper2D = noiseWrapper2D;
+            this.heightCurve = heightCurve;
+            this.heightScale = heightScale;
+            this.material = material;
+            this.useHeightCurve = useHeightCurve;
+
+            mesh = new Mesh();
+            GetComponent<MeshFilter>().mesh = mesh;
+        }
+
+        [System.Obsolete("Set this in the Configure method instead")]
+        public void SetNoiseSampler(NoiseWrapper2D sampler)
+        {
+            this.noiseWrapper2D = sampler;
+        }
+
+        public void CreateMesh()
+        {
+            verticies = new Vector3[numVerticiesX * numVerticiesZ];
+            verticiesForSample = new Vector2[verticies.Length];
+            //verticies2DArray = new Vector3[numVerticiesX, numVerticiesZ];
+            //verticies2DArrayXZ = new Vector2[numVerticiesX, numVerticiesZ];
+            //verticiesXZ = new Vector2[verticies.Length];
+            triangles = new int[numVerticiesX * numVerticiesZ * 6];
+
+            for (int i = 0, z = 0; z < numVerticiesZ; z++)
+            {
+                for (int x = 0; x < numVerticiesX; x++)
+                {
+                    Vector3 meshCoord = new Vector3(x * spaceBetweenVerticiesX, 0, z * spaceBetweenVerticiesZ);
+                    verticies[i] = meshCoord;
+                    //verticies2DArray[x, z] = newCoord;
+
+                    // Vector2 new2Coord = new Vector2(x * spaceBetweenVerticiesX, z * spaceBetweenVerticiesZ);
+                    // verticiesXZ[i] = new2Coord;
+                    Vector2 sampleCoord = new Vector2(x * spaceBetweenVerticiesX + transform.position.x, z * spaceBetweenVerticiesZ + transform.position.z);
+                    // Vector2 sampleCoord = new Vector2(1, 1);
+                    verticiesForSample[i] = sampleCoord;
+                    //verticies2DArrayXZ[x, z] = new2Coord;
+                    i++;
+                }
+            }
+
+            int vert = 0, tri = 0;
+            for (int z = 0; z < numVerticiesZ - 1; z++)
+            {
+                for (int x = 0; x < numVerticiesX - 1; x++)
+                {
+                    triangles[tri + 0] = vert + 0;
+                    triangles[tri + 1] = vert + 0 + numVerticiesX;
+                    triangles[tri + 2] = vert + 1;
+                    triangles[tri + 3] = vert + 1;
+                    triangles[tri + 4] = vert + 0 + numVerticiesX;
+                    triangles[tri + 5] = vert + 1 + numVerticiesX;
+
+                    vert++;
+                    tri += 6;
+                }
                 vert++;
-                tri += 6;
             }
-            vert++;
         }
-    }
 
-    [System.Obsolete("Seperate the noise creation from the noise application")]
-    public void SetNoiseToHeight()
+        [System.Obsolete("Seperate the noise creation from the noise application")]
+        public void SetNoiseToHeight()
+        {
+            //verticies = noiseSampler.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
+            Parallel.For(0, noise.Length, (x) =>
+            {
+                verticies[x].y = noise[x];
+            });
+        }
+
+        public void GenerateNoise()
+        {
+            noise = noiseWrapper2D.Sample(verticiesForSample);
+            //noise2DArray = noiseSampler.Sample(verticies2DArrayXZ, new Vector2(transform.position.z, transform.position.z));
+        }
+
+    public void RescaleNoise()
     {
-        verticies = noiseSampler.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
+        // noise = noiseSampler.RescaleNoise(noise, lower, upper);
+        normalizedNoise = noiseWrapper2D.Normalize(noise);
     }
 
-    public void GenerateNoise()
-    {
-        noise = noiseSampler.Sample(verticiesXZ, new Vector2(transform.position.x, transform.position.z));
-        //noise2DArray = noiseSampler.Sample(verticies2DArrayXZ, new Vector2(transform.position.z, transform.position.z));
-    }
-
-    public void RescaleNoise(float lower, float upper)
-    {
-        noise = noiseSampler.RescaleNoise(noise, lower, upper);
-    }
-
-    public (float minHeight, float maxHeight) ApplyHeight(float minNoise, float maxNoise)
+    public (float minHeight, float maxHeight) ApplyHeight()
     {
         float minHeight = float.MaxValue;
         float maxHeight = float.MinValue;

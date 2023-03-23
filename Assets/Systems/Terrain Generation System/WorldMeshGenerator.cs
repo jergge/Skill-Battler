@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NoiseSystem;
 using UnityEngine;
 
 namespace TerrainGeneration{
@@ -8,7 +9,7 @@ public class WorldMeshGenerator : MonoBehaviour
 {
     [Header("Noise Sampler Settings")]
     [ExposedScriptableObject]
-    public NoiseSampler noiseSampler;
+    public NoiseWrapper2D noiseWrapper2D;
     public bool randomInBuild = false;
     public Vector2 randomOffsetMinMax;
     Vector2 randomOffset;
@@ -100,7 +101,7 @@ public class WorldMeshGenerator : MonoBehaviour
         {
             GenerateNewRandom();
         }
-        noiseSampler.Reset();
+        noiseWrapper2D.Reset();
         GenerateNewChuks();
         //GenerateWater();
     }
@@ -110,8 +111,8 @@ public class WorldMeshGenerator : MonoBehaviour
         randomOffset = new Vector2(Random.Range(-1000, 1000), Random.Range(-1000, 1000));
         randomScale = Random.Range(100,300);
 
-        noiseSampler.scale = randomScale;
-        noiseSampler.offset = randomOffset;
+        // noiseSampler.scale = randomScale;
+        // noiseSampler.offset = randomOffset;
     }
 
     void GenerateWater()
@@ -183,8 +184,8 @@ public class WorldMeshGenerator : MonoBehaviour
         int numberOfChunksZ = Mathf.CeilToInt(totalVerticiesZ / (float)(TerrainChunk.maxSideVertexCount - 1));
             // Debug.Log("Number of chunks x / z:     " + numberOfChunksX + " / " + numberOfChunksZ);
 
-        noiseSampler.Reset();
-        noiseSampler.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
+        noiseWrapper2D.Reset();
+        //noiseWrapper2D.OnVaulesUpdated += RegenerateMeshFromNewNoise; 
 
         //Label in inspector to ID each chunk
         int chunkID = 0;
@@ -208,7 +209,7 @@ public class WorldMeshGenerator : MonoBehaviour
                 TerrainChunk chunk = new GameObject("Chunk " + chunkID.ToString()).AddComponent<TerrainChunk>();
                 Vector3 chunkPos = new Vector3(x * chunkOffsetX, 0, z * chunkOffsetZ) + transform.position;
 
-                chunk.Configure(verticiesForChunkX, verticiesForChunkZ, chunkPos, spaceBetweenVerticiesX, spaceBetweenVerticiesZ, noiseSampler, heightCurve, heightScale, heightMapMaterial, useHeightCurve);
+                chunk.Configure(verticiesForChunkX, verticiesForChunkZ, chunkPos, spaceBetweenVerticiesX, spaceBetweenVerticiesZ, noiseWrapper2D, heightCurve, heightScale, heightMapMaterial, useHeightCurve);
                 chunk.bakeCollider = bakeCollider;
                 chunk.transform.SetParent(transform);
                 
@@ -228,8 +229,8 @@ public class WorldMeshGenerator : MonoBehaviour
         
         foreach(TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
         {
-            chunk.RescaleNoise(0, 1);
-            var minMax = chunk.ApplyHeight(noiseSampler.minNoiseHeight, noiseSampler.maxNoiseHeight);
+            chunk.RescaleNoise();
+            var minMax = chunk.ApplyHeight();
             chunk.UpdateMesh();
         }
 
@@ -259,7 +260,7 @@ public class WorldMeshGenerator : MonoBehaviour
     
     public void ClearChunks()
     {
-        noiseSampler.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
+        //noiseWrapper2D.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
         for (int i = transform.childCount -1; i >= 0; i--)
         {
             //transform.GetChild(i).gameObject.GetComponent<TerrainChunk>().Invoke("DestroyInEditMode", .01f);
@@ -271,14 +272,14 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         if(!Application.isPlaying)
         {
-            noiseSampler.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
+            //noiseWrapper2D.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
             RegenerateMeshFromNewNoise(); 
         }
     }
 
     void OnValidate()
     {
-        if (noiseSampler != null)
+        if (noiseWrapper2D != null)
         {
             //noiseData.OnVaulesUpdated += OnVaulesUpdated;
         }
