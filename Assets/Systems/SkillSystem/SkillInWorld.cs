@@ -37,7 +37,7 @@ public class SkillInWorld : MonoBehaviour
         {
             skillManager.Aquire(skill, true);
             alreadyTaught.Add(skillManager);
-            Debug.Log(other.transform.parent.gameObject.name + " has aquired a new skill: " + skill.name);
+            // Debug.Log(other.transform.parent.gameObject.name + " has aquired a new skill: " + skill.name);
         }
 
         return;

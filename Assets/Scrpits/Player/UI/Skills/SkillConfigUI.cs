@@ -39,7 +39,7 @@ namespace SkillSystem
                 SkillDisplayPrefab skillIcon = GameObject.Instantiate(skillDisplayPrefab);
                 skillIcon.transform.SetParent(allSkillsSection.transform);
                 skillIcon.Configure(skill);
-                skillIcon.OnClick += OnSkillSelected;
+                skillIcon.OnMouseOver += ShowSkillTooltip;
                 allPrefabs.Add(skillIcon);
             }
         }
@@ -49,7 +49,7 @@ namespace SkillSystem
             // Debug.Log("calling on disable");
             foreach (var prefab in allPrefabs)
             {
-                prefab.OnClick -= OnSkillSelected;
+                prefab.OnMouseOver -= ShowSkillTooltip;
                 // Debug.Log("Destroying " + prefab);
                 // Destroy(prefab);
                 prefab.Destroy();
@@ -58,9 +58,10 @@ namespace SkillSystem
             allPrefabs.Clear();
         }
 
-        void OnSkillSelected(Skill skill)
+        void ShowSkillTooltip(Skill skill)
         {
             tooltipDisplay.ShowTooltip(skill);
         }
+
     }
 }

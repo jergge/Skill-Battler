@@ -288,7 +288,7 @@ namespace SkillSystem
                     return;
                 }
 
-                Debug.Log("Casting the active skill: " + skill.name);
+                // Debug.Log("Casting the active skill: " + skill.name);
                 activeSkill.Cast(skillSpawnLocation, targetInfo);
 
                 if (skill is IChanneledSkill channeledSkillx)

@@ -62,7 +62,8 @@ MonoBehaviour:
   collisionOffload:
     serializedVersion: 2
     m_Bits: 30848
-  createOnOffloadTrigger: []
+  createOnOffloadTrigger:
+  - {fileID: 6070593223282321495, guid: c927fe7b4dc8a5c46be513e56fc5725d, type: 3}
   collisionSelfDestruct:
     serializedVersion: 2
     m_Bits: 0

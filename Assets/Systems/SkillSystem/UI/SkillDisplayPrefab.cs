@@ -7,17 +7,21 @@ using UnityEngine.UI;
 
 namespace SkillSystem
 {
-    public class SkillDisplayPrefab : MonoBehaviour, IPointerClickHandler
+    public class SkillDisplayPrefab : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        public event Action<Skill> OnClick;
+        public event Action<Skill> OnMouseOver;
+        public event Action OnMouseOff;
+        public event Action<Skill> OnMouseClick;
 
         Skill skill;
 
         public Image icon;
 
+        [SerializeField] GameObject border;
+
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnClick?.Invoke(skill);
+            OnMouseClick?.Invoke(skill);
         }
 
         public void Configure(Skill? skill)
@@ -34,6 +38,28 @@ namespace SkillSystem
         public void Destroy()
         {
             Destroy(gameObject);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            OnMouseOver?.Invoke(skill);
+            ShowBorder(true);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            OnMouseOff?.Invoke();
+            ShowBorder(false);
+        }
+
+        void ShowBorder(bool input)
+        {
+            if (input)
+            {
+                border.SetActive(true);
+            } else {
+                border.SetActive(false);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using SkillSystem.Properties;
 using UnityEngine;
 
 namespace SkillSystem{
+[RequireComponent(typeof(MeshRenderer), typeof(SphereCollider))]
 public class MissilePrefab : MonoBehaviour
 {
 
@@ -20,7 +21,11 @@ public class MissilePrefab : MonoBehaviour
     Skill.ValidTargets validTargets;
     List<GameObject> createOnOffloadTrigger = new List<GameObject>();
 
-    protected delegate void Del();
+    public List<GameObject> disableOnDieStart = new List<GameObject>();
+
+        bool dying = false;
+
+        protected delegate void Del();
     Del triggerOnCollisionOffload;
 
     protected delegate void Damage();
@@ -53,7 +58,7 @@ public class MissilePrefab : MonoBehaviour
         MaxTravelTime = m.maxTravelTime;
         collisionOffload = m.collisionOffload;
         collisionDestroy = m.collisionSelfDestruct;
-        source = m.GetSource();
+        source = m.source;
         validTargets = m.validTargets;
         gameObject.transform.localScale = gameObject.transform.localScale * m.sizeScale;
         triggerOnCollisionOffload = m.TriggerOnCollisionOffload;
@@ -62,6 +67,10 @@ public class MissilePrefab : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dying)
+        {
+            return;
+        }
         CheckExpiery();
 
         Vector3 moveAmount = transform.forward * speed * Time.deltaTime;
@@ -73,6 +82,10 @@ public class MissilePrefab : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (dying)
+        {
+            return;
+        }
         alreadyDamagedInFrame.Clear();
     }
 
@@ -80,7 +93,7 @@ public class MissilePrefab : MonoBehaviour
     {
         if((timeAlive > MaxTravelTime) || (distanceTraveled > maxTravelDistance))
         {
-            Destroy(gameObject);
+            Die();
         } 
     }
 
@@ -92,6 +105,7 @@ public class MissilePrefab : MonoBehaviour
             Die();
         } else if ( collisionOffload.Contains(other.gameObject) && Skill.IsValidTarget(source, other.gameObject, validTargets))
         {
+            SpawnOffloadObjects();
             IDamageable damagable;
             if(other.gameObject.TryGetComponent<IDamageable>(out damagable))
             {
@@ -111,15 +125,35 @@ public class MissilePrefab : MonoBehaviour
 
     void Die()
     {
-        //do some stuff beforehand...
-        //Debug.Log(this.name + "'s Die() function has been called");
+        Debug.Log("Die method called");
+        dying = true;
 
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<SphereCollider>().enabled = false;
+
+        foreach ( GameObject go in disableOnDieStart)
+        {
+            if  (go is not null)
+            {
+                go.SetActive(false);
+            }
+        }
+
+        StartCoroutine(DeathRoutine());
+
+    }
+
+    IEnumerator DeathRoutine()
+    {
+        Debug.Log("Death routine started");
+        yield return new WaitForSeconds(5);
         Destroy(gameObject);
     }
 
     void SpawnOffloadObjects()
     {
-        if ( createOnOffloadTrigger is not null)
+            // Debug.Log("spawning offload objects");
+            if ( createOnOffloadTrigger is not null)
         {
             foreach (var obj in createOnOffloadTrigger)
             {

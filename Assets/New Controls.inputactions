@@ -319,22 +319,22 @@
                 },
                 {
                     "name": "",
-                    "id": "8891e9ee-28fd-406c-bacc-ed1b5da8a6d4",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "f282c81e-06b5-4638-8d05-7dbc7b83791d",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "XBox Controller",
+                    "groups": "Keyboard & Mouse",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "f282c81e-06b5-4638-8d05-7dbc7b83791d",
-                    "path": "<Keyboard>/space",
+                    "id": "8891e9ee-28fd-406c-bacc-ed1b5da8a6d4",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard & Mouse",
+                    "groups": "XBox Controller",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
