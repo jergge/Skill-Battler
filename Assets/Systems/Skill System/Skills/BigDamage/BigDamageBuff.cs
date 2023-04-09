@@ -6,17 +6,20 @@ using UnityEngine;
 
 public class BigDamageBuff : Buff, IModifySkillProperty
 {
-    List<SkillPropertyModifier> temp = new List<SkillPropertyModifier>();
+    List<SkillPropertyModifier> temp = new List<SkillPropertyModifier> {
+        new SkillPropertyModifier(ModifiableSkillProperty.ModifyValue.damage,
+            (damage) => damage = damage * 2)
+    };
 
 
-    void Start()
-    {
-        temp.Add(new SkillPropertyModifier(
-            ModifiableSkillProperty.ModifyValue.damage,
-            (damage) => damage = damage*2
-        ));
+    // void Start()
+    // {
+    //     temp.Add(new SkillPropertyModifier(
+    //         ModifiableSkillProperty.ModifyValue.damage,
+    //         (damage) => damage = damage*2
+    //     ));
 
-    }
+    // }
 
     public List<SkillPropertyModifier>? GetPropertyModifiers(ModifiableSkillProperty.ModifyValue type)
     {

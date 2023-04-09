@@ -45,5 +45,20 @@ namespace DamageSystem
         }
 
         public static DamageUnit Default(float amount) => new DamageUnit(amount, 0, null);
+
+        protected override void ModifyOutgoing()
+        {
+            if (source is null)
+            {
+                return;
+            }
+
+            var mods = source.GetComponents<IModifyOutgoing<DamageUnit>>();
+
+            foreach (var mod in mods)
+            {
+                mod.ModifyOutgoing(this);
+            }
+        }
     }
 }

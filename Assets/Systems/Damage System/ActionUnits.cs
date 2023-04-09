@@ -34,11 +34,15 @@ namespace DamageSystem
 
         public readonly GameObject source;
 
+        protected abstract void ModifyOutgoing();
+
         public ActionUnit(float baseAmount, Type damageType, GameObject source)
         {
             this.baseAmount = baseAmount;
             this.type = damageType;
             this.source = source;
+
+            ModifyOutgoing();
         }
     }
 }
