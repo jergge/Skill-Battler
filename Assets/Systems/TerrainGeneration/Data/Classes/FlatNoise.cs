@@ -89,7 +89,7 @@ public class FlatNoise : NoiseSampler
                     break; 
 
                 default:
-                throw new System.AccessViolationException("soething went wrong here");
+                throw new System.AccessViolationException("something went wrong here");
         }
 
             return input;
