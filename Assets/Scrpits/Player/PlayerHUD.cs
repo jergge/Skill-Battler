@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+// using UnityEngine.UIElements;
 
 public class PlayerHUD : PlayerUI
 {
@@ -12,15 +13,13 @@ public class PlayerHUD : PlayerUI
     public DPad dPad;
     List<PlayerMP> mps = new List<PlayerMP>();
 
-    public float gap;
+    public float spaceBetweenStatsBars;
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
     void Update()
     {
         foreach ( Transform t in energies.transform)
@@ -30,12 +29,12 @@ public class PlayerHUD : PlayerUI
 
         int i = 0;
 
-        foreach(StatsTracker m in GetComponentsInParent<StatsTracker>())
+        foreach(StatsTracker statsTracker in GetComponentsInParent<StatsTracker>())
         {
              PlayerMP mp = GameObject.Instantiate(prefab);
              mp.transform.SetParent(energies.transform);
-             mp.stats = m;
-             mp.transform.localPosition = Vector3.zero + Vector3.down * gap * i;
+             mp.stats = statsTracker;
+             mp.transform.localPosition = Vector3.zero + Vector3.down * spaceBetweenStatsBars * i;
 
             i++;
              //mps.Add(mp);
