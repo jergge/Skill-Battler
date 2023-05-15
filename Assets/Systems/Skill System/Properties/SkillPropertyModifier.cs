@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+ 
 namespace SkillSystem.Properties
 {
     public class SkillPropertyModifier {
