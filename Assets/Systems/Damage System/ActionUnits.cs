@@ -38,11 +38,15 @@ namespace DamageSystem
 
         public readonly GameObject source;
 
+        protected abstract void ModifyOutgoing();
+
         public ActionUnit(float baseAmount, Type damageType, GameObject source)
         {
             this.value = baseAmount;
             this.type = damageType;
             this.source = source;
+
+            ModifyOutgoing();
         }
 
         public bool TypeContains(Type other)
