@@ -12,8 +12,8 @@ namespace DamageSystem
         {        }
 
         /// <summary>
-        /// Combine 2 DamageUnits into one. Adds baseAmounts together and 'bitwise ors' the Types.
-        /// Must have the same source.
+        /// Combine 2 DamagePacket into one. Adds baseAmounts together and 'bitwise ors' the damageTypes.
+        /// The source of a will be used.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -45,5 +45,20 @@ namespace DamageSystem
         }
 
         public static DamagePacket Default(float amount) => new DamagePacket(amount, 0, null);
+
+        protected override void ModifyOutgoing()
+        {
+            if (source is null)
+            {
+                return;
+            }
+
+            var mods = source.GetComponents<IModifyOutgoing<DamagePacket>>();
+
+            foreach (var mod in mods)
+            {
+                mod.ModifyOutgoing(this);
+            }
+        }
     }
 }

@@ -44,5 +44,21 @@ namespace DamageSystem
         }
 
         public static HealPacket Default(float amount) => new HealPacket(amount, 0, null);
+
+
+        protected override void ModifyOutgoing()
+        {
+            if (source is null)
+            {
+                return;
+            }
+
+            var mods = source.GetComponents<IModifyOutgoing<HealPacket>>();
+
+            foreach (var mod in mods)
+            {
+                mod.ModifyOutgoing(this);
+            }
+        }
     }
 }
