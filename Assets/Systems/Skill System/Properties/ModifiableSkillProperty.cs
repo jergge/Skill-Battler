@@ -8,12 +8,16 @@ public static class ModifiableSkillProperty {
     
     public enum ModifyValue {
         damage,
+        healing,
         range,
         speed,
         cooldownRate,
         radius,
         sizeScale,
-        cost
+        cost,
+        element,
+        charges,
+        buffDuration
     };
 
     public static float GetModifiedValue(ModifyValue value, float baseValue , GameObject source) 

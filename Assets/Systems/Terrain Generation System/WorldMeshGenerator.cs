@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NoiseSystem;
+using UnityEditor;
 using UnityEngine;
 
 namespace TerrainGeneration{
@@ -40,18 +41,25 @@ public class WorldMeshGenerator : MonoBehaviour
     public Material heightMapMaterial;
     public bool generateWaterMesh = true;
     public Material flatWaterMaterial;
-    public Layer[] layers = new Layer[8];
-
+    //public Layer[] layers = new Layer[8];
+    public TerrainLayers terrainLayersObject;
+    TerrainLayer[] terrainLayers => terrainLayersObject.layers;
 
     int totalVerticiesX;
     int totalVerticiesZ;
 
-
     float maxMeshHeight;
     float minMeshHeight;
 
-    const int textureSize = 512;
-    const TextureFormat textureFormat = TextureFormat.RGB565;
+    [SerializeField] int textureSize = 4096;
+    // const TextureFormat textureFormat = TextureFormat.RGB565;
+    [SerializeField] TextureFormat textureFormat;
+
+    // [UnityEditor.Callbacks.DidReloadScripts]
+    // private static void OnScriptsReloaded() 
+    // {
+    //     terrainLayers.OnVaulesUpdated += UpdateMeshes;
+    // }
 
     public float GetHeightAtPoint(Vector2 point)
     {
@@ -65,21 +73,29 @@ public class WorldMeshGenerator : MonoBehaviour
         throw new System.OverflowException("could not find terrain with the raycast");
     }
 
-    public void ApplyToMaterial(Material material)
+    public void ApplyTerrainLayersToMaterial(Material material)
     {
-        material.SetInt ("layerCount", layers.Length);
-        material.SetColorArray ("baseColours", layers.Select(x => x.tint).ToArray());
-        material.SetFloatArray ("baseStartingHeights", layers.Select(x => x.startHeight).ToArray());
-        material.SetFloatArray ("baseBlends", layers.Select(x => x.blendStrength).ToArray());
-        material.SetFloatArray ("baseColourStrength", layers.Select(x => x.tintStrength).ToArray());
-        material.SetFloatArray ("baseTextureScales", layers.Select(x => x.textureScale).ToArray());
-        Texture2DArray texturesArray = GenerateTextureArray(layers.Select(x => x.texture).ToArray());
-        material.SetTexture("baseTextures", texturesArray);
+
+        //Primary Layer
+        Texture2DArray albedosArray = GenerateTextureArray(terrainLayers.Select(x => x.albedoMapPrimary).ToArray());
+        material.SetTexture("baseAlbedos", albedosArray);
+        Texture2DArray normalsArray = GenerateTextureArray(terrainLayers.Select(x => x.normalMapPrimary).ToArray());
+        //material.SetTexture("baseNormals", normalsArray);
+        Texture2DArray displacementsArray = GenerateTextureArray(terrainLayers.Select(x => x.displacementMapPrimary).ToArray());
+        //material.SetTexture("baseDisplacements", displacementsArray);
+        material.SetInt ("layerCount", terrainLayers.Length);
+        material.SetColorArray ("baseColours", terrainLayers.Select(x => x.tint).ToArray());
+        material.SetFloatArray ("baseStartingHeights", terrainLayers.Select(x => x.startHeight).ToArray());
+        material.SetFloatArray ("baseBlends", terrainLayers.Select(x => x.blendStrength).ToArray());
+        material.SetFloatArray ("baseColourStrength", terrainLayers.Select(x => x.tintStrength).ToArray());
+        material.SetFloatArray ("baseTextureScales", terrainLayers.Select(x => x.textureScalePrimary).ToArray());
 
         float tempMin = (heightCurve.Evaluate(-1) *2 -1) * heightScale;
-        material.SetFloat("minHeight", tempMin);
+        // material.SetFloat("minHeight", tempMin);
+        material.SetFloat("minHeight", minMeshHeight);
         float tempMax = (heightCurve.Evaluate(1) *2 -1) * heightScale;
-        material.SetFloat("maxHeight", tempMax);
+        // material.SetFloat("maxHeight", tempMax);
+        material.SetFloat("maxHeight", maxMeshHeight);
     }
 
     Texture2DArray GenerateTextureArray(Texture2D[] textures) 
@@ -121,10 +137,11 @@ public class WorldMeshGenerator : MonoBehaviour
         {
             return;
         }
-        //Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
-        float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, layers[1].startHeight);
+            //Debug.Log("min: " + minMeshHeight + "  | max: " + maxMeshHeight);
+            float topOfWater = Mathf.Lerp(minMeshHeight, maxMeshHeight, terrainLayers[1].startHeight);
+            // float topOfWater = 0;
 
-        Vector3[] verticies = new Vector3[4] 
+            Vector3[] verticies = new Vector3[4] 
         {
             new Vector3(0,          topOfWater, 0           ),      //bottom left
             new Vector3(0,          topOfWater, worldSizeZ  ),      //top left
@@ -164,6 +181,8 @@ public class WorldMeshGenerator : MonoBehaviour
     {
         //delete all the existing terrain chunks that are children
         ClearChunks();
+
+        terrainLayersObject.OnVaulesUpdated += UpdateMeshes;
 
         //The total # of verticies in each direction of the world mesh
         totalVerticiesX = Mathf.CeilToInt(worldSizeX * verticiesPerUnit);
@@ -213,8 +232,7 @@ public class WorldMeshGenerator : MonoBehaviour
                 chunk.bakeCollider = bakeCollider;
                 chunk.transform.SetParent(transform);
                 
-                chunk.CreateMesh();
-                chunk.SetTracker(tracker);
+                chunk.CreateMeshData();
                 //chunk.SetNoiseToHeight();
                 chunk.GenerateNoise();
 
@@ -224,19 +242,20 @@ public class WorldMeshGenerator : MonoBehaviour
             }
         }
 
-        minMeshHeight = ((heightCurve.Evaluate(0) * 2 - 1) * heightScale);
-        maxMeshHeight = ((heightCurve.Evaluate(1) * 2 - 1) * heightScale);
-        
+        minMeshHeight = noiseWrapper2D.GetNoiseBounds().lower * heightScale;
+        maxMeshHeight = noiseWrapper2D.GetNoiseBounds().upper * heightScale;
+
         foreach(TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
         {
             chunk.RescaleNoise();
-            var minMax = chunk.ApplyHeight();
+            // var minMax = chunk.ApplyHeight();
+            chunk.ApplyHeight();
             chunk.UpdateMesh();
         }
 
         GenerateWater();
 
-        ApplyToMaterial(heightMapMaterial);
+        ApplyTerrainLayersToMaterial(heightMapMaterial);
     }
 
     public void RegenerateMeshFromNewNoise()
@@ -261,6 +280,7 @@ public class WorldMeshGenerator : MonoBehaviour
     public void ClearChunks()
     {
         //noiseWrapper2D.OnVaulesUpdated -= RegenerateMeshFromNewNoise;
+        terrainLayersObject.OnVaulesUpdated -= UpdateMeshes;
         for (int i = transform.childCount -1; i >= 0; i--)
         {
             //transform.GetChild(i).gameObject.GetComponent<TerrainChunk>().Invoke("DestroyInEditMode", .01f);
@@ -292,4 +312,21 @@ public class WorldMeshGenerator : MonoBehaviour
         return centre;
     }
 
-}}
+    void UpdateMeshes()
+    {
+        // Debug.Log("event from terrainlayers fired");
+
+        if (Application.isPlaying)
+        {
+            return;
+        }
+        ApplyTerrainLayersToMaterial(heightMapMaterial);    
+        // foreach (TerrainChunk chunk in gameObject.GetComponentsInChildren<TerrainChunk>())
+        // {
+        //     chunk.SetMaterial(heightMapMaterial);
+        // }
+
+            SceneView.RepaintAll();
+        }
+    }
+}

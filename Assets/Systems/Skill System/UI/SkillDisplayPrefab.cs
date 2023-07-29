@@ -21,6 +21,7 @@ namespace SkillSystem
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            //Debug.Log("pointer click registered");
             OnMouseClick?.Invoke(skill);
         }
 

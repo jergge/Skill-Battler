@@ -39,7 +39,7 @@ public class Stepper
     {
         while (secondsRemaining > 0)
         {
-            target.TakeDamage( (DamageUnit)damageSum );
+            target.TakeDamage( (DamagePacket)damageSum );
             damageSum = 0;
             secondsRemaining--;
             yield return new WaitForSeconds(1);

@@ -3422,7 +3422,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 28927
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -9789,7 +9789,7 @@ MonoBehaviour:
   disabledSkills: {fileID: 6652292213984876150}
   skillSpawnLocation: {fileID: 86285627}
   mainEnergyStats: {fileID: 4209795977568627087}
-  attack: {fileID: 0}
+  attack: {fileID: 263542385365331316, guid: b368a23c08dce60439f0a512d9f0a5c5, type: 3}
   block: {fileID: 0}
   skill1: {fileID: 0}
   skill2: {fileID: 0}

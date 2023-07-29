@@ -7,23 +7,29 @@ using SkillSystem.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Fireball : Missile, IActiveSkill, IOnDealDamageEvents
+public class Fireball : Missile, IOnDealDamageEvents
 {
-    public new event Action<DamageInfo?> OnDealDamage;
+    public new event Action<DamageReport?> OnDealDamage;
 
     void Update()
     {
         TickCooldown();
     }
 
-    public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
+    public override void PrepareCast(Transform spawnLoaction, TargetInfo targetInfo)
     {
-        MissilePrefab missile = GameObject.Instantiate<MissilePrefab>(misslePrefab, spawnLoaction.position, Quaternion.identity);
+        // Debug.Log("Fireball prep cast method");
+        missileToFire = GameObject.Instantiate<MissilePrefab>(misslePrefab, spawnLoaction.position, Quaternion.identity);
         
-        missile.Configure(this, targetInfo);
-        
+        missileToFire.Configure(this, targetInfo);
+
+        TriggerOnCreateMissileObject(missileToFire);
+
+        // Debug.Log(missileToFire);
+
+        //missileToFire.gameObject.SetActive(false);
+
         ResetCooldown();
     }
-
 }
 

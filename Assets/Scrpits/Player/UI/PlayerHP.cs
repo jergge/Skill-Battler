@@ -16,6 +16,6 @@ public class PlayerHP : MonoBehaviour
 
     void Update()
     {
-        slider.value = player.HP.currentPercent;
+        slider.value = player.hitPointsTracker.currentPercent;
     }
 }

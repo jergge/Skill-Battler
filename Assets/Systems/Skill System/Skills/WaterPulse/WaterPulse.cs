@@ -11,18 +11,22 @@ public class WaterPulse : Missile, IActiveSkill
         TickCooldown();
     }
 
-    public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
+    public override void PrepareCast(Transform spawnLoaction, TargetInfo targetInfo)
     {
-        if (CoolingDown())
+        if (IsOnCooldown())
         {
             return;
         }
 
-        MissilePrefab missile = GameObject.Instantiate<MissilePrefab>(misslePrefab, spawnLoaction.position, Quaternion.identity);
+        missileToFire = GameObject.Instantiate<MissilePrefab>(misslePrefab, spawnLoaction.position, Quaternion.identity);
 
-        missile.Configure(this, targetInfo);
+        missileToFire.Configure(this, targetInfo);
+
+        missileToFire.gameObject.SetActive(false);
 
         ResetCooldown();
     }
+
+
 
 }

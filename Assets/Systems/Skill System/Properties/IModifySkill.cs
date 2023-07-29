@@ -11,7 +11,8 @@ namespace SkillSystem.Properties {
 /// Attatches to a GameObject (with a Skill Manager) and provides modifications to Skills of Type<T>
 /// </summary>
 /// <typeparam name="S">The Skill Type to modify</typeparam>
-public abstract class IModifySkill<S> : Buff where S: Skill
+public abstract class IModifySkill<S> : Buff 
+    where S : Skill
 {
     /// <summary>
     /// A Reference to this object's SkillManager
@@ -66,20 +67,28 @@ public abstract class IModifySkill<S> : Buff where S: Skill
 
     void RegisterEvents()
     {
-        skillManager.OnAfterCast += WhenOnSkillCast;             
+        skillManager.OnSuccessfulSkillCast += WhenOnSkillCast;
+        skillManager.OnApplySkillModifications += WhenOnApplySkillModifications;
         if (skillManager.TryGetEnabledSkill<S>(out skill) )
         {
             skill.OnDealDamage += OnDealDamage;
+            if (skill is Missile missile)
+            {
+                missile.OnIDamagableOffload += WhenOnIDamageableOffload;
+            }
         }
     }
 
     void UnregisterEvents()
     {
-        skillManager.OnAfterCast -= WhenOnSkillCast;
-        skill.OnDealDamage -= WhenOnDealDamage;        
+        skillManager.OnSuccessfulSkillCast -= WhenOnSkillCast;
+        skillManager.OnApplySkillModifications -= WhenOnApplySkillModifications;
+        skill.OnDealDamage -= WhenOnDealDamage;
+        if (skill is Missile missile)
+        {
+            missile.OnIDamagableOffload += WhenOnIDamageableOffload;
+        }      
     }
-
-
 
     private void WhenOnSkillCast(CastEventInfo castEventInfo)
     {
@@ -90,17 +99,26 @@ public abstract class IModifySkill<S> : Buff where S: Skill
     }
         protected virtual void OnSkillCast(CastEventInfo castEventInfo) { }
 
-    private void WhenOnSkillCollisionOffload()
+    private void WhenOnIDamageableOffload(GameObject other)
     {
-        OnSkillCollisionOffload();
+        OnIDamagableOffload(other);
     }
-        protected virtual void OnSkillCollisionOffload() { }
+        protected virtual void OnIDamagableOffload(GameObject other) { }
 
-    private void WhenOnDealDamage(DamageInfo? damageInfo)
+    private void WhenOnDealDamage(DamageReport? damageInfo)
     {
         OnDealDamage(damageInfo);
     }
-        protected virtual void OnDealDamage(DamageInfo? damageInfo) { }
+        protected virtual void OnDealDamage(DamageReport? damageInfo) { }
+
+    void WhenOnApplySkillModifications(Skill skill)
+    {
+        if (skill is S checkedSkill)
+        {
+            OnApplySkillModifications(checkedSkill);
+        }
+    }
+        protected virtual void OnApplySkillModifications(S skill) { }
 
     public override void Configure(SkillSystem.Skill skill)
     {

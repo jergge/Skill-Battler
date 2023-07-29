@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NoiseSystem
 {
-    [CreateAssetMenu(menuName = "Terrian System/Noise/GPU Simplex")]
+    [CreateAssetMenu(menuName = "Noise/GPU Simplex 2D")]
     public class GPUSimplexNoise : NoiseSampler, INoiseSampler2D
     {
         [Range(1, 5)]
@@ -18,14 +18,6 @@ namespace NoiseSystem
 
         Vector2[] octaveOffsets;
         System.Random prng;
-
-        public override void Reset()
-        {
-            if (noiseResult is not null)
-            {
-                System.Array.Clear(noiseResult, 0, noiseResult.Length);
-            }
-        }
 
         public float Sample(Vector2 input)
         {
@@ -78,47 +70,11 @@ namespace NoiseSystem
             inputBuffer.Dispose();
             outputBuffer.Dispose();
 
+            // for (int i = 0; i < 100; i++)
+            // {
+            //     Debug.Log(output[1 * 100]);
+            // }
             return output;
-        }
-
-        public override Vector2[] SampleOverride(Vector2[] input, ReplaceComponent replace, Vector2 manualOffset)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override Vector3[] SampleOverride(Vector3[] input, ReplaceComponent replace, Vector3 manualOffset)
-        {
-            int kernalID = Shader.FindKernel("OverrideV3");
-
-            Vector3[] output = new Vector3[input.Length];
-
-            Shader.SetFloat("scale", scale);
-            Shader.SetInt("octaves", octaves);
-            Shader.SetFloat("persistence", persistence);
-            Shader.SetFloat("lacunarity", lacunarity);
-            Shader.SetVector("sampleOffset", new Vector2(manualOffset.x, manualOffset.z) + offset);
-
-            ComputeBuffer inputBuffer = new ComputeBuffer(input.Length, sizeof(float) * 3);
-            ComputeBuffer outputBuffer = new ComputeBuffer(output.Length, sizeof(float) * 3);
-
-            inputBuffer.SetData(input);
-
-            Shader.SetBuffer(kernalID, "inputs3", inputBuffer);
-            Shader.SetBuffer(kernalID, "outputs3", outputBuffer);
-
-            Shader.Dispatch(kernalID, Mathf.CeilToInt(input.Length / 4), 1, 1);
-
-            outputBuffer.GetData(output);
-
-            inputBuffer.Dispose();
-            outputBuffer.Dispose();
-
-            return output;
-        }
-
-        public override Vector4[] SampleOverride(Vector4[] input, ReplaceComponent replace, Vector4 manualOffset)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

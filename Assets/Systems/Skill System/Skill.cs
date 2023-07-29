@@ -31,6 +31,11 @@ namespace SkillSystem
         public string basicDescription;
 
         /// <summary>
+        /// A list of skills that can be unlocked through this skill
+        /// </summary>
+        [SerializeField]public List<Skill> upgrades = new List<Skill>();
+
+        /// <summary>
         /// A square icon that represents the Skill
         /// </summary>
         public Sprite icon;
@@ -74,7 +79,7 @@ namespace SkillSystem
         /// </summary>
         private bool cooldownPaused = false;
 
-        public event Action<DamageInfo?> OnDealDamage;
+        public event Action<DamageReport?> OnDealDamage;
 
         protected void PauseCooldown()
         {
@@ -97,7 +102,7 @@ namespace SkillSystem
         /// <summary>
         /// Is the Skill currently cooling down? Is it unable to be used because of this?
         /// </summary>
-        public bool CoolingDown()
+        public bool IsOnCooldown()
         {
             // Debug.Log(remainingCooldown);
             return (remainingCooldown > 0) ? true : false;
@@ -286,7 +291,7 @@ namespace SkillSystem
         }
 
         [Obsolete(">>>???<<< I want a better way to manage this, not a hacky events workaround...")]
-        public DamageInfo? DealDamageTo(DamageUnit damageUnit, IDamageable target)
+        public DamageReport? DealDamageTo(DamagePacket damageUnit, IDamageable target)
         {
             var damageInfo = target.TakeDamage(damageUnit);
             OnDealDamage?.Invoke(damageInfo);

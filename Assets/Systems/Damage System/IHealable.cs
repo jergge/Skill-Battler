@@ -13,8 +13,8 @@ namespace DamageSystem
         /// <summary>
         /// Performs healing on the GameObject
         /// </summary>
-        /// <param name="healUnit">The healing to be given</param>
+        /// <param name="healPacket">The healing to be given</param>
         /// <returns>Information about the actual healing done</returns>
-        public abstract HealInfo? TakeHeal(HealUnit healUnit);
+        public abstract HealReport TakeHeal(HealPacket healPacket);
     }
 }

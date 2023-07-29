@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc3ecb5ba6427f34f90750dbd5dad2ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  source: {fileID: 0}
   skillName: Meteor
   basicDescription: Calls down an explosive meteor on target location
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a361edf68a2719a4b89313c1ef0d83fa, type: 3}
   baseCost: 0
   validTargets: 0
   cooldown: 0.2
-  remainingCooldown: 0
   misslePrefab: {fileID: 3598189057740184666, guid: 40e37673cd25b1e4c8e5d17d806a3bc6, type: 3}
   baseDamage: 20
   damageType: 0
@@ -61,6 +61,7 @@ MonoBehaviour:
   collisionOffload:
     serializedVersion: 2
     m_Bits: 30912
+  createOnOffloadTrigger: []
   collisionSelfDestruct:
     serializedVersion: 2
     m_Bits: 16

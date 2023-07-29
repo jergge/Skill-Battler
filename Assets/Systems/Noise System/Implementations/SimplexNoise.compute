@@ -100,7 +100,8 @@ void Sample2D (uint3 id : SV_DispatchThreadID)
         amplitude *= persistence;
         frequency *= lacunarity;
     }
-
+    noise = noise / 2 + .5;
+    
     outputs1[id.x] = noise;
 }
 
@@ -129,10 +130,12 @@ void OverrideV3 (uint3 id : SV_DispatchThreadID)
         frequency *= lacunarity;
     }
 
+
+
     outputs3[id.x] = float3(input.x, noise, input.z);
 }
 
-#pragma kernal Sample2DMulti
+#pragma kernel Sample2DMulti
 [numthreads(128, 1, 1)]
 void Sample2DMulti ()
 {

@@ -41,7 +41,6 @@ namespace TerrainGeneration
 
         public void CreateMarchingCubes()
         {
-            noiseData.Reset();
             marchingCubes = new MarchingCube[(size.x - 1) * (size.y - 1) * (size.z - 1)];
 
             for (int z = 0, i = 0; z < size.z - 1; z++)

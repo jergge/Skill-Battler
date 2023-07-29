@@ -18,6 +18,7 @@ public class DualCastFireball : IModifySkill<Fireball>
     public float timeBetweenOnDamageProcs = 5;
     protected float remaingOnDamageProcTime;
 
+
     void Update()
     {
         ReduceDuration();
@@ -37,34 +38,15 @@ public class DualCastFireball : IModifySkill<Fireball>
         {
             return;
         }
-        // List<LivingEntity> livingEntities = gameObject.GetInRange<LivingEntity>(detectionRange);
-        // List<LivingEntity> enemies = (List<LivingEntity>)from le in livingEntities
-        //                                                  where Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies)
-        //                                                  select le;
-        // var randomEnemy = enemies.Random();
 
         LivingEntity randomEnemy = gameObject.GetInRange<LivingEntity>(detectionRange)
             .Random((le) => Skill.IsValidTarget(gameObject, le.gameObject, Skill.ValidTargets.Enemies));
 
         Debug.Log("Casting the dualcast fireball @" + randomEnemy.name);
 
-        Debug.Log(skillManager.skillSpawnLocation is null);
-        Debug.Log(randomEnemy is null);
-
-        skill.Cast(skillManager.skillSpawnLocation, 
+        skill.PrepareCast(skillManager.skillSpawnLocation, 
             new TargetInfo(randomEnemy.gameObject, 20, randomEnemy.transform.position));
 
         remaingDualCastProcTime = timeBetweenDualCastProcs;
     }
-
-    // protected override void OnDealDamage(DamageInfo? damageInfo)
-    // {
-    //     LivingEntity randomTarget = gameObject.GetInRange<LivingEntity>(detectionRange).Random<LivingEntity>();
-    //     Debug.Log("Casting the bonus on hit fireball @" + randomTarget.name);
-
-    //     skill.Cast(gameObject.GetComponent<SkillManager>().skillSpawnLocation, 
-    //         new TargetInfo(randomTarget.gameObject, 20, randomTarget.transform.position));
-
-    //     remaingOnDamageProcTime = timeBetweenDualCastProcs;
-    // }
 }

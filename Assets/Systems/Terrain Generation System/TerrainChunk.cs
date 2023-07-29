@@ -10,13 +10,7 @@ namespace TerrainGeneration{
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider))]
     public class TerrainChunk : MonoBehaviour
     {
-        public static int maxSideVertexCount = 255;
-
-        MinMaxTracker tracker;
-        public void SetTracker(MinMaxTracker tracker)
-        {
-            this.tracker = tracker;
-        }
+        public static int maxSideVertexCount = 250;
 
         //Vector3[,] verticies2DArray;
         //Vector2[,] verticies2DArrayXZ;
@@ -30,6 +24,7 @@ namespace TerrainGeneration{
         /// a 2D (x and z) array of verticies in world space used for the sampling function
         /// </summary>
         Vector2[] verticiesForSample;
+        List<Vector2> uvs = new List<Vector2>();
 
         int[] triangles;
         //Things for the height (noise and calculations)
@@ -40,6 +35,7 @@ namespace TerrainGeneration{
 
         public bool showVertexGizmos = false;
         bool useHeightCurve = true;
+        public bool lowestHieghtAtZero = true;
 
         float spaceBetweenVerticiesX;
         float spaceBetweenVerticiesZ;
@@ -54,6 +50,10 @@ namespace TerrainGeneration{
         // NoiseSampler noiseSampler;
         NoiseWrapper2D noiseWrapper2D;
         Material material;
+        public void SetMaterial(Material material)
+        {
+            this.material = material;
+        }
         AnimationCurve heightCurve;
 
         public void Configure(int numVerticiesX, int numVerticiesZ, Vector3 position, float spaceBetweenVerticiesX, float spaceBetweenVerticiesZ, NoiseWrapper2D noiseWrapper2D, AnimationCurve heightCurve, float heightScale, Material material, bool useHeightCurve)
@@ -86,7 +86,7 @@ namespace TerrainGeneration{
             this.noiseWrapper2D = sampler;
         }
 
-        public void CreateMesh()
+        public void CreateMeshData()
         {
             verticies = new Vector3[numVerticiesX * numVerticiesZ];
             verticiesForSample = new Vector2[verticies.Length];
@@ -101,14 +101,12 @@ namespace TerrainGeneration{
                 {
                     Vector3 meshCoord = new Vector3(x * spaceBetweenVerticiesX, 0, z * spaceBetweenVerticiesZ);
                     verticies[i] = meshCoord;
-                    //verticies2DArray[x, z] = newCoord;
 
-                    // Vector2 new2Coord = new Vector2(x * spaceBetweenVerticiesX, z * spaceBetweenVerticiesZ);
-                    // verticiesXZ[i] = new2Coord;
                     Vector2 sampleCoord = new Vector2(x * spaceBetweenVerticiesX + transform.position.x, z * spaceBetweenVerticiesZ + transform.position.z);
-                    // Vector2 sampleCoord = new Vector2(1, 1);
                     verticiesForSample[i] = sampleCoord;
-                    //verticies2DArrayXZ[x, z] = new2Coord;
+
+                    Vector2 uv = new Vector2(Mathf.InverseLerp(0, numVerticiesX, x), Mathf.InverseLerp(0, numVerticiesZ, z));
+                    uvs.Add(uv);
                     i++;
                 }
             }
@@ -133,7 +131,7 @@ namespace TerrainGeneration{
         }
 
         [System.Obsolete("Seperate the noise creation from the noise application")]
-        public void SetNoiseToHeight()
+        public void SetHeightAsNoiseValues()
         {
             //verticies = noiseSampler.SampleOverride(verticies, NoiseSampler.ReplaceComponent.y, transform.position);
             Parallel.For(0, noise.Length, (x) =>
@@ -154,26 +152,33 @@ namespace TerrainGeneration{
         normalizedNoise = noiseWrapper2D.Normalize(noise);
     }
 
-    public (float minHeight, float maxHeight) ApplyHeight()
+    public void ApplyHeight()
     {
-        float minHeight = float.MaxValue;
-        float maxHeight = float.MinValue;
+        // float minHeight = float.MaxValue;
+        // float maxHeight = float.MinValue;
         for (int i = 0; i < verticies.Length; i++) 
         {
-            //float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
-            float newHeight = (useHeightCurve) ? ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, noise[i]))) * 2 -1 ) * heightScale) : noise[i] * heightScale;
-            verticies[i].y = newHeight;
+                //float newHeight = ((heightCurve.Evaluate((Mathf.InverseLerp(-1, 1, verticies[i].y))) * 2 -1 ) * heightScale);
+                float newHeight;
+                if (useHeightCurve)
+                {
+                    newHeight = ((heightCurve.Evaluate(noise[i])) * heightScale);
+                } else 
+                {
+                    newHeight = noise[i] * heightScale;
+                }
+                verticies[i].y = newHeight;
 
-            if (newHeight > maxHeight)
-            {
-                maxHeight = newHeight;
-            } else if (newHeight < minHeight)
-            {
-                minHeight = newHeight;
-            }
+            // if (newHeight > maxHeight)
+            // {
+            //     maxHeight = newHeight;
+            // } else if (newHeight < minHeight)
+            // {
+            //     minHeight = newHeight;
+            // }
         }
 
-        return (minHeight, maxHeight);
+        // return (minHeight, maxHeight);
     }
 
     public void UpdateMesh() {
@@ -181,6 +186,8 @@ namespace TerrainGeneration{
 
         mesh.vertices = verticies;
         mesh.triangles = triangles;
+
+        mesh.SetUVs(0, uvs);
 
         mesh.RecalculateNormals();
         if(bakeCollider)

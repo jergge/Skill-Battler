@@ -31,12 +31,12 @@ public class DamagableMesh : MonoBehaviour, IDamageable
         return IDamageable.IsDead();
     }
 
-    public DamageInfo? TakeDamage(DamageUnit damage)
+    public DamageReport TakeDamage(DamagePacket damage)
     {
         return IDamageable.TakeDamage(damage);
     }
 
-    public HealInfo? TakeHeal(HealUnit heal)
+    public HealReport? TakeHeal(HealPacket heal)
     {
         return IHealable.TakeHeal(heal);
     }

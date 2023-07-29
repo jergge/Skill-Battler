@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NoiseSystem
 {
-    [CreateAssetMenu(menuName = "Terrian System/Noise/Open Symplex")]
+    [CreateAssetMenu(menuName = "Noise/Open Simplex 3D")]
     public class OpenSimplexNoise : NoiseSampler, INoiseSampler3D
     {
         System.Random prng;
@@ -19,19 +19,6 @@ namespace NoiseSystem
         public float persistence;
         [Range(1, 10)]
         public float lacunarity;
-
-
-        public override void Reset()
-        {
-            prng = new System.Random(seed);
-            octaveOffsets = new Vector3[octaves];
-
-            for (int i = 0; i < octaves; i++)
-            {
-                octaveOffsets[i] = new Vector3(prng.Next(-1000, 1000), prng.Next(-1000, 1000), prng.Next(-1000, 1000));
-            }
-            ClearMinMax();
-        }
 
         public float Sample(Vector3 input)
         {
@@ -54,9 +41,6 @@ namespace NoiseSystem
                 amplitude *= persistence;
                 frequency *= lacunarity;
             }
-
-
-            TrackMinMax(noiseHeight);
             return noiseHeight;
         }
 
@@ -70,21 +54,6 @@ namespace NoiseSystem
             }
 
             return results;
-        }
-
-        public override Vector2[] SampleOverride(Vector2[] input, ReplaceComponent replace, Vector2 offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Vector3[] SampleOverride(Vector3[] input, ReplaceComponent replace, Vector3 offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Vector4[] SampleOverride(Vector4[] input, ReplaceComponent replace, Vector4 offset)
-        {
-            throw new NotImplementedException();
         }
 
 

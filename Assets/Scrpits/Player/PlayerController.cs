@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
     void OnJump()
     {
         //check to see if on ground;
-        Debug.Log("trying to jump");
+//        Debug.Log("trying to jump");
         if (onGround)
         {
             //jumpCount = 0;

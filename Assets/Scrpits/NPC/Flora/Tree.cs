@@ -12,17 +12,17 @@ public class Tree : Flora, IDamageable
         throw new System.NotImplementedException();
     }
 
-    public DamageInfo? TakeDamage(DamageUnit damage)
+    public DamageReport TakeDamage(DamagePacket damage)
     {
-        if ( damage.baseAmount >= SingleHitDestroyAmount )
+        if ( damage.value >= SingleHitDestroyAmount )
         {
             Die();
-            return new DamageInfo(true, (float)damage, 0, (float)damage);
+            return new DamageReport(damage.source, this, this.transform.position, damage.value, damage.value, 0, SingleHitDestroyAmount, 0, 0, true);
         }
-        else return new DamageInfo(false, 0, Mathf.CeilToInt(SingleHitDestroyAmount), (float)damage);
+        else return DamageReport.NoDamge(damage.source, this, this.transform.position, damage.value, SingleHitDestroyAmount, 100);
     }
 
-    public DamageInfo? TakeHeal(DamageUnit healUnit)
+    public DamageReport? TakeHeal(DamagePacket healUnit)
     {
         return null;
     }

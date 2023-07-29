@@ -7,6 +7,6 @@ namespace DamageSystem
 {
     public interface IOnDealDamageEvents
     {
-        public event Action<DamageInfo?> OnDealDamage;
+        public event Action<DamageReport?> OnDealDamage;
     }
 }

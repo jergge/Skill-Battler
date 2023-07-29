@@ -10,6 +10,7 @@ namespace SkillSystem
     {
         public SkillManager skillManager;
 
+        Skill selectedSkill;
         public SkillDisplayPrefab skillSlot1;
         public SkillDisplayPrefab skillSlot2;
         public SkillDisplayPrefab skillSlot3;
@@ -21,6 +22,8 @@ namespace SkillSystem
         public SkillDisplayPrefab skillDisplayPrefab;
         public GameObject allSkillsSection;
         public TooltipDisplay tooltipDisplay;
+        public GameObject skillUpgrades;
+        List<SkillDisplayPrefab> upgrades = new List<SkillDisplayPrefab>();
 
         //public MenuManager menuManager;
 
@@ -40,6 +43,7 @@ namespace SkillSystem
                 skillIcon.transform.SetParent(allSkillsSection.transform);
                 skillIcon.Configure(skill);
                 skillIcon.OnMouseOver += ShowSkillTooltip;
+                skillIcon.OnMouseClick += ShowSkillUpgrades;
                 allPrefabs.Add(skillIcon);
             }
         }
@@ -61,6 +65,30 @@ namespace SkillSystem
         void ShowSkillTooltip(Skill skill)
         {
             tooltipDisplay.ShowTooltip(skill);
+        }
+
+        void ShowSkillUpgrades(Skill skill)
+        {
+            selectedSkill = skill;
+
+            Debug.Log("pointer click received");
+
+            foreach (var item in upgrades)
+            {
+                item.OnMouseOver -= ShowSkillTooltip;
+                item.Destroy();
+            }
+
+            upgrades.Clear();
+
+            foreach (var upgrade in selectedSkill.upgrades)
+            {
+                SkillDisplayPrefab option = GameObject.Instantiate(skillDisplayPrefab);
+                option.transform.SetParent(skillUpgrades.transform);
+                option.Configure(upgrade);
+                option.OnMouseOver += ShowSkillTooltip;
+                upgrades.Add(option);
+            }
         }
 
     }

@@ -1,23 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-using SkillSystem;
 using UnityEngine;
 
-public abstract class BuffSkill<T> : Skill where T : Buff
+namespace SkillSystem
 {
-    T buff;
-
-    public override void Enabled()
+    public abstract class BuffSkill<T> : Skill where T : Buff
     {
-        if (buff is null)
+        T buff;
+
+        public override void Enabled()
         {
-            buff = source.AddComponent<T>();
+            if (buff is null)
+            {
+                buff = source.AddComponent<T>();
+            }
+            buff?.gameObject.SetActive(true);
         }
-        buff?.gameObject.SetActive(true);
-    }
 
-    public override void Disabled()
-    {
-        buff?.gameObject.SetActive(false);
+        public override void Disabled()
+        {
+            buff?.gameObject.SetActive(false);
+        }
     }
 }

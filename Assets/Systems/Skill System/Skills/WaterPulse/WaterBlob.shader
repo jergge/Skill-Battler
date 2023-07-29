@@ -114,7 +114,8 @@ Shader "Unlit/WaterBlob"
 
                 float noise = tex2Dlod(_Noise, float4(v.uv, 0, 0)).rgb;
                 // float filt = tex2Dlod(_StrengthFilter, float4(v.uv, 0, 0)).rgb;
-                float filt = tex2D(_StrengthFilter, v.uv).rgb;
+                // float filt = tex2D(_StrengthFilter, v.uv).rgb;
+                float filt = .6;
                 // o.grabPosDistorted.x += cos(noise * _Time.x * _TimeSpeed) * filt.x * _Strength;
                 // o.grabPosDistorted.y += sin(noise * _Time.x * _TimeSpeed) * filt.x * _Strength;
                 o.grabPosDistorted.x += (10 *_Strength) * filt.x;

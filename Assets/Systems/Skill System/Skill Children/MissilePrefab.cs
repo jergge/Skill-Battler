@@ -12,7 +12,7 @@ public class MissilePrefab : MonoBehaviour
 
     float speed;
     float damage;
-    DamageUnit.Type damageType;
+    DamagePacket.Type damageType;
     float maxTravelDistance;
     float distanceTraveled;
     float MaxTravelTime;
@@ -21,12 +21,14 @@ public class MissilePrefab : MonoBehaviour
     Skill.ValidTargets validTargets;
     List<GameObject> createOnOffloadTrigger = new List<GameObject>();
 
+    public float deathRoutineDuration = 5f;
+
     public List<GameObject> disableOnDieStart = new List<GameObject>();
 
-        bool dying = false;
+    bool dying = false;
 
-        protected delegate void Del();
-    Del triggerOnCollisionOffload;
+    protected delegate void Del(GameObject other);
+    Del triggerOnIDamageableOffload;
 
     protected delegate void Damage();
     Damage triggerDamage;
@@ -61,9 +63,9 @@ public class MissilePrefab : MonoBehaviour
         source = m.source;
         validTargets = m.validTargets;
         gameObject.transform.localScale = gameObject.transform.localScale * m.sizeScale;
-        triggerOnCollisionOffload = m.TriggerOnCollisionOffload;
+        triggerOnIDamageableOffload = m.TriggerOnIDamageableOffload;
         createOnOffloadTrigger = m.createOnOffloadTrigger;
-        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -99,7 +101,7 @@ public class MissilePrefab : MonoBehaviour
 
     public virtual void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Skill " + name + " colliding with " + other.gameObject.name);
+        // Debug.Log("Skill " + name + " colliding with " + other.gameObject.name);
         if( collisionDestroy.Contains(other.gameObject) )
         {
             Die();
@@ -113,10 +115,10 @@ public class MissilePrefab : MonoBehaviour
                 {
                     alreadyDamagedInFrame.Add(damagable);
                     alreadyDamagedEver.Add(damagable);
-                    Debug.Log("Skill " + name + " dealing damage to " + other.name);
+                    // Debug.Log("Skill " + name + " dealing damage to " + other.name);
                     // damagable.TakeDamage(damage);
-                    damagable.TakeDamage(new DamageUnit(damage, damageType, source));
-                    triggerOnCollisionOffload();
+                    damagable.TakeDamage(new DamagePacket(damage, damageType, source));
+                    triggerOnIDamageableOffload(other.gameObject);
                     Die();
                 }
             }
@@ -125,7 +127,7 @@ public class MissilePrefab : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Die method called");
+        // Debug.Log("Die method called");
         dying = true;
 
         GetComponent<MeshRenderer>().enabled = false;
@@ -145,8 +147,8 @@ public class MissilePrefab : MonoBehaviour
 
     IEnumerator DeathRoutine()
     {
-        Debug.Log("Death routine started");
-        yield return new WaitForSeconds(5);
+        // Debug.Log("Death routine started");
+        yield return new WaitForSeconds(deathRoutineDuration);
         Destroy(gameObject);
     }
 

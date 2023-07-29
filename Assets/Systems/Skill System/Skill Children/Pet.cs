@@ -11,10 +11,6 @@ public class Pet : Skill, IActiveSkill, IUpdateDPad
 
     public void Cast(Transform spawnLocation, TargetInfo targetInfo)
     {
-        if(CoolingDown())
-        {
-            return;
-        }
         summonedPet = GameObject.Instantiate<PetPrefab>(petToSummon, spawnLocation.position, Quaternion.identity);
         summonedPet.master = source;
 
@@ -25,7 +21,7 @@ public class Pet : Skill, IActiveSkill, IUpdateDPad
 
     public DPadMap GetDPadMap()
     {
-//        return summonedPet.GetDPadMap();
+
         return new DPadMap();
     }
 

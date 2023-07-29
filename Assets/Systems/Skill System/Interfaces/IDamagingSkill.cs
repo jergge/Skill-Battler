@@ -11,7 +11,7 @@ namespace SkillSystem
     /// </summary>
     public interface IDamagingSkill : IOnDealDamageEvents
     {
-        public DamageInfo? DealDamageTo(DamageUnit damageUnit, IDamageable target)
+        public DamageReport? DealDamageTo(DamagePacket damageUnit, IDamageable target)
         {
             return target.TakeDamage(damageUnit);
         }

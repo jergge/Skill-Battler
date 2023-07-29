@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class PrayerOfMending : Skill, IActiveSkill
 {
     public float baseHealAmount = 50f;
+    float healAmount => GetModifiedValue(SkillSystem.Properties.ModifiableSkillProperty.ModifyValue.healing, baseHealAmount);
     public int baseChargesCount = 5;
     protected int remainingCharges;
     public float baseJumpRange = 20f;

@@ -5,13 +5,13 @@ using SkillSystem;
 using UnityEngine.InputSystem;
 using System;
 
-public class CameraTester : Skill, IChanneledSkill
+public class CameraTester : Skill//, IChanneledSkill
 {
     bool casting;
 
     public event Action<Skill> CastEnded;
 
-    public void Cast(Transform spawnLoaction, TargetInfo targetInfo)
+    public void PrepareCast(Transform spawnLoaction, TargetInfo targetInfo)
     {
         Player p;
 

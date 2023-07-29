@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DamageSystem
 {
     /// <summary>
-    /// A GameObject that can be damaged
+    /// A GameObject that can be damaged.
     /// </summary>
     public interface IDamageable
     {
@@ -15,7 +15,7 @@ namespace DamageSystem
         /// </summary>
         /// <param name="damageUnit"></param>
         /// <returns></returns>
-        public abstract DamageInfo? TakeDamage(DamageUnit damageUnit);
+        public abstract DamageReport TakeDamage(DamagePacket damageUnit);
 
         public bool IsDead();
     }

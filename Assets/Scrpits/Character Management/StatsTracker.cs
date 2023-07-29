@@ -20,7 +20,7 @@ public class StatsTracker : MonoBehaviour
     /// <summary>
     /// Holds information about the last change (+ or - operation) that occured
     /// </summary>
-    public InfoFromLastOperator afterLastChange;
+    public StatsTrackerReport eventReport;
 
     void Start()
     {
@@ -40,10 +40,25 @@ public class StatsTracker : MonoBehaviour
     /// <returns></returns>
     public static StatsTracker operator + (StatsTracker stats, float value)
     {
-        float valueBefore = stats.current;
+        float valueBeforeOpperation = stats.current;
+        float percentBeforeOpperation = stats.currentPercent;
         stats.current = Mathf.Min(stats.current + value, stats.maxValue);
-        stats.afterLastChange = new InfoFromLastOperator
-            {preMitigationChange = value, postMitigationChange = stats.current - valueBefore, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+        stats.eventReport = new StatsTrackerReport
+        {
+            // amountChanged = value, 
+            // postMitigationChange = stats.current - valueBefore, 
+            // isZeroOrLess = (stats.current <= 0)? true : false, 
+            // current = stats.current, 
+            // percent = stats.currentPercent 
+            valueBefore = valueBeforeOpperation,
+            percentBefore = percentBeforeOpperation,
+            valueAfter = stats.current,
+            percentAfter = stats.currentPercent,
+            delta = Mathf.Abs(valueBeforeOpperation - stats.current),
+            percentDelta = Mathf.Abs(percentBeforeOpperation - stats.currentPercent),
+            //lethalHit = (stats.current == 0 && stats.statType == StatType.Health)
+            setToMaxValue = (stats.current == stats.maxValue)
+        };
         return stats;
     }
 
@@ -51,23 +66,44 @@ public class StatsTracker : MonoBehaviour
     /// Reduces the stat's current amount
     /// </summary>
     /// <param name="stats"></param>
-    /// <param name="input"></param>
+    /// <param name="inputValue"></param>
     /// <returns></returns>
-    public static StatsTracker operator - (StatsTracker stats, float input)
+    public static StatsTracker operator - (StatsTracker stats, float inputValue)
     {
-        float valueBefore = stats.current;
-        stats.current = Mathf.Max(stats.current - input, 0);
-        stats.afterLastChange = new InfoFromLastOperator
-            {preMitigationChange = input, postMitigationChange = valueBefore - stats.current, isZeroOrLess = (stats.current <= 0)? true : false, current = stats.current, percent = stats.currentPercent };
+        float valueBeforeOpperation = stats.current;
+        float percentBeforeOpperation = stats.currentPercent;
+        stats.current = Mathf.Max(stats.current - inputValue, 0);
+        stats.eventReport = new StatsTrackerReport 
+        {
+            // amountChanged = inputValue, 
+            // postMitigationChange = valueBeforeOpperation - stats.current, 
+            // isZeroOrLess = (stats.current <= 0)? true : false, 
+            // current = stats.current, 
+            // percent = stats.currentPercent 
+
+            valueBefore = valueBeforeOpperation,
+            percentBefore = percentBeforeOpperation,
+            valueAfter = stats.current,
+            percentAfter = stats.currentPercent,
+            delta = Mathf.Abs(valueBeforeOpperation - stats.current),
+            percentDelta = Mathf.Abs(percentBeforeOpperation - stats.currentPercent),
+            lethalHit = (stats.current == 0 && stats.statType == StatType.Health)
+        };
         return stats;
     }
 
-    public struct InfoFromLastOperator
+    public struct StatsTrackerReport
     {
-        public float preMitigationChange;
-        public float postMitigationChange;
-        public bool isZeroOrLess;
-        public float current;
-        public float percent;
+        /// <summary>
+        /// 
+        /// </summary>
+        public float valueBefore;
+        public float percentBefore;
+        public float valueAfter;
+        public float percentAfter;
+        public float delta;
+        public float percentDelta;
+        public bool lethalHit;
+        public bool setToMaxValue;
     }
 }

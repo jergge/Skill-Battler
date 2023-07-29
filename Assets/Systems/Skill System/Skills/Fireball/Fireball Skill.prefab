@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8569422846857579862}
   - component: {fileID: 6263357398972305974}
   m_Layer: 0
-  m_Name: Fireball 1
+  m_Name: Fireball Skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,10 +48,13 @@ MonoBehaviour:
   skillName: Fireball
   basicDescription: Shoots a fast moving, long range ball of fire in the targeted
     direction
+  upgrades:
+  - {fileID: 8901077940844232446, guid: bb5057e64e4e2de4c9b3d1dfd503ea88, type: 3}
   icon: {fileID: 21300000, guid: a7d49a89d1048ad469d7719087592985, type: 3}
   baseCost: 0
   validTargets: 4
   cooldown: 1
+  missileToFire: {fileID: 0}
   misslePrefab: {fileID: 545934043473865816, guid: 8044f49a70305fc459f63c6d9913ca33, type: 3}
   baseDamage: 20
   damageType: 2

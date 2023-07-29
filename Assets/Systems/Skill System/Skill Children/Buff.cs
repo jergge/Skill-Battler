@@ -8,14 +8,14 @@ namespace SkillSystem
     /// <summary>
     /// Attatches to a GameObject and provides a benifit
     /// </summary>
-    public abstract class Buff : MonoBehaviour, UniqueComponent
+    public abstract class Buff : MonoBehaviour
     {
         [Header("Base Class - Buff settings")]
         //public bool active = true;
 
         public float baseDuration = Mathf.Infinity;
         public float remainingTime = Mathf.Infinity;
-        
+
         protected void ReduceDuration()
         {
             remainingTime -= Time.deltaTime;
@@ -26,7 +26,7 @@ namespace SkillSystem
             }
         }
 
-        GameObject source;
+        protected GameObject source;
 
         public event Action OnBuffExpired;
         public event Action OnBuffRemoved;

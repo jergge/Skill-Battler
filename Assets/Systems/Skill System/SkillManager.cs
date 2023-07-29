@@ -51,7 +51,8 @@ namespace SkillSystem
 
         public event Action<CastEventInfo, CheckForAny> CanICast;
         public event Action<CastEventInfo> OnBeforeCast;
-        public event Action<CastEventInfo> OnAfterCast;
+        public event Action<Skill> OnApplySkillModifications;
+        public event Action<CastEventInfo> OnSuccessfulSkillCast;
 
         public event Action<ToastNotificationInfo> PushToast;
 
@@ -160,7 +161,7 @@ namespace SkillSystem
 
         public bool TryGetEnabledSkill<SkillType>(out SkillType skill) where SkillType : Skill
         {
-            Debug.Log("TryGetEnabledSkill called with " + enabledSkillsList.Count + " active skills in the list");
+//            Debug.Log("TryGetEnabledSkill called with " + enabledSkillsList.Count + " active skills in the list");
             foreach ( Skill enabledSkill in enabledSkillsList)
             {
                 //Debug.Log("Checking if skill: [" + s.name + "] is of type [" + typeof(SkillType).ToString());
@@ -220,7 +221,7 @@ namespace SkillSystem
 
             if (skill is IActiveSkill activeSkill)
             {
-                activeSkill.Cast(skillSpawnLocation, targetInfo);
+                activeSkill.PrepareCast(skillSpawnLocation, targetInfo);
             }
         }
 
@@ -236,7 +237,7 @@ namespace SkillSystem
                 return;
             }
 
-            //Debug.Log("using skill: " + skill.name);
+            // Debug.Log("using skill: " + skill.name);
 
 
             if (skill is IUpdateDPad dPadSkill && triggerDown)
@@ -268,27 +269,33 @@ namespace SkillSystem
             //If you are activating an active skill
             if (skill is IActiveSkill activeSkill && triggerDown)
             {
-                // Debug.Log("skill is IActiveSkill");
-                //currentlyCasting = true;
-
-                if (skill.remainingCooldown > 0)
-                {
-                    return;
-                }
+                // Debug.Log("Using an active skill");
+                //Don't cast it if is is on cooldown
+                // if (skill.remainingCooldown > 0)
+                // {
+                //     return;
+                // }
 
                 CastEventInfo castInfo = new CastEventInfo(gameObject, skill, targetInfo.target);
-
                 CheckForAny checker = new CheckForAny(false);
 
+                //Check for anything preventing the cast, if so: don't cast it
                 CanICast?.Invoke(castInfo, checker);
-
-                if (checker.Found() || skill.CoolingDown())
+                if (checker.Found() || skill.IsOnCooldown())
                 {
-                    Debug.Log("Checker says skill cannot be cast: Found(): " + checker.Found() + " ||  OnCooldown(): " + skill.CoolingDown());
+                    Debug.Log("Checker says skill cannot be cast: Found(): " + checker.Found() + " ||  OnCooldown(): " + skill.IsOnCooldown());
                     return;
                 }
 
-                // Debug.Log("Casting the active skill: " + skill.name);
+                //Prepare the skill for casting (some skills create things on cast that the mods want access to before it's cast)
+                //This is optional for skills to implement
+                // Debug.Log("invoking prep cast");
+                activeSkill.PrepareCast(skillSpawnLocation, targetInfo);
+
+                //Check for modifications to the skill (IModifySkill)
+                OnApplySkillModifications?.Invoke(skill);
+
+                //Cast the skill
                 activeSkill.Cast(skillSpawnLocation, targetInfo);
 
                 if (skill is IChanneledSkill channeledSkillx)
@@ -297,7 +304,7 @@ namespace SkillSystem
                     currentlyCasting.Add(skill);
                 }
 
-                OnAfterCast?.Invoke(castInfo);
+                OnSuccessfulSkillCast?.Invoke(castInfo);
 
                 //mainEnergyStats.Reduce(skill.cost);
                 mainEnergyStats -= skill.baseCost;

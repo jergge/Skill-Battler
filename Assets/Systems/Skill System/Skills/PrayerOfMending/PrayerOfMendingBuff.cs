@@ -31,11 +31,11 @@ public class PrayerOfMendingBuff : Buff
         }
     }
 
-    protected void TriggerHeal(DamageInfo info)
+    protected void TriggerHeal(DamageReport damageReport)
     {
-        if(info.damageTaken >0 && !info.wasLethalHit)
+        if(damageReport.targetRemainingHP > 0 && !damageReport.lethalHit)
         {
-            livingEntity.TakeHeal((DamageUnit)sourceSkill.baseHealAmount);
+            livingEntity.TakeHeal(new HealPacket(sourceSkill.baseHealAmount, ActionUnit.Type.holy, source));
             if (remainingCharges == 0)
             {
                 RemoveSelf();

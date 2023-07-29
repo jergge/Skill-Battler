@@ -1,17 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using SkillSystem;
 using DamageSystem;
+using SkillSystem;
+using UnityEngine;
 
 [RequireComponent(typeof(StatsTracker), typeof(SkillManager))]
 [RequireComponent(typeof(Animator))]
-public class LivingEntity : MonoBehaviour, IDamageable, IOnDeathEvents, IForceable, IOnCastEvents
+public class LivingEntity : MonoBehaviour, IDamageable, IHealable, IOnDeathEvents, IForceable//, IOnCastEvents
 {
     public Transform NPCHeadTarget;
     public Transform NPCBodyTarget;
-    public StatsTracker HP;
+    public StatsTracker hitPointsTracker;
     public StatsTracker MP;
     public SkillManager skillManager;
     public Animator animator;
@@ -31,38 +31,72 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnDeathEvents, IForceab
         OnBeforeCast?.Invoke(info);
     }
 
-    public event Action<CastEventInfo> OnAfterCast;
+    public event Action<CastEventInfo> OnSuccessfulSkillCast;
     protected void FireOnAfterCast(CastEventInfo info)
     {
-        OnAfterCast?.Invoke(info);
+        OnSuccessfulSkillCast?.Invoke(info);
     }
 
-    public event Action<DamageInfo> OnTakeDamage;
-    public DamageInfo? TakeDamage(DamageUnit damageUnit)
+    public event Action<DamageReport> OnTakeDamage;
+    public DamageReport TakeDamage(DamagePacket PreMitigationDamagePacket)
     {
-        HP -= damageUnit.baseAmount;
-        var HPChangeInfo = HP.afterLastChange;
+        // Apply damage to pre-mitigation shields
+        ShieldsPreMitigation(PreMitigationDamagePacket);
 
-        Debug.Log(name + " took " + HPChangeInfo.postMitigationChange + " damage");
+        // Mitigate the remaing damage
+        DamagePacket mitigatedDamagePacket = ApplyDamageMitigation(PreMitigationDamagePacket);
 
-        DamageInfo damageInfo = new DamageInfo(HPChangeInfo);
-        //DamageInfo damageInfo = new DamageInfo((statsInfo.current == 0) ? true : false, damage, statsInfo.current);
+        // Apply remaining damage to post-mitigation shields
 
-        OnTakeDamage?.Invoke(damageInfo);
+
+        // Apply remaining damage to HP (via StatsTracker)
+        hitPointsTracker -= mitigatedDamagePacket.value;
+        var hitPointsReport = hitPointsTracker.eventReport;
+
+        Debug.Log(name + " took " + hitPointsReport.delta + " damage");
+
+        DamageReport damageReport = new DamageReport(PreMitigationDamagePacket, mitigatedDamagePacket, this, this.transform.position, 0, hitPointsReport);
+
+        OnTakeDamage?.Invoke(damageReport);
         
-        if (HPChangeInfo.current == 0)
+        if (damageReport.lethalHit)
         {
             Die();
         }
-        return damageInfo;
+        return damageReport;
+    }
+
+    protected DamagePacket ShieldsPreMitigation(DamagePacket damagePacket)
+    {
+        return damagePacket;
+    }
+
+    protected DamagePacket ApplyDamageMitigation(DamagePacket damagePacket)
+    {
+        return damagePacket;
+    }
+
+    protected DamagePacket ShieldsPostMitigation(DamagePacket damagePacket)
+    {
+        return damagePacket;
     }
 
 
-    public DamageInfo? TakeHeal(DamageUnit damageUnit)
+    public HealReport TakeHeal(HealPacket healPacket)
     {
-        HP += damageUnit.baseAmount;
+        // Apply Healing Mitigation
+        HealPacket mitigatedHealPacket = ApplyHealMitigation(healPacket);
 
-        return new DamageInfo(HP.afterLastChange);
+        // Apply the healing
+        hitPointsTracker += mitigatedHealPacket.value;
+        var hitPointsReport = hitPointsTracker.eventReport;
+
+        return new HealReport(healPacket, mitigatedHealPacket, this, this.transform.position, hitPointsReport);
+    }
+
+    protected HealPacket ApplyHealMitigation(HealPacket healPacket)
+    {
+        return healPacket;
     }
 
     public void ApplyForce(Vector3 directon, float magnitude, ForceMode forceMode)
@@ -118,18 +152,18 @@ public class LivingEntity : MonoBehaviour, IDamageable, IOnDeathEvents, IForceab
 
         if(animator != null) {animator.SetTrigger("Death");}
         
-        foreach(MonoBehaviour m in disableOnDie)
+        foreach(MonoBehaviour monoBehaviour in disableOnDie)
         {
-            if ( m != null )
+            if ( monoBehaviour != null )
             {
-                m.enabled = false;
+                monoBehaviour.enabled = false;
             }
         }
     }
 
     public bool IsDead()
     {
-        if (HP.currentPercent == 0)
+        if (hitPointsTracker.currentPercent == 0)
         {
             return true;
         }

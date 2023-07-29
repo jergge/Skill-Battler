@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class UpdateableData : ScriptableObject 
 {
@@ -18,9 +18,6 @@ public class UpdateableData : ScriptableObject
 
     public void NotifyOfUpdatedValues()
     {
-        if (OnVaulesUpdated != null)
-        {
-            OnVaulesUpdated();
-        }
+        OnVaulesUpdated?.Invoke();
     }
 }
